@@ -5,8 +5,8 @@ const API_BASE_URL = import.meta.env["VITE_API_BASE_URL"] ?? "http://localhost:3
 
 export class ApiError extends Error {
   statusCode: number;
-  error?: string;
-  details?: unknown;
+  error: string | undefined;
+  details: unknown;
 
   constructor(statusCode: number, message: string, error?: string, details?: unknown) {
     super(message);
