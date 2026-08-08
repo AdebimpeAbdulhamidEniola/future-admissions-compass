@@ -17,8 +17,10 @@ export const registerSchema = z.object({
   phone: z
     .string()
     .min(1, "Enter your phone number")
-    .transform((v) => v.replace(/[\s-]/g, ""))
-    .refine((v) => NIGERIAN_PHONE.test(v), "Use a Nigerian number, e.g. 08031234567"),
+    .refine(
+      (v) => NIGERIAN_PHONE.test(v.replace(/[\s-]/g, "")),
+      "Use a Nigerian number, e.g. 08031234567",
+    ),
   password: z.string().min(6, "Use at least 6 characters"),
 });
 
