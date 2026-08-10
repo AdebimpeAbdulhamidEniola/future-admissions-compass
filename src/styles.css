@@ -180,3 +180,23 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
+
+@utility avoid-break {
+  break-inside: avoid;
+}
+
+@media print {
+  html,
+  body {
+    background: white;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+}

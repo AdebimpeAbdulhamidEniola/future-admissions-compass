@@ -1,5 +1,11 @@
 import { http, mockDelay, mockFailure, USE_MOCKS } from "@/lib/http";
-import { classifyCatchment, computeAggregate, recommendCourses, verifyEligibility } from "@/mocks/engine";
+import {
+  buildAssessmentContext,
+  classifyCatchment,
+  computeAggregate,
+  recommendCourses,
+  verifyEligibility,
+} from "@/mocks/engine";
 import type { AssessmentReport, CandidateProfile } from "@/types/domain";
 
 const store: AssessmentReport[] = [];
@@ -20,6 +26,7 @@ export async function createAssessment(
       score: candidate.postUtmeScore === null ? null : computeAggregate(candidate),
       catchment: classifyCatchment(candidate),
       recommendations: recommendCourses(candidate),
+      context: buildAssessmentContext(candidate),
     };
     store.unshift(report);
     return mockDelay(report);

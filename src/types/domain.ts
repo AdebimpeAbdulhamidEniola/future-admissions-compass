@@ -108,6 +108,24 @@ export interface CourseRecommendation {
   rationale: string[];
 }
 
+export interface AssessmentContext {
+  candidateName: string;
+  stateOfOrigin: string;
+  courseId: string;
+  courseName: string;
+  faculty: string;
+  universityId: string;
+  universityCode: UniversityCode;
+  universityName: string;
+  catchmentStates: string[];
+  requiredUtmeSubjects: string[];
+  optionalUtmeSubjects: string[];
+  requiredOLevelSubjects: string[];
+  minimumCredits: number;
+  cutOffs: { merit: number; catchment: number; elds: number };
+  quotaPercents: { merit: number; catchment: number; elds: number };
+}
+
 export interface AssessmentReport {
   id: string;
   createdAt: string;
@@ -116,6 +134,7 @@ export interface AssessmentReport {
   score: AggregateScoreResult | null;
   catchment: CatchmentResult;
   recommendations: CourseRecommendation[];
+  context: AssessmentContext;
 }
 
 // --- Auth / admin support types ---

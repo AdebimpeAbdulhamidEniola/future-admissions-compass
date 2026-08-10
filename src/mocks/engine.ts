@@ -1,5 +1,6 @@
 import type {
   AggregateScoreResult,
+  AssessmentContext,
   CandidateProfile,
   CatchmentResult,
   CourseRecommendation,
@@ -12,7 +13,15 @@ import { mockCatchmentRules, mockRequirements, mockScoringPolicies } from "./pol
 import { mockUniversities } from "./universities";
 
 const GRADE_POINTS: Record<OLevelGrade, number> = {
-  A1: 10, B2: 9, B3: 8, C4: 7, C5: 6, C6: 5, D7: 0, E8: 0, F9: 0,
+  A1: 10,
+  B2: 9,
+  B3: 8,
+  C4: 7,
+  C5: 6,
+  C6: 5,
+  D7: 0,
+  E8: 0,
+  F9: 0,
 };
 
 const CREDIT_GRADES: OLevelGrade[] = ["A1", "B2", "B3", "C4", "C5", "C6"];
@@ -115,8 +124,19 @@ export function classifyCatchment(profile: CandidateProfile): CatchmentResult {
 }
 
 export function computeAggregate(profile: CandidateProfile): AggregateScoreResult {
-  const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId)!;
-  const course = mockCourses.find((c) => c.id === profile.targetCourseId)!;
+  const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
+  const course = mockCourses.find((c) => c.id === profile.targetCourseId);
+  if (!policy || !course) {
+    return {
+      aggregate: 0,
+      breakdown: [],
+      formulaDescription: "",
+      applicableCutOff: 0,
+      cutOffType: "MERIT",
+      meetsCutOff: false,
+      margin: 0,
+    } as AggregateScoreResult;
+  }
   const catchment = classifyCatchment(profile);
 
   const utmePercent = (profile.utmeScore / policy.utmeMaxScore) * 100;
@@ -202,6 +222,39 @@ export function recommendCourses(profile: CandidateProfile): CourseRecommendatio
     .sort((a, b) => b.matchProbability - a.matchProbability)
     .slice(0, 8)
     .map((r, i) => ({ ...r, rank: i + 1 }));
+}
+
+export function buildAssessmentContext(profile: CandidateProfile): AssessmentContext {
+  const course = mockCourses.find((c) => c.id === profile.targetCourseId)!;
+  const university = mockUniversities.find((u) => u.id === profile.targetUniversityId)!;
+  const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId)!;
+  const rule = mockCatchmentRules.find((r) => r.universityId === profile.targetUniversityId);
+
+  return {
+    candidateName: profile.fullName,
+    stateOfOrigin: profile.stateOfOrigin,
+    courseId: course.id,
+    courseName: course.name,
+    faculty: course.faculty,
+    universityId: university.id,
+    universityCode: university.code,
+    universityName: university.name,
+    catchmentStates: rule?.catchmentStates ?? [],
+    requiredUtmeSubjects: requirement.requiredUtmeSubjects,
+    optionalUtmeSubjects: requirement.optionalUtmeSubjects,
+    requiredOLevelSubjects: requirement.requiredOLevelSubjects,
+    minimumCredits: requirement.minimumCredits,
+    cutOffs: {
+      merit: course.meritCutOff,
+      catchment: course.catchmentCutOff,
+      elds: course.eldsCutOff,
+    },
+    quotaPercents: {
+      merit: rule?.meritQuotaPercent ?? 45,
+      catchment: rule?.catchmentQuotaPercent ?? 35,
+      elds: rule?.eldsQuotaPercent ?? 20,
+    },
+  };
 }
 
 function round(n: number, dp = 1) {
