@@ -100,7 +100,9 @@ function AssessmentResult() {
         {showRecommendations && (
           <RecommendationsSection
             recommendations={recommendations}
+            candidateAggregate={score?.aggregate ?? 0}
             ineligible={!verification.eligible}
+            viewAllAssessmentId={report.id}
           />
         )}
         <DisclaimerCallout />

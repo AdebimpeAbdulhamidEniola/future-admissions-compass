@@ -24,6 +24,9 @@ export function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
+            <Link to="/universities">Universities</Link>
+          </Button>
           {isAuthenticated ? (
             <>
               <span className="hidden text-sm text-muted-foreground sm:inline">

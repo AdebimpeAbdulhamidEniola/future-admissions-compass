@@ -75,7 +75,10 @@ function LoginPage() {
       footer={
         <>
           New here?{" "}
-          <Link to="/register" className="font-medium text-primary underline-offset-4 hover:underline">
+          <Link
+            to="/register"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
             Create an account
           </Link>
         </>
@@ -155,8 +158,8 @@ function LoginPage() {
         Continue as demo candidate
       </Button>
       <p className="mt-2 text-xs text-muted-foreground">
-        Opens a pre-filled profile (Adebayo Ogunlesi, UTME 286, University of Ibadan) so you can walk
-        through the whole system without typing results.
+        Opens a pre-filled profile (Adebayo Ogunlesi, UTME 286, University of Ibadan) so you can
+        walk through the whole system without typing results.
       </p>
     </AuthShell>
   );

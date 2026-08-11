@@ -46,7 +46,7 @@ export function AggregateScoreCard({
         <div>
           <p
             className={cn(
-              "text-numeral text-6xl font-semibold leading-none sm:text-7xl",
+              "text-numeral text-6xl font-serif font-semibold leading-none sm:text-7xl",
               tone === "success" && "text-success",
               tone === "caution" && "text-caution",
               tone === "ineligible" && "text-ineligible",

@@ -18,16 +18,16 @@ export function VerdictBanner({ report }: { report: AssessmentReport }) {
 
   const summary = (() => {
     if (aboveCutOff && score) {
-      return `Your aggregate of ${score.aggregate.toFixed(1)} clears the ${CATCHMENT_LABEL[score.cutOffType]} cut-off of ${score.applicableCutOff} for this course.`;
+      return `You're eligible for ${context.courseName} at ${context.universityName}, and your aggregate of ${score.aggregate.toFixed(1)} clears the ${CATCHMENT_LABEL[score.cutOffType]} cut-off by ${Math.abs(score.margin).toFixed(1)} points.`;
     }
     if (belowCutOff && score) {
-      return `Your subjects and O'Level credits check out, but your aggregate of ${score.aggregate.toFixed(1)} is ${Math.abs(score.margin).toFixed(1)} points below the ${CATCHMENT_LABEL[score.cutOffType]} cut-off of ${score.applicableCutOff}.`;
+      return `Your UTME subjects and O'Level credits satisfy the requirements, but your aggregate of ${score.aggregate.toFixed(1)} is ${Math.abs(score.margin).toFixed(1)} points below the ${CATCHMENT_LABEL[score.cutOffType]} cut-off.`;
     }
     if (eligible) {
-      return "Your UTME subjects and O'Level credits meet this course's requirements. Add your Post-UTME score to see your full aggregate.";
+      return "Your UTME subjects and O'Level credits meet this course's requirements. Add your Post-UTME score to see your full aggregate and cut-off position.";
     }
     const failed = verification.issues.filter((i) => i.severity === "ERROR").length;
-    return `${failed} requirement${failed === 1 ? "" : "s"} for this course ${failed === 1 ? "is" : "are"} not yet met — see the breakdown below for exactly what's missing.`;
+    return `${failed} requirement${failed === 1 ? "" : "s"} for this course ${failed === 1 ? "is" : "are"} not yet met — see the breakdown below for exactly what would need to change.`;
   })();
 
   return (
