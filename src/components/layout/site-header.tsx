@@ -29,6 +29,9 @@ export function SiteHeader() {
           </Button>
           {isAuthenticated ? (
             <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/dashboard">Dashboard</Link>
+              </Button>
               <span className="hidden text-sm text-muted-foreground sm:inline">
                 {user?.fullName}
               </span>
