@@ -1,5 +1,14 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { Building2, ListChecks, MapPinned, LayoutDashboard, Scale, ScrollText } from "lucide-react";
+import {
+  Building2,
+  ClipboardList,
+  Gauge,
+  ListChecks,
+  MapPinned,
+  LayoutDashboard,
+  Scale,
+  ScrollText,
+} from "lucide-react";
 
 import { RequireAdmin } from "@/components/auth/guards";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -17,6 +26,8 @@ const NAV = [
   { to: "/admin/requirements", label: "Requirements", icon: ListChecks },
   { to: "/admin/scoring-policies", label: "Scoring policies", icon: Scale },
   { to: "/admin/catchment-rules", label: "Catchment rules", icon: MapPinned },
+  { to: "/admin/metrics", label: "Metrics", icon: Gauge },
+  { to: "/admin/evaluation-logs", label: "Evaluation logs", icon: ClipboardList },
 ] as const;
 
 function AdminRoute() {

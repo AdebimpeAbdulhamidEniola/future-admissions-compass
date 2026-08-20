@@ -1,4 +1,9 @@
 import type { AuthSession, CandidateProfile, AdminMetrics, AdminLogEntry } from "@/types/domain";
+import {
+  mockAggregateScoreHistogram,
+  mockConfusionMatrix,
+  mockLatencyTimeSeries,
+} from "@/mocks/evaluation";
 
 export const DEMO_EMAIL = "demo@idss.ng";
 /** Email that always fails on the mock auth path, so error states are reachable. */
@@ -61,11 +66,47 @@ export const mockAdminMetrics: AdminMetrics = {
     { code: "FUNAAB", assessments: 312, passRate: 0.72 },
     { code: "FUOYE", assessments: 218, passRate: 0.77 },
   ],
+  precision: 0.883,
+  recall: 0.921,
+  accuracy: 0.897,
+  meanResponseLatencyMs: 412,
+  latencyTargetMs: 1200,
+  latencyTimeSeries: mockLatencyTimeSeries,
+  recommenderConfusionMatrix: mockConfusionMatrix,
+  aggregateScoreHistogram: mockAggregateScoreHistogram,
 };
 
 export const mockAdminLogs: AdminLogEntry[] = [
-  { id: "log-1", createdAt: "2026-07-28T09:14:00.000Z", actor: "Fatima Abdulsalam", action: "UPDATE", entity: "Course", summary: "UI Computer Science merit cut-off 70 → 71" },
-  { id: "log-2", createdAt: "2026-07-27T15:02:00.000Z", actor: "Fatima Abdulsalam", action: "UPDATE", entity: "ScoringPolicy", summary: "FUOYE UTME weighting 60 → 70" },
-  { id: "log-3", createdAt: "2026-07-26T11:47:00.000Z", actor: "Chinedu Okafor", action: "CREATE", entity: "AdmissionRequirement", summary: "Added requirement set for FUNAAB Crop Protection" },
-  { id: "log-4", createdAt: "2026-07-24T08:20:00.000Z", actor: "Chinedu Okafor", action: "UPDATE", entity: "CatchmentRule", summary: "Added Kogi to FUOYE catchment states" },
+  {
+    id: "log-1",
+    createdAt: "2026-07-28T09:14:00.000Z",
+    actor: "Fatima Abdulsalam",
+    action: "UPDATE",
+    entity: "Course",
+    summary: "UI Computer Science merit cut-off 70 → 71",
+  },
+  {
+    id: "log-2",
+    createdAt: "2026-07-27T15:02:00.000Z",
+    actor: "Fatima Abdulsalam",
+    action: "UPDATE",
+    entity: "ScoringPolicy",
+    summary: "FUOYE UTME weighting 60 → 70",
+  },
+  {
+    id: "log-3",
+    createdAt: "2026-07-26T11:47:00.000Z",
+    actor: "Chinedu Okafor",
+    action: "CREATE",
+    entity: "AdmissionRequirement",
+    summary: "Added requirement set for FUNAAB Crop Protection",
+  },
+  {
+    id: "log-4",
+    createdAt: "2026-07-24T08:20:00.000Z",
+    actor: "Chinedu Okafor",
+    action: "UPDATE",
+    entity: "CatchmentRule",
+    summary: "Added Kogi to FUOYE catchment states",
+  },
 ];

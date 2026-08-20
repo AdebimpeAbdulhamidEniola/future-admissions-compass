@@ -10,13 +10,38 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminCatchmentRulesRouteImport } from './routes/admin/catchment-rules'
+import { Route as AdminCoursesRouteImport } from './routes/admin/courses'
+import { Route as AdminEvaluationLogsRouteImport } from './routes/admin/evaluation-logs'
+import { Route as AdminMetricsRouteImport } from './routes/admin/metrics'
+import { Route as AdminRequirementsRouteImport } from './routes/admin/requirements'
+import { Route as AdminScoringPoliciesRouteImport } from './routes/admin/scoring-policies'
+import { Route as AdminUniversitiesRouteImport } from './routes/admin/universities'
+import { Route as AssessmentIdRouteImport } from './routes/assessment/$id'
+import { Route as AssessmentNewRouteImport } from './routes/assessment/new'
+import { Route as UniversitiesIndexRouteImport } from './routes/universities/index'
+import { Route as UniversitiesCodeRouteImport } from './routes/universities/$code'
+import { Route as AssessmentIdRecommendationsRouteImport } from './routes/assessment/$id.recommendations'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -34,39 +59,212 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCatchmentRulesRoute = AdminCatchmentRulesRouteImport.update({
+  id: '/catchment-rules',
+  path: '/catchment-rules',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCoursesRoute = AdminCoursesRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminEvaluationLogsRoute = AdminEvaluationLogsRouteImport.update({
+  id: '/evaluation-logs',
+  path: '/evaluation-logs',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMetricsRoute = AdminMetricsRouteImport.update({
+  id: '/metrics',
+  path: '/metrics',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminRequirementsRoute = AdminRequirementsRouteImport.update({
+  id: '/requirements',
+  path: '/requirements',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminScoringPoliciesRoute = AdminScoringPoliciesRouteImport.update({
+  id: '/scoring-policies',
+  path: '/scoring-policies',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminUniversitiesRoute = AdminUniversitiesRouteImport.update({
+  id: '/universities',
+  path: '/universities',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AssessmentIdRoute = AssessmentIdRouteImport.update({
+  id: '/assessment/$id',
+  path: '/assessment/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentNewRoute = AssessmentNewRouteImport.update({
+  id: '/assessment/new',
+  path: '/assessment/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversitiesIndexRoute = UniversitiesIndexRouteImport.update({
+  id: '/universities/',
+  path: '/universities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversitiesCodeRoute = UniversitiesCodeRouteImport.update({
+  id: '/universities/$code',
+  path: '/universities/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentIdRecommendationsRoute =
+  AssessmentIdRecommendationsRouteImport.update({
+    id: '/recommendations',
+    path: '/recommendations',
+    getParentRoute: () => AssessmentIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
+  '/admin/catchment-rules': typeof AdminCatchmentRulesRoute
+  '/admin/courses': typeof AdminCoursesRoute
+  '/admin/evaluation-logs': typeof AdminEvaluationLogsRoute
+  '/admin/metrics': typeof AdminMetricsRoute
+  '/admin/requirements': typeof AdminRequirementsRoute
+  '/admin/scoring-policies': typeof AdminScoringPoliciesRoute
+  '/admin/universities': typeof AdminUniversitiesRoute
+  '/assessment/$id': typeof AssessmentIdRouteWithChildren
+  '/assessment/new': typeof AssessmentNewRoute
+  '/universities/$code': typeof UniversitiesCodeRoute
+  '/admin/': typeof AdminIndexRoute
+  '/universities/': typeof UniversitiesIndexRoute
+  '/assessment/$id/recommendations': typeof AssessmentIdRecommendationsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
+  '/admin/catchment-rules': typeof AdminCatchmentRulesRoute
+  '/admin/courses': typeof AdminCoursesRoute
+  '/admin/evaluation-logs': typeof AdminEvaluationLogsRoute
+  '/admin/metrics': typeof AdminMetricsRoute
+  '/admin/requirements': typeof AdminRequirementsRoute
+  '/admin/scoring-policies': typeof AdminScoringPoliciesRoute
+  '/admin/universities': typeof AdminUniversitiesRoute
+  '/assessment/$id': typeof AssessmentIdRouteWithChildren
+  '/assessment/new': typeof AssessmentNewRoute
+  '/universities/$code': typeof UniversitiesCodeRoute
+  '/admin': typeof AdminIndexRoute
+  '/universities': typeof UniversitiesIndexRoute
+  '/assessment/$id/recommendations': typeof AssessmentIdRecommendationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
+  '/admin/catchment-rules': typeof AdminCatchmentRulesRoute
+  '/admin/courses': typeof AdminCoursesRoute
+  '/admin/evaluation-logs': typeof AdminEvaluationLogsRoute
+  '/admin/metrics': typeof AdminMetricsRoute
+  '/admin/requirements': typeof AdminRequirementsRoute
+  '/admin/scoring-policies': typeof AdminScoringPoliciesRoute
+  '/admin/universities': typeof AdminUniversitiesRoute
+  '/assessment/$id': typeof AssessmentIdRouteWithChildren
+  '/assessment/new': typeof AssessmentNewRoute
+  '/universities/$code': typeof UniversitiesCodeRoute
+  '/admin/': typeof AdminIndexRoute
+  '/universities/': typeof UniversitiesIndexRoute
+  '/assessment/$id/recommendations': typeof AssessmentIdRecommendationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/onboarding' | '/register'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/login'
+    | '/onboarding'
+    | '/register'
+    | '/admin/catchment-rules'
+    | '/admin/courses'
+    | '/admin/evaluation-logs'
+    | '/admin/metrics'
+    | '/admin/requirements'
+    | '/admin/scoring-policies'
+    | '/admin/universities'
+    | '/assessment/$id'
+    | '/assessment/new'
+    | '/universities/$code'
+    | '/admin/'
+    | '/universities/'
+    | '/assessment/$id/recommendations'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/onboarding' | '/register'
-  id: '__root__' | '/' | '/login' | '/onboarding' | '/register'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/onboarding'
+    | '/register'
+    | '/admin/catchment-rules'
+    | '/admin/courses'
+    | '/admin/evaluation-logs'
+    | '/admin/metrics'
+    | '/admin/requirements'
+    | '/admin/scoring-policies'
+    | '/admin/universities'
+    | '/assessment/$id'
+    | '/assessment/new'
+    | '/universities/$code'
+    | '/admin'
+    | '/universities'
+    | '/assessment/$id/recommendations'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/login'
+    | '/onboarding'
+    | '/register'
+    | '/admin/catchment-rules'
+    | '/admin/courses'
+    | '/admin/evaluation-logs'
+    | '/admin/metrics'
+    | '/admin/requirements'
+    | '/admin/scoring-policies'
+    | '/admin/universities'
+    | '/assessment/$id'
+    | '/assessment/new'
+    | '/universities/$code'
+    | '/admin/'
+    | '/universities/'
+    | '/assessment/$id/recommendations'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   RegisterRoute: typeof RegisterRoute
+  AssessmentIdRoute: typeof AssessmentIdRouteWithChildren
+  AssessmentNewRoute: typeof AssessmentNewRoute
+  UniversitiesCodeRoute: typeof UniversitiesCodeRoute
+  UniversitiesIndexRoute: typeof UniversitiesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +274,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -99,15 +311,160 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/catchment-rules': {
+      id: '/admin/catchment-rules'
+      path: '/catchment-rules'
+      fullPath: '/admin/catchment-rules'
+      preLoaderRoute: typeof AdminCatchmentRulesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/courses': {
+      id: '/admin/courses'
+      path: '/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminCoursesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/evaluation-logs': {
+      id: '/admin/evaluation-logs'
+      path: '/evaluation-logs'
+      fullPath: '/admin/evaluation-logs'
+      preLoaderRoute: typeof AdminEvaluationLogsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/metrics': {
+      id: '/admin/metrics'
+      path: '/metrics'
+      fullPath: '/admin/metrics'
+      preLoaderRoute: typeof AdminMetricsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/requirements': {
+      id: '/admin/requirements'
+      path: '/requirements'
+      fullPath: '/admin/requirements'
+      preLoaderRoute: typeof AdminRequirementsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/scoring-policies': {
+      id: '/admin/scoring-policies'
+      path: '/scoring-policies'
+      fullPath: '/admin/scoring-policies'
+      preLoaderRoute: typeof AdminScoringPoliciesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/universities': {
+      id: '/admin/universities'
+      path: '/universities'
+      fullPath: '/admin/universities'
+      preLoaderRoute: typeof AdminUniversitiesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/assessment/$id': {
+      id: '/assessment/$id'
+      path: '/assessment/$id'
+      fullPath: '/assessment/$id'
+      preLoaderRoute: typeof AssessmentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessment/new': {
+      id: '/assessment/new'
+      path: '/assessment/new'
+      fullPath: '/assessment/new'
+      preLoaderRoute: typeof AssessmentNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/universities/': {
+      id: '/universities/'
+      path: '/universities'
+      fullPath: '/universities/'
+      preLoaderRoute: typeof UniversitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/universities/$code': {
+      id: '/universities/$code'
+      path: '/universities/$code'
+      fullPath: '/universities/$code'
+      preLoaderRoute: typeof UniversitiesCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessment/$id/recommendations': {
+      id: '/assessment/$id/recommendations'
+      path: '/recommendations'
+      fullPath: '/assessment/$id/recommendations'
+      preLoaderRoute: typeof AssessmentIdRecommendationsRouteImport
+      parentRoute: typeof AssessmentIdRoute
+    }
   }
 }
 
+interface AdminRouteRouteChildren {
+  AdminCatchmentRulesRoute: typeof AdminCatchmentRulesRoute
+  AdminCoursesRoute: typeof AdminCoursesRoute
+  AdminEvaluationLogsRoute: typeof AdminEvaluationLogsRoute
+  AdminMetricsRoute: typeof AdminMetricsRoute
+  AdminRequirementsRoute: typeof AdminRequirementsRoute
+  AdminScoringPoliciesRoute: typeof AdminScoringPoliciesRoute
+  AdminUniversitiesRoute: typeof AdminUniversitiesRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminCatchmentRulesRoute: AdminCatchmentRulesRoute,
+  AdminCoursesRoute: AdminCoursesRoute,
+  AdminEvaluationLogsRoute: AdminEvaluationLogsRoute,
+  AdminMetricsRoute: AdminMetricsRoute,
+  AdminRequirementsRoute: AdminRequirementsRoute,
+  AdminScoringPoliciesRoute: AdminScoringPoliciesRoute,
+  AdminUniversitiesRoute: AdminUniversitiesRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
+interface AssessmentIdRouteChildren {
+  AssessmentIdRecommendationsRoute: typeof AssessmentIdRecommendationsRoute
+}
+
+const AssessmentIdRouteChildren: AssessmentIdRouteChildren = {
+  AssessmentIdRecommendationsRoute: AssessmentIdRecommendationsRoute,
+}
+
+const AssessmentIdRouteWithChildren = AssessmentIdRoute._addFileChildren(
+  AssessmentIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
+  DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   RegisterRoute: RegisterRoute,
+  AssessmentIdRoute: AssessmentIdRouteWithChildren,
+  AssessmentNewRoute: AssessmentNewRoute,
+  UniversitiesCodeRoute: UniversitiesCodeRoute,
+  UniversitiesIndexRoute: UniversitiesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

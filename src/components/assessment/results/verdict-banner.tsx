@@ -32,6 +32,8 @@ export function VerdictBanner({ report }: { report: AssessmentReport }) {
 
   return (
     <Card
+      role="status"
+      aria-live="polite"
       className={cn(
         "avoid-break overflow-hidden p-0",
         tone === "success" && "border-success/40",

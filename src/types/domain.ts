@@ -182,6 +182,24 @@ export interface AdminMetrics {
   eligibilityPassRate: number;
   averageAggregate: number;
   byUniversity: { code: UniversityCode; assessments: number; passRate: number }[];
+  precision: number;
+  recall: number;
+  accuracy: number;
+  meanResponseLatencyMs: number;
+  latencyTargetMs: number;
+  latencyTimeSeries: {
+    date: string;
+    verificationMs: number;
+    scoringMs: number;
+    catchmentMs: number;
+    recommendationMs: number;
+  }[];
+  recommenderConfusionMatrix: {
+    predicted: "MATCH" | "NO_MATCH";
+    actual: "MATCH" | "NO_MATCH";
+    count: number;
+  }[];
+  aggregateScoreHistogram: { bucket: string; count: number }[];
 }
 
 export interface AdminLogEntry {
@@ -191,4 +209,16 @@ export interface AdminLogEntry {
   action: string;
   entity: string;
   summary: string;
+}
+
+export type EvaluationModule = "VERIFICATION" | "SCORING" | "CATCHMENT" | "RECOMMENDATION";
+export type EvaluationOutcome = "SUCCESS" | "FAILURE";
+
+export interface EvaluationEvent {
+  id: string;
+  timestamp: string;
+  candidateId: string;
+  module: EvaluationModule;
+  outcome: EvaluationOutcome;
+  latencyMs: number;
 }
