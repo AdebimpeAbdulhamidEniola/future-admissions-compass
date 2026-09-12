@@ -1,15 +1,15 @@
 # JAMB Data Dossier
 
-Backend seed-data specification for the PlaceRight IDSS. The complete 210-course catalog (35 per university, 5 per faculty × 7 faculties, across 6 universities), each university's scoring formula, and national policy — sourced and confidence-flagged. OAU's course list is final; its cut-off/formula research was stopped mid-run and hasn't been re-run.
+Backend seed-data specification for the PlaceRight IDSS. The complete 210-course catalog (35 per university, 5 per faculty × 7 faculties, across 6 universities), each university's scoring formula, and national policy — sourced and confidence-flagged. OAU's course list is final; roughly two-thirds of its courses now have Confirmed cut-offs (2023/2024 cycle) from OAU's own faculty documents — the rest (Science, Agriculture, Medicine/Dentistry/Pharmacy) are still unsourced.
 
 - **Compiled:** 2026-08-13
 - **Target cycle:** 2025/26–2026/27 UTME
 - **Scope:** 210 courses · 35/university · 7 faculties · 6 universities
-- **Status:** cut-offs & formulas complete for UI, UNILAG, FUTA, FUNAAB, FUOYE · OAU partial
+- **Status:** cut-offs & formulas complete for UI, UNILAG, FUTA, FUNAAB, FUOYE · OAU partially confirmed (2023/24 cycle; Science and Agriculture still unsourced)
 
 **Confidence key:** **Confirmed** — read directly off an official university page/PDF. **Likely** — consistent across independent secondary sources, official page unreachable. **Uncertain** — conflicting sources. **Absent** — genuinely doesn't exist at that university (faculty gap, or a course name that turned out not to be real there).
 
-> **Why cut-off scales aren't comparable across universities:** not a data error — it's the exact problem the thesis is about (Ch.1.2). UI and UNILAG publish a 0–100 aggregate on their own formula. FUNAAB publishes the raw UTME/JAMB floor (0–400) per course, with no aggregate published at all. FUTA has both a 0–100 aggregate scale and a separate unofficial "estimated competitive JAMB score" floating around. FUOYE has both a UTME floor (0–400) and its own 0–100 aggregate. Every course below states which scale its number is on.
+> **Why cut-off scales aren't comparable across universities:** not a data error — it's the exact problem the thesis is about (Ch.1.2). UI, UNILAG, and OAU publish a 0–100 aggregate on their own formula. FUNAAB publishes the raw UTME/JAMB floor (0–400) per course, with no aggregate published at all. FUTA has both a 0–100 aggregate scale and a separate unofficial "estimated competitive JAMB score" floating around. FUOYE has both a UTME floor (0–400) and its own 0–100 aggregate. Every course below states which scale its number is on.
 
 ---
 
@@ -146,47 +146,99 @@ The scoring engine should average the grades of *these* subjects, not the candid
 
 ## Obafemi Awolowo University (OAU · Osun State)
 
-**Research stopped mid-run** — only the course list is final for OAU; cut-offs and formula weren't re-researched.
+**Partial upgrade — Confirmed, but for the 2023/2024 cycle, not 2025/2026.** Sourced from OAU's own faculty-issued cut-off documents (College of Health Sciences; Faculty of Law; Faculty of Technology; Faculty of Arts; Faculty of Social Sciences — the last two signed and dated by their respective Deans). These are official OAU-produced figures, not aggregator guesses, but they're one admission cycle old — treat as directionally reliable (which courses run high vs. low, roughly how catchment/ELDS discount the merit cut-off) rather than exact for the current 2025/2026 cycle. Formula/weighting is still **Uncertain** — none of these documents states a formula, only final cut-offs. OAU's aggregate is confirmed to be a **0–100 scale** (like UI and UNILAG), not the raw 0–400 UTME score, resolving that ambiguity for the "why cut-off scales aren't comparable" note at the top of this dossier.
 
-| Faculty | Course |
-|---|---|
-| Clinical Sciences | Medicine and Surgery |
-| Clinical Sciences | Dentistry / Dental Surgery |
-| Clinical Sciences | Nursing Science |
-| Clinical Sciences | Medical Rehabilitation (Physiotherapy/OT) |
-| Clinical Sciences | Pharmacy |
-| Law | Law |
-| Engineering & Technology | Civil Engineering |
-| Engineering & Technology | Mechanical Engineering |
-| Engineering & Technology | Electronic and Electrical Engineering |
-| Engineering & Technology | Chemical Engineering |
-| Engineering & Technology | Agricultural and Environmental Engineering |
-| Arts | English Language |
-| Arts | History |
-| Arts | Linguistics and African Languages |
-| Arts | Philosophy |
-| Arts | Religious Studies |
-| Arts | Dramatic Arts |
-| Arts | Music |
-| Social & Management Sciences | Economics |
-| Social & Management Sciences | Accounting |
-| Social & Management Sciences | Business Administration |
-| Social & Management Sciences | Political Science |
-| Social & Management Sciences | Sociology and Anthropology |
-| Science | Chemistry |
-| Science | Physics |
-| Science | Microbiology |
-| Science | Zoology |
-| Science | Mathematics |
-| Science | Botany |
-| Science | Geology |
-| Agriculture | Agricultural Economics |
-| Agriculture | Animal Sciences |
-| Agriculture | Crop Production and Protection |
-| Agriculture | Soil Science and Land Resources Management |
-| Agriculture | Agricultural Extension and Rural Development |
+**Catchment states — Confirmed, independently, across all five documents**: every one of them uses the same six states — **Ekiti, Lagos, Ogun, Ondo, Osun, Oyo** — matching UI/UNILAG's catchment area exactly (column order varies per faculty document, but the set of six is identical every time).
 
-**Cut-offs / formula** — **Uncertain**: Microbiology has two conflicting figures (170 UTME threshold vs. 234 aggregate). Formula disputed: 50% JAMB/40% Post-UTME/10% O'Level vs. JAMB÷8 + Post-UTME÷2. The rest of the 35 courses have no cut-off sourced yet. If the 10% O'Level variant is confirmed, the same correction as UNILAG applies: score the course's required combination (science/arts/commercial subjects per stream — see UNILAG section above), not an independently-chosen best 5.
+**ELDS — partially confirmed, and inconsistent in structure across faculties.** College of Health Sciences and the Faculty of Law publish a *separate ELDS cut-off per state* (like catchment); Faculty of Technology and Faculty of Social Sciences instead publish a single flat ELDS figure that applies uniformly across states. States seen with real ELDS cut-offs: Kogi, Kano, Kwara, Ebonyi, Cross River, Benue, Nasarawa, Rivers — a smaller, different set than the national 23-state ELDS guess in this dossier's "National policy" section, and not necessarily the full OAU ELDS list (only the states that appear in these five documents). Don't treat this as OAU's complete ELDS list — it's a confirmed sample, not a confirmed total.
+
+| Faculty | Course | Merit cut-off (2023/24) | Note |
+|---|---|---:|---|
+| Clinical Sciences | Medicine and Surgery | — | Not covered in sourced documents |
+| Clinical Sciences | Dentistry / Dental Surgery | — | Not covered in sourced documents |
+| Clinical Sciences | Nursing Science | 79.225 | **Confirmed** (College of Health Sciences doc) |
+| Clinical Sciences | Medical Rehabilitation (Physiotherapy/OT) | 73.5 | **Confirmed**, listed as "Medical Rehab" |
+| Clinical Sciences | Pharmacy | — | Not covered in sourced documents |
+| Law | Law | 75.325 | **Confirmed** |
+| Engineering & Technology | Civil Engineering | 70.85 | **Confirmed** — OAU's own faculty is named "Faculty of Technology," not "Engineering & Technology" |
+| Engineering & Technology | Mechanical Engineering | 72.07 | **Confirmed** |
+| Engineering & Technology | Electronic and Electrical Engineering | 70.87 | **Confirmed**, listed as "Electrical/Electronics Engineering" |
+| Engineering & Technology | Chemical Engineering | 68.28 | **Confirmed** |
+| Engineering & Technology | Agricultural and Environmental Engineering | 53.12 | **Corrected name** — real programme is "Agricultural Engineering," no "and Environmental" |
+| Arts | English Language | 64.825 | **Confirmed** |
+| Arts | History | 62.625 | **Confirmed** |
+| Arts | Linguistics and African Languages | 65.725 | **Confirmed**, listed simply as "Linguistics" |
+| Arts | Philosophy | 51.4 | **Confirmed** |
+| Arts | Religious Studies | 62.05 | **Confirmed** |
+| Arts | Dramatic Arts | 65.8 | **Confirmed** |
+| Arts | Music | 51.125 | **Confirmed** |
+| Social & Management Sciences | Economics | 65.63 | **Confirmed** (Faculty of Social Sciences doc) |
+| Social & Management Sciences | Accounting | — | **Open question** — not listed under this faculty's own cut-off document; may sit in a separate Faculty of Administration at OAU, not Social Sciences. Needs verification before seeding. |
+| Social & Management Sciences | Business Administration | — | Same open question as Accounting above |
+| Social & Management Sciences | Political Science | 65.35 | **Confirmed** |
+| Social & Management Sciences | Sociology and Anthropology | 52.53 | **Confirmed** |
+| Science | Chemistry | — | Not covered in sourced documents |
+| Science | Physics | — | Not covered in sourced documents |
+| Science | Microbiology | — | Not covered in sourced documents — still has the two conflicting figures noted previously (170 UTME threshold vs. 234 aggregate) |
+| Science | Zoology | — | Not covered in sourced documents |
+| Science | Mathematics | — | Not covered in sourced documents |
+| Science | Botany | — | Not covered in sourced documents |
+| Science | Geology | — | Not covered in sourced documents |
+| Agriculture | Agricultural Economics | — | Not covered in sourced documents |
+| Agriculture | Animal Sciences | — | Not covered in sourced documents |
+| Agriculture | Crop Production and Protection | — | Not covered in sourced documents |
+| Agriculture | Soil Science and Land Resources Management | — | Not covered in sourced documents |
+| Agriculture | Agricultural Extension and Rural Development | — | Not covered in sourced documents |
+
+**Bonus real OAU programmes found in these documents that aren't in the current 35-course scope** (useful if the scope expands later, or as substitutes if a listed course turns out not to exist): Human Nutrition & Dietetics (Merit 63.925); Aerospace Engineering (76.55), Computer Engineering (73.62), Computer Science With Economics (71.30), Computer Science With Mathematics (73.67), Food Science & Technology (55.90), Materials Science & Engineering (52.52), Information and Communication Technology (65), Information Systems (65), Cyber Security (65), Software Engineering (65) — all Faculty of Technology; French (55.125), German (65.975), Portuguese (53.375), Literature in English (53.975), Yoruba (54.275) — all Faculty of Arts; Demography & Social Statistics (55.05), Entrepreneurship (50.63), Geography (54.83), Mass Communication (69.18), Film Production (51.63), Broadcast Journalism (53.18), Information Science & Media Studies (52.75) — all Faculty of Social Sciences.
+
+**Catchment & ELDS detail (2023/2024, Confirmed)** — full per-state breakdown for the courses above, since OAU (unlike UNILAG) publishes both catchment *and* ELDS per state for some faculties:
+
+*College of Health Sciences:*
+
+| Programme | Merit | Osun | Ogun | Ekiti | Ondo | Oyo | Lagos | ELDS states (cut-off) |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| Medical Rehab | 73.5 | 73.025 | 70.375 | 71.05 | 69.65 | 72.075 | 67.9 | Kogi 70.775 · Kano 72.525 · Kwara 67.775 · Ebonyi 71.1 |
+| Nursing Science | 79.225 | 77.525 | 77.1 | 76 | 76.55 | 76.725 | 74.25 | Kogi 70.2 · Cross River 70.9 · Kwara 70.725 · Ebonyi 73.225 · Benue 70.775 |
+| Human Nutrition & Dietetics *(not in current scope)* | 63.925 | 61.55 | 52.7 | 58.525 | 55.6 | 59.825 | 61.775 | Kwara 56.55 · Plateau 57 · Kano 53.675 |
+
+*Faculty of Law:*
+
+| Merit | Oyo | Osun | Ogun | Ondo | Ekiti | Lagos | ELDS states (cut-off) |
+|---:|---:|---:|---:|---:|---:|---:|---|
+| 75.325 | 73.95 | 74.725 | 73.25 | 73.775 | 73 | 69 | Benue 73.325 · Cross River 59.3 · Ebonyi 67.025 · Kwara 73.8 · Kogi 74.25 · Nasarawa 56.425 · Rivers 64.325 |
+
+*Faculty of Technology* (ELDS is a single flat figure here, not per-state):
+
+| Department | Merit | Ekiti | Lagos | Ogun | Ondo | Osun | Oyo | ELDS (flat) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Civil Engineering | 70.85 | 58.85 | 62.82 | 62.22 | 54.8 | 69.00 | 69.07 | 59.00 |
+| Mechanical Engineering | 72.07 | 62.60 | 54.87 | 66.37 | 53.92 | 70.65 | 66.62 | 56.00 |
+| Electrical/Electronics Engineering | 70.87 | 57.15 | 61.37 | 66.72 | 52.30 | 68.15 | 68.07 | 59.57 |
+| Chemical Engineering | 68.28 | 63.17 | 63.17 | 61.15 | 62.02 | 65.72 | 57.95 | 59.17 |
+| Agricultural Engineering | 53.12 | 50.00 | 50.00 | 50.00 | 50.00 | 50.00 | 50.00 | 50.00 |
+
+*Faculty of Arts* (state order for the catchment columns wasn't visible in the source document — figures shown in source order, **Likely** Ekiti/Lagos/Ogun/Ondo/Osun/Oyo to match the other faculties, not independently confirmed):
+
+| Programme | Merit | Catchment 1 | Catchment 2 | Catchment 3 | Catchment 4 | Catchment 5 | Catchment 6 | ELDS (flat) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Dramatic Arts | 65.8 | 64.375 | 61.925 | 63.4 | 51.525 | 62.85 | 53.275 | 50 |
+| English Language | 64.825 | 63.225 | 60.675 | 56.325 | 56.45 | 58.025 | 59.325 | 50 |
+| History | 62.625 | 57.475 | 54.2 | 60.125 | 50 | 61.325 | 50 | 50 |
+| Linguistics | 65.725 | 65 | 63.7 | 56.9 | 57 | 58.55 | 59.4 | 50 |
+| Music | 51.125 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
+| Philosophy | 51.4 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
+| Religious Studies | 62.05 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
+
+*Faculty of Social Sciences* (ELDS is a single flat figure here too):
+
+| Programme | Merit | Osun | Oyo | Ekiti | Ondo | Lagos | Ogun | ELDS (flat) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Economics | 65.63 | 63.0 | 59.80 | 55.80 | 53.33 | 57.05 | 61.43 | 51.93 |
+| Political Science | 65.35 | 62.38 | 62.93 | 58.35 | 58.15 | 64.15 | 61.15 | 54.50 |
+| Sociology & Anthropology | 52.53 | 50 | 50 | 50 | 50 | 50 | 50 | 50 |
+
+**Data-model implication**: like UNILAG, OAU's catchment cut-off (and, for two of its five faculties, its ELDS cut-off too) is not a single number per course — it varies by state. Same open schema decision as flagged in the UNILAG section applies here.
 
 ---
 
@@ -346,12 +398,13 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 
 ## Before this gets seeded
 
-- [ ] **OAU** — cut-off/formula research was stopped mid-run; only the course list is final.
-- [ ] **UI / OAU catchment & ELDS states** — still the app's original unverified guesses. (UNILAG's catchment states are now Confirmed — see its section above; UNILAG's ELDS status is still unconfirmed.)
-- [ ] **ELDS state list** — the 23-state list traces to a 2023 social-media post, not JAMB/NUC.
+- [ ] **OAU** — Clinical Sciences (partial), Law, Engineering & Technology, Arts (partial), and Social & Management Sciences (partial) now have Confirmed 2023/2024 cut-offs; Science and Agriculture (all 12 courses) plus Medicine/Dentistry/Pharmacy and Accounting/Business Administration remain unsourced. Formula/weighting is still Uncertain. All figures are one cycle old (2023/24, not 2025/26) — re-verify before seeding for the current cycle if a more recent OAU document turns up.
+- [ ] **OAU Accounting / Business Administration faculty placement** — not listed under OAU's own Faculty of Social Sciences cut-off document; may belong to a separate Faculty of Administration. Needs verification before seeding, since the dossier currently files them under "Social & Management Sciences."
+- [ ] **UI catchment & ELDS states** — still the app's original unverified guess. (UNILAG's and OAU's catchment states are now Confirmed — see their sections above; ELDS is Confirmed as a *sample*, not a complete list, for OAU only.)
+- [ ] **ELDS state list** — the national 23-state list traces to a 2023 social-media post, not JAMB/NUC. OAU's own documents confirm real ELDS cut-offs for a smaller, different set of states (Kogi, Kano, Kwara, Ebonyi, Cross River, Benue, Nasarawa, Rivers) — see OAU section — which doesn't fully validate or fully contradict the national 23-state guess, since it's only a sample.
 - [ ] **UI** — two courses ("Agronomy," "Forest Resources Management") don't exist under those names; swapped for real equivalents ("Crop and Horticultural Sciences," "Forest Production and Products"). Confirm this is acceptable.
 - [ ] **UNILAG** — three entries (Religious Studies, European Languages, Actuarial Science and Insurance) are each really two-to-three separate admission tracks with no single combined cut-off. Decide how to model this.
-- [ ] **UNILAG catchment cut-off model** — official source gives a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See UNILAG section above for the full finding and example figures.
+- [ ] **Catchment (and, for OAU, ELDS) cut-off model** — both UNILAG and OAU publish a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course; OAU additionally does this for ELDS in 2 of its 5 sourced faculties. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See the UNILAG and OAU sections above for the full findings and example figures.
 - [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering cut-offs remain genuinely unfound. MBBS admission is suspended for 2026/27.
 - [ ] **FUOYE** — several courses have small (10–20 point) conflicts between two secondary sources on the UTME-floor scale; the aggregate-scale figures are mostly dated 2023.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
