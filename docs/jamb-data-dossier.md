@@ -9,7 +9,7 @@ Backend seed-data specification for the PlaceRight IDSS. The complete 210-course
 
 **Confidence key:** **Confirmed** — read directly off an official university page/PDF. **Likely** — consistent across independent secondary sources, official page unreachable. **Uncertain** — conflicting sources. **Absent** — genuinely doesn't exist at that university (faculty gap, or a course name that turned out not to be real there).
 
-> **Why cut-off scales aren't comparable across universities:** not a data error — it's the exact problem the thesis is about (Ch.1.2). UI, UNILAG, and OAU publish a 0–100 aggregate on their own formula. FUNAAB publishes the raw UTME/JAMB floor (0–400) per course, with no aggregate published at all. FUTA has both a 0–100 aggregate scale and a separate unofficial "estimated competitive JAMB score" floating around. FUOYE has both a UTME floor (0–400) and its own 0–100 aggregate. Every course below states which scale its number is on.
+> **Why cut-off scales aren't comparable across universities:** not a data error — it's the exact problem the thesis is about (Ch.1.2). UI, UNILAG, and OAU publish a 0–100 aggregate on their own formula. FUNAAB publishes the raw UTME/JAMB floor (0–400) per course, with no aggregate published at all — even though FUNAAB's own Confirmed formula computes a 0–100 composite score internally; the per-course cut-offs it publishes are apparently a simpler raw-JAMB screening threshold, not that composite (worth re-checking once the backend actually seeds FUNAAB). FUTA has both a 0–100 aggregate scale and a separate unofficial "estimated competitive JAMB score" floating around. FUOYE has both a UTME floor (0–400) and its own 0–100 aggregate. Every course below states which scale its number is on.
 
 ---
 
@@ -364,7 +364,17 @@ The scoring engine should average the grades of *these* subjects, not the candid
 
 ## Federal University of Agriculture, Abeokuta (FUNAAB · Ogun State)
 
-**Formula** — **Likely**: `50% JAMB (÷8) + 20% O'Level (5-subject grade points × ⅔) + 30% screening`, out of 100. FUNAAB's own portal doesn't publish this weighting anywhere reachable; three independent aggregators converge on it, superseding an earlier "60/40 simple split" claim. Same correction as UNILAG applies to the "5-subject" component: the required combination per the course's stream (science/agriculture courses here mean English, Mathematics, Physics/Agricultural Science, Chemistry, Biology — see UNILAG section above for the general rule), not the candidate's best 5 credits.
+**Formula — Confirmed**, read directly from FUNAAB's own official Help Desk knowledgebase (helpdesk.funaab.edu.ng, Article ID 30, "How Does FUNAAB Calculate Points for UTME Candidates"). This **overturns** the dossier's previous "50% JAMB + 20% O'Level + 30% screening" entry — there is **no Post-UTME/screening component at all**:
+
+`Final Composite Score = O'Level Composite (%) + UTME Composite (%)`, a straight **50:50 split**, out of 100.
+
+- **UTME component (50% max)**: `UTME Score ÷ 8` (max 400÷8 = 50)
+- **O'Level component (50% max)**: sum of grade points for the 5 core required subjects (max 30 points) `× (5/3)` (max 30×5/3 = 50). Grade scale: A1=6, B2=5, B3=4, C4=3, C5=2, C6=1, all others=0.
+- **Required 5 subjects, by stream** (matches the general rule already established for UNILAG/OAU/FUTA, but stated explicitly by FUNAAB itself): **Core Sciences** — English, Mathematics, Physics, Chemistry, Biology. **Management Science** — English, Mathematics, Economics, plus the best 2 relevant subjects.
+- **Two O'Level results (WAEC + NECO)**: the better grade is taken per subject, but **1 point is deducted** from the total.
+- **Agriculture in lieu of Biology**: accepted for eligibility, but the Agriculture grade itself does **not** count toward O'Level points — a genuine edge case worth handling explicitly in the scoring engine, not silently substituting it in.
+
+Confidence upgraded from Likely to **Confirmed** — this is the only one of the six universities' formulas read directly off the institution's own page rather than inferred from aggregator convergence.
 
 All 35 cut-offs confirmed directly from FUNAAB's own live 2026/27 admission portal.
 
@@ -481,7 +491,7 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 - [ ] **FUTA O'Level requirements by school** — now documented (see FUTA section) and should feed `AdmissionRequirement.requiredOLevelSubjects` directly once seeding begins.
 - [ ] **FUOYE** — several courses have small (10–20 point) conflicts between two secondary sources on the UTME-floor scale; the aggregate-scale figures are mostly dated 2023.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
-- [ ] **O'Level scoring component (UNILAG, OAU, FUTA, FUNAAB, FUOYE)** — corrected from "best 5 credits" to "the course's required subject combination per stream" (science/arts/commercial). Confirm the scoring engine implementation reads from `AdmissionRequirement.requiredOLevelSubjects` per course rather than picking a candidate's top 5 grades. Note the grade-point scale is **university-specific, not universal** — UNILAG uses A1=4.0…C6=2.0, OAU uses A1=10…C6=5 (both ÷5 subjects), FUOYE uses A1=6…C6=1 — don't hardcode one scale across universities.
+- [ ] **O'Level scoring component (UNILAG, OAU, FUTA, FUNAAB, FUOYE)** — corrected from "best 5 credits" to "the course's required subject combination per stream" (science/arts/commercial). Confirm the scoring engine implementation reads from `AdmissionRequirement.requiredOLevelSubjects` per course rather than picking a candidate's top 5 grades. Note the grade-point scale is **university-specific, not universal** — UNILAG uses A1=4.0…C6=2.0 (÷5, averaged), OAU uses A1=10…C6=5 (÷5), FUOYE uses A1=6…C6=1, FUNAAB uses A1=6…B2=5…C6=1 summed then ×(5/3) (Confirmed — see FUNAAB section) — don't hardcode one scale across universities. FUNAAB also has two edge cases worth implementing explicitly: a 1-point deduction when a candidate presents two O'Level sittings/boards, and Agriculture-in-lieu-of-Biology counting for eligibility but not contributing O'Level points.
 
 ---
 
