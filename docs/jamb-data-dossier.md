@@ -296,9 +296,25 @@ The scoring engine should average the grades of *these* subjects, not the candid
 
 ## Federal University of Technology, Akure (FUTA · Ondo State)
 
-**Formula** — **Likely**: `75% JAMB (÷400×75) + 25% O'Level` (5 subjects, grade-point average). FUTA runs no written Post-UTME anymore — screening is JAMB score + O'Level via CAPS only. The "JAMB÷8 + Post-UTME÷2" formula still repeated by aggregator sites is a stale, pre-CAPS-era formula. Two incompatible cut-off scales circulate (a 0–100 aggregate, and an unofficial "estimated competitive JAMB score" out of 400) — both shown since neither is officially confirmed. As with UNILAG, the 5 O'Level subjects are the course's required combination for the candidate's stream (science/arts/commercial), not the candidate's best 5 credits overall — relevant here since FUTA is almost entirely Science/Engineering/Agriculture courses, so English/Mathematics/Physics/Chemistry/Biology applies to nearly the whole catalog.
+**Formula** — **Likely**: `75% JAMB (÷400×75) + 25% O'Level` (5 subjects, grade-point average). FUTA runs no written Post-UTME anymore — screening is JAMB score + O'Level via CAPS only, now cross-confirmed by a second source (Campusdesk, "FUTA Cut Off Mark 2026/2027," 18 Aug 2026 — claims to be verified against FUTA's own admission portal, but is still an aggregator page, not futa.edu.ng itself, so stays **Likely** not **Confirmed**): *"FUTA does not conduct a traditional written Post-UTME examination... Admission is based on an aggregate of your JAMB score and O'level results."* The "JAMB÷8 + Post-UTME÷2" formula still repeated by other aggregator sites is a stale, pre-CAPS-era formula. Two incompatible cut-off scales circulate (a 0–100 aggregate, and an unofficial "estimated competitive JAMB score" out of 400) — both shown since neither is officially confirmed. As with UNILAG, the 5 O'Level subjects are the course's required combination for the candidate's stream (science/arts/commercial), not the candidate's best 5 credits overall — relevant here since FUTA is almost entirely Science/Engineering/Agriculture courses, so English/Mathematics/Physics/Chemistry/Biology applies to nearly the whole catalog.
 
-"Financial Management" was replaced with "Procurement Management Technology" (confirmed real; the former doesn't exist at FUTA).
+**General JAMB floor — Likely, new data point**: 180 and above (lower than UI/UNILAG/OAU's 200 floor). This is FUTA's eligibility threshold to sit the Post-UTME *screening*, distinct from the per-department aggregate cut-offs in the table below.
+
+**FUTA's real structure is 7 "Schools," not "Faculties," and doesn't map cleanly onto this dossier's faculty categories.** Per the Campusdesk source, FUTA actually runs: School of Agriculture and Agricultural Technology (SAAT), School of Engineering and Engineering Technology (SEET), School of Earth and Mineral Sciences (SEMS), School of Environmental Technology (SET — includes Architecture, not Engineering), School of Computing (SOC — separate from Science), School of Sciences (SOS), and School of Health and Health Technology (SHHT). That's 7 real schools, none of them named "Law," "Arts," or "Social & Management Sciences" — consistent with this dossier's existing note that FUTA has no Law or Arts faculty, but **no school resembling "Social & Management Sciences" appears in this source at all**, which raises an open question about the five courses this dossier currently files there (Business Information Technology, Entrepreneurship Management Technology, Logistics and Transport Technology, Project Management Technology, Procurement Management Technology) — they may sit under a school this source simply didn't cover (e.g. a School of Logistics/Innovation/Management Technology), not necessarily nonexistent. Needs verification before seeding.
+
+**O'Level subject requirements by school (Likely, new data)** — useful directly for `AdmissionRequirement.requiredOLevelSubjects`:
+- **SEET (Engineering) & SOC (Computing)**: English, Mathematics, Physics, Chemistry, + 1 other Science subject
+- **SOS (Sciences)**: English, Mathematics, Physics, Chemistry, + Biology or Agricultural Science (department-dependent)
+- **SAAT (Agriculture)**: English, Mathematics, Biology or Agricultural Science, Chemistry, + Physics or 1 other Science subject
+- **SET (Environmental Technology)**: English, Mathematics, Physics, + 2 other relevant subjects (Geography, Fine Arts, or Technical Drawing depending on course)
+- **SEMS (Earth & Mineral Sciences)**: English, Mathematics, Physics, + Chemistry or Geography
+- **SHHT (Health Technology)**: English, Mathematics, Biology, Chemistry, Physics
+
+**Two figures conflict with this dossier's existing data** — flagging both, not resolving in either direction:
+- **Forestry and Wood Technology**: this dossier has 47.5; the new source gives **57.5**.
+- **Chemical Engineering and Mechatronics Engineering** — both entirely absent from this newer, apparently more complete departmental list (every other SEET department is covered). This dossier previously listed them as "no figure found despite repeated search" / "no figure found; department confirmed to exist" — their absence here is suggestive that they may not currently run as standalone FUTA departments, but isn't proof either way.
+
+"Financial Management" was replaced with "Procurement Management Technology" (confirmed real; the former doesn't exist at FUTA) — though see the "Social & Management Sciences" open question above, since neither appears in the newer source.
 
 | Faculty | Course | Aggregate (0–100) | Est. JAMB (0–400) | Note |
 |---|---|---:|---:|---|
@@ -307,16 +323,16 @@ The scoring engine should average the grades of *these* subjects, not the candid
 | Clinical Sciences | Human Anatomy | 59.5 | ~260 | |
 | Clinical Sciences | Physiology | 57.25 | 230 | |
 | Law | — | — | — | No Law faculty exists |
-| Engineering & Technology | Civil Engineering | 71.87 | 235 | |
+| Engineering & Technology | Civil Engineering | 71.87 | 235 | **Corrected name** — real programme is "Civil and Environmental Engineering" |
 | Engineering & Technology | Mechanical Engineering | 73.75 | 240 | |
 | Engineering & Technology | Electrical/Electronics Engineering | 74.37 | 245 | |
-| Engineering & Technology | Chemical Engineering | — | — | No figure found despite repeated search |
-| Engineering & Technology | Agricultural Engineering | 55.12 | 210 | |
+| Engineering & Technology | Chemical Engineering | — | — | Absent from the newer, more complete departmental list too — see finding above |
+| Engineering & Technology | Agricultural Engineering | 55.12 | 210 | **Corrected name** — real programme is "Agricultural and Environmental Engineering" |
 | Engineering & Technology | Computer Engineering | 69.62 | 250 | Law/Arts-shortfall reallocation |
 | Engineering & Technology | Industrial and Production Engineering | 47.5 | — | Law/Arts-shortfall reallocation |
 | Engineering & Technology | Metallurgical and Materials Engineering | 54.87 | — | Law/Arts-shortfall reallocation |
 | Engineering & Technology | Mining Engineering | 54.75 | — | Law/Arts-shortfall reallocation |
-| Engineering & Technology | Mechatronics Engineering | — | — | No figure found; department confirmed to exist |
+| Engineering & Technology | Mechatronics Engineering | — | — | Absent from the newer, more complete departmental list too — see finding above |
 | Arts | — | — | — | No Arts/Humanities faculty exists |
 | Social & Management Sciences | Business Information Technology | — | 210 | Estimate only |
 | Social & Management Sciences | Entrepreneurship Management Technology | — | 190 | Estimate only |
@@ -336,11 +352,13 @@ The scoring engine should average the grades of *these* subjects, not the candid
 | Agriculture | Animal Production and Health | 55.37 | 200 | |
 | Agriculture | Crop, Soil and Pest Management | 47.5 | 195 | |
 | Agriculture | Food Science and Technology | 58.12 | 215 | |
-| Agriculture | Forestry and Wood Technology | 47.5 | 190 | |
+| Agriculture | Forestry and Wood Technology | 47.5 | 190 | **Conflict** — newer source gives 57.5 instead; see finding above |
 | Agriculture | Agricultural Extension and Communication Technology | 47.5 | 190 | |
 | Agriculture | Agricultural and Resource Economics | 47.5 | — | Law/Arts-shortfall reallocation |
 
-**Catchment** — **Uncertain**: found Ondo, Ekiti, Osun, Oyo, Lagos (Lagos replacing the app's current Ogun/Edo guess), aggregator-only.
+**Bonus real FUTA programmes found in the newer source that aren't in the current 35-course scope** (School of Earth and Mineral Sciences, School of Environmental Technology, and School of Computing are barely represented in the current scope, so most of these are from those three schools): Applied Geophysics (47.5), Applied Geology (47.5), Marine Science and Technology (47.5), Meteorology (47.5), Remote Sensing and GIS (47.5) — all SEMS; Architecture (72.87), Building (56.62), Estate Management (47.5), Industrial Design (53.25), Quantity Surveying (57), Surveying and Geoinformatics (64.25), Urban and Regional Planning (52.87) — all SET; Information and Communication Technology (49.75, SEET — distinct from SOC's own "Information Technology" at 63.75); Information Systems (63.75), Software Engineering (63.75) — SOC; Ecotourism and Wildlife Management (47.5), Fisheries and Aquaculture Technology (47.5) — SAAT; Biomedical Technology (47.5) — SHHT.
+
+**Catchment** — **Uncertain**: found Ondo, Ekiti, Osun, Oyo, Lagos (Lagos replacing the app's current Ogun/Edo guess), aggregator-only. Not addressed by the newer source either.
 
 ---
 
@@ -457,7 +475,10 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 - [ ] **UI** — two courses ("Agronomy," "Forest Resources Management") don't exist under those names; swapped for real equivalents ("Crop and Horticultural Sciences," "Forest Production and Products"). Confirm this is acceptable.
 - [ ] **UNILAG** — three entries (Religious Studies, European Languages, Actuarial Science and Insurance) are each really two-to-three separate admission tracks with no single combined cut-off. Decide how to model this.
 - [ ] **Catchment (and, for OAU, ELDS) cut-off model** — both UNILAG and OAU publish a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course; OAU additionally does this for ELDS in 2 of its 5 sourced faculties. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See the UNILAG and OAU sections above for the full findings and example figures.
-- [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering cut-offs remain genuinely unfound. MBBS admission is suspended for 2026/27.
+- [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering are absent from two independent sources now, not just unfound — worth treating as likely nonexistent rather than "not yet located." MBBS admission is suspended for 2026/27. Forestry and Wood Technology has a genuine conflict (47.5 vs. 57.5) between sources.
+- [ ] **FUTA "Social & Management Sciences" faculty** — doesn't appear at all in FUTA's real 7-school structure (SAAT, SEET, SEMS, SET, SOC, SOS, SHHT) per a newer, more complete source. The 5 courses this dossier files there (Business Information Technology, Entrepreneurship Management Technology, Logistics and Transport Technology, Project Management Technology, Procurement Management Technology) may belong to an uncovered school rather than being invented — needs verification, similar to the OAU Accounting/Business Administration question that was resolved earlier.
+- [ ] **FUTA general JAMB floor** — newly found at 180 (vs. 200 at UI/UNILAG/OAU) — only Likely confidence, not yet cross-checked against futa.edu.ng directly.
+- [ ] **FUTA O'Level requirements by school** — now documented (see FUTA section) and should feed `AdmissionRequirement.requiredOLevelSubjects` directly once seeding begins.
 - [ ] **FUOYE** — several courses have small (10–20 point) conflicts between two secondary sources on the UTME-floor scale; the aggregate-scale figures are mostly dated 2023.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
 - [ ] **O'Level scoring component (UNILAG, OAU, FUTA, FUNAAB, FUOYE)** — corrected from "best 5 credits" to "the course's required subject combination per stream" (science/arts/commercial). Confirm the scoring engine implementation reads from `AdmissionRequirement.requiredOLevelSubjects` per course rather than picking a candidate's top 5 grades. Note the grade-point scale is **university-specific, not universal** — UNILAG uses A1=4.0…C6=2.0, OAU uses A1=10…C6=5 (both ÷5 subjects), FUOYE uses A1=6…C6=1 — don't hardcode one scale across universities.
