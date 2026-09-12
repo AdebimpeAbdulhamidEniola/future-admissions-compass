@@ -79,6 +79,8 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 
 ## University of Lagos (UNILAG · Lagos State)
 
+**Cut-off figures below are now Confirmed** — cross-checked against UNILAG's own official publication, ["UNILAG Releases 2025/2026 UTME Merit Cut-Off Marks"](https://unilag.edu.ng/unilag-releases-2025-2026-utme-merit-cut-off-marks/) (unilag.edu.ng, 3 October 2025). Every Merit figure already in this dossier matches that source exactly. The scoring **formula/weighting** itself is still **Likely** — the official page publishes cut-off marks only, not the weighting breakdown.
+
 **Formula** — **Likely**: `50% UTME (÷8) + 30% Post-UTME (÷2) + 20% O'Level` (5 subjects, A1=4.0…C6=2.0, averaged), out of 100. This corrects an earlier 60/40/0 guess — O'Level does count. Candidates below 12% in Post-UTME screening are disqualified regardless of JAMB score.
 
 **Correction — which 5 O'Level subjects count**: earlier drafts of this dossier assumed "best 5 credits" (whichever 5 subjects score highest, regardless of relevance). That's wrong — the 5 subjects are the course's own *required* combination for the candidate's stream, i.e. the same list already captured per-course in `AdmissionRequirement.requiredOLevelSubjects`, not an independently-chosen best-5. Concretely:
@@ -97,7 +99,7 @@ The scoring engine should average the grades of *these* subjects, not the candid
 | Clinical Sciences | Medical Laboratory Science | 74.375 | |
 | Clinical Sciences | Pharmacy | 76.4 | Agriculture-shortfall reallocation |
 | Law | Law | 78.225 | Only 1 real program |
-| Engineering & Technology | Civil and Environmental Engineering | 75.625 | |
+| Engineering & Technology | Civil Engineering | 75.625 | **Corrected name** — official source lists this as "Civil Engineering," not "Civil and Environmental Engineering"; no combined Civil/Environmental program exists at UNILAG |
 | Engineering & Technology | Mechanical Engineering | 78.525 | |
 | Engineering & Technology | Electrical and Electronics Engineering | 79.5 | |
 | Engineering & Technology | Chemical Engineering | 72.8 | |
@@ -126,7 +128,19 @@ The scoring engine should average the grades of *these* subjects, not the candid
 | Science | Zoology | 57.25 | Agriculture-shortfall reallocation |
 | Science | Marine Sciences / Marine Biology | 55.45 | Closest real substitute for Agriculture |
 
-**Catchment/ELDS** — **Uncertain**: app currently guesses Lagos, Ogun, Oyo, Osun, Ondo, Ekiti; not yet independently verified.
+**Catchment states — Confirmed**: the official cut-off publication lists per-course catchment cut-offs for exactly six states — **Ekiti, Lagos, Ogun, Ondo, Osun, Oyo** — matching the app's existing guess. ELDS is not mentioned anywhere on the page (no ELDS column, no ELDS states, no ELDS cut-offs) — UNILAG's ELDS quota/state-list treatment remains unconfirmed and should stay on the national ELDS list from the "National policy" section above until a UNILAG-specific source turns up.
+
+**Data-model finding — catchment cut-off is not a single number per course.** The official source publishes a *separate* catchment cut-off for **each of the six catchment states**, per course, and they differ meaningfully — e.g. Medicine and Surgery: Merit 85.025, but Ekiti 79.975 / Lagos 79.75 / Ogun 83.8 / Ondo 81.325 / Osun 81.775 / Oyo 81.575. This dossier and the current domain model (`Course.catchmentCutOff` as a single value) assume one catchment cut-off per course — that's a simplification of what UNILAG actually publishes. Before seeding, decide whether to: (a) keep the single-value simplification (e.g. take the lowest or an average of the six state figures), or (b) extend the schema to store a cut-off per catchment state. Representative per-state catchment cut-offs, for reference:
+
+| Course | Merit | Ekiti | Lagos | Ogun | Ondo | Osun | Oyo |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Medicine and Surgery | 85.025 | 79.975 | 79.75 | 83.8 | 81.325 | 81.775 | 81.575 |
+| Law | 78.225 | 73.625 | 75.9 | 76.55 | 75.75 | 76.35 | 74.525 |
+| Computer Science | 83.425 | 80.125 | 79.6 | 82.025 | 77.5 | 79.2 | 78.1 |
+| Accounting | 75.7 | 69.475 | 71.4 | 73.825 | 68.8 | 72.325 | 71 |
+| Civil Engineering | 75.625 | 65.525 | 74.5 | 72.075 | 65.575 | 72.375 | 71.05 |
+
+*Source: [unilag.edu.ng, 3 October 2025](https://unilag.edu.ng/unilag-releases-2025-2026-utme-merit-cut-off-marks/) — full table covers all ~78 UNILAG programs across 9 faculties (Arts, College of Medicine, Education, Engineering, Environmental Sciences, Law, Management Sciences, Pharmacy, Science, Social Sciences), not just the 28 in this dossier's 35-course-per-university scope.*
 
 ---
 
@@ -333,10 +347,11 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 ## Before this gets seeded
 
 - [ ] **OAU** — cut-off/formula research was stopped mid-run; only the course list is final.
-- [ ] **UI / UNILAG / OAU catchment & ELDS states** — still the app's original unverified guesses.
+- [ ] **UI / OAU catchment & ELDS states** — still the app's original unverified guesses. (UNILAG's catchment states are now Confirmed — see its section above; UNILAG's ELDS status is still unconfirmed.)
 - [ ] **ELDS state list** — the 23-state list traces to a 2023 social-media post, not JAMB/NUC.
 - [ ] **UI** — two courses ("Agronomy," "Forest Resources Management") don't exist under those names; swapped for real equivalents ("Crop and Horticultural Sciences," "Forest Production and Products"). Confirm this is acceptable.
 - [ ] **UNILAG** — three entries (Religious Studies, European Languages, Actuarial Science and Insurance) are each really two-to-three separate admission tracks with no single combined cut-off. Decide how to model this.
+- [ ] **UNILAG catchment cut-off model** — official source gives a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See UNILAG section above for the full finding and example figures.
 - [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering cut-offs remain genuinely unfound. MBBS admission is suspended for 2026/27.
 - [ ] **FUOYE** — several courses have small (10–20 point) conflicts between two secondary sources on the UTME-floor scale; the aggregate-scale figures are mostly dated 2023.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
