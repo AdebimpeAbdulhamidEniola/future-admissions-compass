@@ -5,7 +5,7 @@ Backend seed-data specification for the PlaceRight IDSS. The complete 210-course
 - **Compiled:** 2026-08-13
 - **Target cycle:** 2025/26–2026/27 UTME
 - **Scope:** 210 courses · 35/university · 7 faculties · 6 universities
-- **Status:** cut-offs & formulas complete for all 6 universities · UI, OAU, and FUNAAB cut-offs/catchment (and, for FUNAAB, formula too) are now Confirmed off official university pages · UI's and OAU's figures are one cycle old (2024/25 and 2023/24 respectively, not 2025/26)
+- **Status:** cut-offs & formulas complete for all 6 universities · UI, OAU, and FUNAAB cut-offs/catchment (and, for FUNAAB, formula too) are now Confirmed off official university pages · UI's and OAU's figures are one cycle old (2024/25 and 2023/24 respectively, not 2025/26) · FUOYE's UTME floors are largely cross-confirmed against its own current-cycle admission-requirements document, with an open question over whether its Law faculty exists at all
 
 **Confidence key:** **Confirmed** — read directly off an official university page/PDF. **Likely** — consistent across independent secondary sources, official page unreachable. **Uncertain** — conflicting sources. **Absent** — genuinely doesn't exist at that university (faculty gap, or a course name that turned out not to be real there).
 
@@ -436,43 +436,55 @@ All 35 cut-offs confirmed directly from FUNAAB's own live 2026/27 admission port
 
 Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this dual scale is exactly what caused the earlier Law 150/220/260 conflict.
 
+**UTME floors upgraded — cross-confirmed against FUOYE's own Admission Requirements document (2026/2027 cycle, the current target cycle).** This is a different kind of source than the cut-off-marks blog posts used elsewhere: it's FUOYE's own per-course UTME and O'Level subject-combination requirements list, with a "MIN. SCORE" (JAMB/UTME floor) column, covering essentially the whole university across 14 faculties/colleges. It resolves several of this table's previously-flagged "minor conflict" UTME floors in favor of one specific value (shown below), and surfaces two new conflicts. **This document is also the authoritative source for `AdmissionRequirement.requiredUtmeSubjects`/`requiredOLevelSubjects` per course** — the exact Major/Minor subject lists it gives are far more granular than this dossier's general science/arts/commercial rule (e.g. Water Resources Management and Agrometeorology's UTME major is just Mathematics/Chemistry/Physics, no Biology, unlike most other Agriculture courses) — reference the source document directly when seeding `AdmissionRequirement` rather than relying on the general rule alone.
+
+**Two new conflicts surfaced**: Linguistics and Languages (this dossier has 180; the new source gives 170) and Religious Studies (this dossier has 160; the new source gives 150).
+
+**Open question — does FUOYE have a Law faculty at all?** The new admission-requirements document is exhaustive across 14 faculties/colleges (Agriculture, Arts, Basic Medical Sciences, Communication and Media Studies, Computer and Information Engineering, Computing, Education, Engineering, Environmental Design and Management, Life Sciences, Management Sciences, College of Medicine, Pharmacy, Physical Sciences, Social Sciences) and **never mentions Law at all**. This dossier's existing Law entry (150, "only 1 real program") was already the most uncertain figure in the whole FUOYE section (with a prior 150/220/260 conflict) — its absence from this otherwise-comprehensive document raises real doubt about whether FUOYE currently runs a Law programme via UTME admission. Needs direct verification before seeding, rather than assuming Law is real.
+
+**Two significant new real courses found**: **Medicine and Surgery** (MIN. SCORE 280, its own "College of Medicine," not part of "Basic Medical Sciences") and **Doctor of Pharmacy** (MIN. SCORE 230, "Faculty of Pharmacy") — neither is in the current 35-course scope, and Medicine and Surgery in particular is a major omission given it's a flagship course at every other university in this dossier.
+
+**FUOYE's real faculty structure is finer-grained than this dossier's assumed categories**: "Science" is really two faculties — **Life Sciences** (Biochemistry, Microbiology, Plant Science and Biotechnology, Animal and Environmental Biology, Environmental Management and Toxicology) and **Physical Sciences** (Chemistry, Industrial Chemistry, Geology, Geophysics, Mathematics, Statistics, Physics). "Social & Management Sciences" is really two faculties too — **Social Sciences** (Political Science, Economics and Development Studies, plus bonus Criminology and Security Studies, Demography and Social Statistics, Peace and Conflict Studies, Psychology, Sociology) and **Management Sciences** (Accounting, Business Administration, plus bonus Finance, Public Administration). "Engineering & Technology" is really two faculties — **Engineering** (Agricultural, Civil, Electrical and Electronics, Mechanical, Mechatronics, Materials and Metallurgical) and **Computer and Information Engineering** (Computer Engineering, System Engineering, Information and Communication Engineering) — plus a wholly separate **Faculty of Computing** (Computer Science, Cyber Security, Software Engineering, Data Science and Analytic). There's also a **Faculty of Communication and Media Studies** (Mass Communication, Broadcasting, Public Relations, Journalism and Media Studies), a full **Faculty of Education** (~16 departments), and a **Faculty of Environmental Design and Management** (Architecture, Building, Estate Management, Quantity Surveying, Surveying and Geoinformatics, Urban and Regional Planning) — none of which this dossier's current 35-course FUOYE scope represents at all.
+
 | Faculty | Course | UTME floor (0–400) | Aggregate (0–100) | Note |
 |---|---|---:|---:|---|
-| Clinical Sciences | Anatomy | 180 | 63.3 | |
-| Clinical Sciences | Physiology | 180 | 61.5 | |
-| Clinical Sciences | Nursing Science | 220–240 | 74.6 | Sources conflict on UTME figure |
-| Clinical Sciences | Medical Laboratory Science | 220–230 | 72.3 | Minor conflict |
-| Clinical Sciences | Radiography and Radiation Science | 200–220 | 71.3 | Minor conflict |
-| Law | Law | 150 | — | Only 1 real program; 150 best-corroborated (260 likely confused with Medicine) |
-| Engineering & Technology | Civil Engineering | 190–200 | 65.0 | Minor conflict |
-| Engineering & Technology | Mechanical Engineering | 180 | 65.0 | Confirmed |
-| Engineering & Technology | Electrical and Electronic Engineering | 190–200 | 63.3 | Minor conflict |
-| Engineering & Technology | Computer Engineering | 180–200 | 64.3 | Minor conflict |
-| Engineering & Technology | Mechatronics Engineering | 180–200 | 65.0 | Minor conflict |
-| Arts | English and Literary Studies | 180 | 66.3 | |
-| Arts | History and International Studies | 180 | 67.8 | |
-| Arts | Linguistics and Languages | 180 | 65.3 | |
-| Arts | Philosophy | 160 | 57.2 | Aggregate is a 2023 figure |
-| Arts | Religious Studies | 160 | 55.0 | Aggregate is a 2023 figure |
-| Social & Management Sciences | Economics | 180 | 63.75 | Listed as "Economics and Development Studies" |
-| Social & Management Sciences | Political Science | 180 | 62.5 | Confirmed |
-| Social & Management Sciences | Accounting | 200 | 65.15 | Aggregate is a 2023 figure |
-| Social & Management Sciences | Business Administration | 200 | 65.45 | Aggregate is a 2023 figure |
-| Social & Management Sciences | Mass Communication | 200–220 | 66.3 | Minor conflict |
-| Science | Computer Science | 200 | 61.95 | UTME confirmed; aggregate is a 2023 figure |
-| Science | Biochemistry | 180 | 64.4 | Confirmed |
-| Science | Microbiology | 180 | 65.75 | |
-| Science | Physics | 150–160 | 56.5 | Minor conflict |
-| Science | Chemistry | 150–160 | 62.5 | Minor conflict |
-| Science | Mathematics | 150–160 | 55.5 | Minor conflict; Law-shortfall reallocation |
-| Science | Statistics | 150–160 | 54.5 | Minor conflict; Law-shortfall reallocation |
-| Agriculture | Animal Production and Health | 150 | 57.7 | UTME confirmed; aggregate is a 2023 figure |
-| Agriculture | Crop Science and Horticulture | 150 | 57.65 | Aggregate is a 2023 figure |
-| Agriculture | Agricultural Economics and Extension | 150 | 61.15 | Aggregate is a 2023 figure |
-| Agriculture | Soil Science and Land Resources Management | 150 | 56.65 | Aggregate is a 2023 figure |
-| Agriculture | Fisheries and Aquaculture | 150 | 57.15 | Aggregate is a 2023 figure |
-| Agriculture | Food Science and Technology | 180 | 60.9 | Aggregate is a 2023 figure; Law-shortfall reallocation |
-| Agriculture | Water Resources Management and Agrometeorology | 150 | 57.3 | Aggregate is a 2023 figure; Law-shortfall reallocation |
+| Clinical Sciences | Anatomy | 180 | 63.3 | **Confirmed** by new source |
+| Clinical Sciences | Physiology | 180 | 61.5 | **Confirmed** by new source |
+| Clinical Sciences | Nursing Science | 240 | 74.6 | Resolved (new source): 240, not 220–240 |
+| Clinical Sciences | Medical Laboratory Science | 230 | 72.3 | Resolved (new source): 230, not 220–230 |
+| Clinical Sciences | Radiography and Radiation Science | 220 | 71.3 | Resolved (new source): 220, not 200–220 |
+| Law | Law | 150 | — | **Open question** — absent entirely from the new, otherwise-exhaustive admission-requirements document; see finding above |
+| Engineering & Technology | Civil Engineering | 190 | 65.0 | Resolved (new source): 190, not 190–200 |
+| Engineering & Technology | Mechanical Engineering | 180 | 65.0 | **Confirmed** by new source |
+| Engineering & Technology | Electrical and Electronic Engineering | 190 | 63.3 | Resolved (new source): 190, not 190–200 |
+| Engineering & Technology | Computer Engineering | 180 | 64.3 | Resolved (new source): 180, not 180–200 |
+| Engineering & Technology | Mechatronics Engineering | 180 | 65.0 | Resolved (new source): 180, not 180–200 |
+| Arts | English and Literary Studies | 180 | 66.3 | **Confirmed** by new source |
+| Arts | History and International Studies | 180 | 67.8 | **Confirmed** by new source |
+| Arts | Linguistics and Languages | 180 | 65.3 | **New conflict** — new source gives 170 |
+| Arts | Philosophy | 160 | 57.2 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Arts | Religious Studies | 160 | 55.0 | **New conflict** — new source gives 150; aggregate is a 2023 figure |
+| Social & Management Sciences | Economics | 180 | 63.75 | **Confirmed** by new source, listed as "Economics and Development Studies" |
+| Social & Management Sciences | Political Science | 180 | 62.5 | **Confirmed** by new source |
+| Social & Management Sciences | Accounting | 200 | 65.15 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Social & Management Sciences | Business Administration | 200 | 65.45 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Social & Management Sciences | Mass Communication | 200 | 66.3 | Resolved (new source): 200, not 200–220 |
+| Science | Computer Science | 200 | 61.95 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Science | Biochemistry | 180 | 64.4 | **Confirmed** by new source |
+| Science | Microbiology | 180 | 65.75 | **Confirmed** by new source |
+| Science | Physics | 150 | 56.5 | Resolved (new source): 150, not 150–160 |
+| Science | Chemistry | 150 | 62.5 | Resolved (new source): 150, not 150–160 |
+| Science | Mathematics | 150 | 55.5 | Resolved (new source): 150, not 150–160; Law-shortfall reallocation |
+| Science | Statistics | 150 | 54.5 | Resolved (new source): 150, not 150–160; Law-shortfall reallocation |
+| Agriculture | Animal Production and Health | 150 | 57.7 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Agriculture | Crop Science and Horticulture | 150 | 57.65 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Agriculture | Agricultural Economics and Extension | 150 | 61.15 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Agriculture | Soil Science and Land Resources Management | 150 | 56.65 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Agriculture | Fisheries and Aquaculture | 150 | 57.15 | **Confirmed** by new source; aggregate is a 2023 figure |
+| Agriculture | Food Science and Technology | 180 | 60.9 | **Confirmed** by new source; aggregate is a 2023 figure; Law-shortfall reallocation |
+| Agriculture | Water Resources Management and Agrometeorology | 150 | 57.3 | **Confirmed** by new source; aggregate is a 2023 figure; Law-shortfall reallocation |
+
+**Bonus real FUOYE programmes found in the new admission-requirements source** (from the finer-grained faculty structure described above): Medicine and Surgery (280, College of Medicine) and Doctor of Pharmacy (230, Faculty of Pharmacy) — both major omissions from the current scope; System Engineering (150) and Information and Communication Engineering (150) — Computer and Information Engineering; Cyber Security (180), Software Engineering (160), Data Science and Analytic (150) — Computing; Agricultural Engineering (150), Materials and Metallurgical Engineering (150) — Engineering; Plant Science and Biotechnology (150), Animal and Environmental Biology (150), Environmental Management and Toxicology (150) — Life Sciences; Industrial Chemistry (150), Geology (150), Geophysics (150) — Physical Sciences; Finance (180), Public Administration (170) — Management Sciences; Criminology and Security Studies (210), Demography and Social Statistics (150), Peace and Conflict Studies (150), Psychology (150), Sociology (160) — Social Sciences; Mass Communication's siblings — Broadcasting (160), Public Relations (160), Journalism and Media Studies (160); Architecture (170), Building (150), Estate Management (150), Quantity Surveying (150), Surveying and Geoinformatics (150), Urban and Regional Planning — Environmental Design and Management; and an entire Faculty of Education (~16 departments, mostly at 150).
 
 **Catchment vs. ELDS** — **Likely**: catchment is Ekiti, Ondo, Osun, Oyo. Kwara and Kogi, which the app currently lists as catchment, actually belong on FUOYE's ELDS list instead.
 
@@ -480,7 +492,7 @@ Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this du
 
 ## Faculty-shortfall pattern across all six
 
-Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely absent (FUTA, FUNAAB) — never 5 courses. Arts is absent at FUTA and FUNAAB. Agriculture is absent at UNILAG. Every shortfall was absorbed by a faculty confirmed to have real surplus departments at that specific university, never invented.
+Law is a single real program everywhere (UI, UNILAG, OAU) or entirely absent (FUTA, FUNAAB) — never 5 courses. FUOYE's Law status is now an open question — see the FUOYE section, where a comprehensive 14-faculty admission-requirements document never mentions Law at all. Arts is absent at FUTA and FUNAAB. Agriculture is absent at UNILAG. Every shortfall was absorbed by a faculty confirmed to have real surplus departments at that specific university, never invented.
 
 ---
 
@@ -498,7 +510,9 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 - [ ] **FUTA "Social & Management Sciences" faculty** — doesn't appear at all in FUTA's real 7-school structure (SAAT, SEET, SEMS, SET, SOC, SOS, SHHT) per a newer, more complete source. The 5 courses this dossier files there (Business Information Technology, Entrepreneurship Management Technology, Logistics and Transport Technology, Project Management Technology, Procurement Management Technology) may belong to an uncovered school rather than being invented — needs verification, similar to the OAU Accounting/Business Administration question that was resolved earlier.
 - [ ] **FUTA general JAMB floor** — newly found at 180 (vs. 200 at UI/UNILAG/OAU) — only Likely confidence, not yet cross-checked against futa.edu.ng directly.
 - [ ] **FUTA O'Level requirements by school** — now documented (see FUTA section) and should feed `AdmissionRequirement.requiredOLevelSubjects` directly once seeding begins.
-- [ ] **FUOYE** — several courses have small (10–20 point) conflicts between two secondary sources on the UTME-floor scale; the aggregate-scale figures are mostly dated 2023.
+- [ ] **FUOYE** — most previously-flagged UTME-floor conflicts are now resolved against FUOYE's own 2026/2027 admission-requirements document (see FUOYE section); two new conflicts surfaced (Linguistics and Languages, Religious Studies); the aggregate-scale figures are mostly still dated 2023.
+- [ ] **FUOYE Law faculty — open question.** Absent entirely from the otherwise-exhaustive 14-faculty/college admission-requirements document. This dossier's existing Law entry (150) was already its most uncertain FUOYE figure (prior 150/220/260 conflict) — verify directly whether FUOYE currently admits into Law via UTME before seeding.
+- [ ] **FUOYE `AdmissionRequirement` seeding** — FUOYE's own admission-requirements document gives exact per-course UTME major/minor and O'Level major/minor subject combinations, more granular than this dossier's general science/arts/commercial rule. Use it directly as the seed source for `AdmissionRequirement.requiredUtmeSubjects`/`optionalUtmeSubjects`/`requiredOLevelSubjects` rather than the general rule alone.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
 - [ ] **O'Level scoring component (UNILAG, OAU, FUTA, FUNAAB, FUOYE)** — corrected from "best 5 credits" to "the course's required subject combination per stream" (science/arts/commercial). Confirm the scoring engine implementation reads from `AdmissionRequirement.requiredOLevelSubjects` per course rather than picking a candidate's top 5 grades. Note the grade-point scale is **university-specific, not universal** — UNILAG uses A1=4.0…C6=2.0 (÷5, averaged), OAU uses A1=10…C6=5 (÷5), FUOYE uses A1=6…C6=1, FUNAAB uses A1=6…B2=5…C6=1 summed then ×(5/3) (Confirmed — see FUNAAB section) — don't hardcode one scale across universities. FUNAAB also has two edge cases worth implementing explicitly: a 1-point deduction when a candidate presents two O'Level sittings/boards, and Agriculture-in-lieu-of-Biology counting for eligibility but not contributing O'Level points.
 
