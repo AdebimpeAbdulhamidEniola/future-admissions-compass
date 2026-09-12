@@ -79,7 +79,14 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 
 ## University of Lagos (UNILAG · Lagos State)
 
-**Formula** — **Likely**: `50% UTME (÷8) + 30% Post-UTME (÷2) + 20% O'Level` (best 5 subjects, A1=4.0…C6=2.0, averaged), out of 100. This corrects an earlier 60/40/0 guess — O'Level does count. Candidates below 12% in Post-UTME screening are disqualified regardless of JAMB score.
+**Formula** — **Likely**: `50% UTME (÷8) + 30% Post-UTME (÷2) + 20% O'Level` (5 subjects, A1=4.0…C6=2.0, averaged), out of 100. This corrects an earlier 60/40/0 guess — O'Level does count. Candidates below 12% in Post-UTME screening are disqualified regardless of JAMB score.
+
+**Correction — which 5 O'Level subjects count**: earlier drafts of this dossier assumed "best 5 credits" (whichever 5 subjects score highest, regardless of relevance). That's wrong — the 5 subjects are the course's own *required* combination for the candidate's stream, i.e. the same list already captured per-course in `AdmissionRequirement.requiredOLevelSubjects`, not an independently-chosen best-5. Concretely:
+- **Science courses** (Medicine, Engineering, pure/applied Sciences, etc.): English Language, Mathematics, Physics, Chemistry, Biology.
+- **Arts courses**: English Language, Literature-in-English, Government or History, plus 1–2 further Arts/Social-Science subjects specific to the course (e.g. Law wants English, Literature, Government, CRS/IRS).
+- **Commercial/Social-Science courses** (Accounting, Business Administration, Economics, etc.): English Language, Mathematics, Economics, plus 1–2 further Commercial/Social-Science subjects (Commerce, Principles of Accounts, Government, Business Studies).
+
+The scoring engine should average the grades of *these* subjects, not the candidate's 5 highest-graded credits overall.
 
 | Faculty | Course | Cut-off | Note |
 |---|---|---:|---|
@@ -165,13 +172,13 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 | Agriculture | Soil Science and Land Resources Management |
 | Agriculture | Agricultural Extension and Rural Development |
 
-**Cut-offs / formula** — **Uncertain**: Microbiology has two conflicting figures (170 UTME threshold vs. 234 aggregate). Formula disputed: 50% JAMB/40% Post-UTME/10% O'Level vs. JAMB÷8 + Post-UTME÷2. The rest of the 35 courses have no cut-off sourced yet.
+**Cut-offs / formula** — **Uncertain**: Microbiology has two conflicting figures (170 UTME threshold vs. 234 aggregate). Formula disputed: 50% JAMB/40% Post-UTME/10% O'Level vs. JAMB÷8 + Post-UTME÷2. The rest of the 35 courses have no cut-off sourced yet. If the 10% O'Level variant is confirmed, the same correction as UNILAG applies: score the course's required combination (science/arts/commercial subjects per stream — see UNILAG section above), not an independently-chosen best 5.
 
 ---
 
 ## Federal University of Technology, Akure (FUTA · Ondo State)
 
-**Formula** — **Likely**: `75% JAMB (÷400×75) + 25% O'Level` (best 5, grade-point average). FUTA runs no written Post-UTME anymore — screening is JAMB score + O'Level via CAPS only. The "JAMB÷8 + Post-UTME÷2" formula still repeated by aggregator sites is a stale, pre-CAPS-era formula. Two incompatible cut-off scales circulate (a 0–100 aggregate, and an unofficial "estimated competitive JAMB score" out of 400) — both shown since neither is officially confirmed.
+**Formula** — **Likely**: `75% JAMB (÷400×75) + 25% O'Level` (5 subjects, grade-point average). FUTA runs no written Post-UTME anymore — screening is JAMB score + O'Level via CAPS only. The "JAMB÷8 + Post-UTME÷2" formula still repeated by aggregator sites is a stale, pre-CAPS-era formula. Two incompatible cut-off scales circulate (a 0–100 aggregate, and an unofficial "estimated competitive JAMB score" out of 400) — both shown since neither is officially confirmed. As with UNILAG, the 5 O'Level subjects are the course's required combination for the candidate's stream (science/arts/commercial), not the candidate's best 5 credits overall — relevant here since FUTA is almost entirely Science/Engineering/Agriculture courses, so English/Mathematics/Physics/Chemistry/Biology applies to nearly the whole catalog.
 
 "Financial Management" was replaced with "Procurement Management Technology" (confirmed real; the former doesn't exist at FUTA).
 
@@ -221,7 +228,7 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 
 ## Federal University of Agriculture, Abeokuta (FUNAAB · Ogun State)
 
-**Formula** — **Likely**: `50% JAMB (÷8) + 20% O'Level (5-subject grade points × ⅔) + 30% screening`, out of 100. FUNAAB's own portal doesn't publish this weighting anywhere reachable; three independent aggregators converge on it, superseding an earlier "60/40 simple split" claim.
+**Formula** — **Likely**: `50% JAMB (÷8) + 20% O'Level (5-subject grade points × ⅔) + 30% screening`, out of 100. FUNAAB's own portal doesn't publish this weighting anywhere reachable; three independent aggregators converge on it, superseding an earlier "60/40 simple split" claim. Same correction as UNILAG applies to the "5-subject" component: the required combination per the course's stream (science/agriculture courses here mean English, Mathematics, Physics/Agricultural Science, Chemistry, Biology — see UNILAG section above for the general rule), not the candidate's best 5 credits.
 
 All 35 cut-offs confirmed directly from FUNAAB's own live 2026/27 admission portal.
 
@@ -271,7 +278,7 @@ All 35 cut-offs confirmed directly from FUNAAB's own live 2026/27 admission port
 
 ## Federal University Oye-Ekiti (FUOYE · Ekiti State)
 
-**Formula** — **Likely**: `60% UTME (÷400×60) + 30% O'Level (best 5, A1=6…C6=1) + 10% sitting bonus` (10pts one sitting, 6pts two), out of 100. General minimum aggregate to qualify: 50/100.
+**Formula** — **Likely**: `60% UTME (÷400×60) + 30% O'Level (5 subjects, A1=6…C6=1) + 10% sitting bonus` (10pts one sitting, 6pts two), out of 100. General minimum aggregate to qualify: 50/100. Same correction as UNILAG applies: the 5 O'Level subjects are the course's required combination for the candidate's stream (science/arts/commercial — see UNILAG section above), not the candidate's best 5 credits overall.
 
 Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this dual scale is exactly what caused the earlier Law 150/220/260 conflict.
 
@@ -333,6 +340,7 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 - [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering cut-offs remain genuinely unfound. MBBS admission is suspended for 2026/27.
 - [ ] **FUOYE** — several courses have small (10–20 point) conflicts between two secondary sources on the UTME-floor scale; the aggregate-scale figures are mostly dated 2023.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
+- [ ] **O'Level scoring component (UNILAG, OAU, FUTA, FUNAAB, FUOYE)** — corrected from "best 5 credits" to "the course's required subject combination per stream" (science/arts/commercial). Confirm the scoring engine implementation reads from `AdmissionRequirement.requiredOLevelSubjects` per course rather than picking a candidate's top 5 grades.
 
 ---
 
