@@ -5,7 +5,7 @@ Backend seed-data specification for the PlaceRight IDSS. The complete 210-course
 - **Compiled:** 2026-08-13
 - **Target cycle:** 2025/26–2026/27 UTME
 - **Scope:** 210 courses · 35/university · 7 faculties · 6 universities
-- **Status:** cut-offs & formulas complete for all 6 universities · OAU's cut-offs are for the 2023/24 cycle (not 2025/26) and its formula is Likely rather than Confirmed
+- **Status:** cut-offs & formulas complete for all 6 universities · UI, OAU, and FUNAAB cut-offs/catchment (and, for FUNAAB, formula too) are now Confirmed off official university pages · UI's and OAU's figures are one cycle old (2024/25 and 2023/24 respectively, not 2025/26)
 
 **Confidence key:** **Confirmed** — read directly off an official university page/PDF. **Likely** — consistent across independent secondary sources, official page unreachable. **Uncertain** — conflicting sources. **Absent** — genuinely doesn't exist at that university (faculty gap, or a course name that turned out not to be real there).
 
@@ -33,47 +33,55 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 
 ## University of Ibadan (UI · Oyo State)
 
-**Formula** — **Likely**: `Aggregate = (JAMB ÷ 8) + (Post-UTME ÷ 2)`, out of 100 (corrected from an earlier ÷75 estimate). O'Level is a pass/fail eligibility gate only, not part of the number. Sourced from UI's own official 2025/26 cut-off PDF (numbers only; the formula itself is secondary-sourced). Two course names in the original list don't exist verbatim at UI — swapped for their real equivalents below.
+**Cut-offs — Confirmed**, read directly from the University of Ibadan's own official website (ui.edu.ng, "UI Releases Cut Off Marks for 2024/2025 Admission Exercises," signed by the Registrar and Secretary to Senate, G.O. Saliu). This is the 2024/2025 cycle — one cycle older than the 2025/26 target, same caveat as OAU — and cut-offs moved meaningfully between cycles for several courses (e.g. Computer Science 63.5→71, Law 70.875→67.25, Agricultural and Environmental Engineering 56.875→50), so treat the table below as directionally reliable, not exact for the current cycle.
 
-| Faculty | Course | Cut-off (Merit) | Note |
-|---|---|---:|---|
-| Clinical Sciences | Medicine and Surgery | 78.875 | |
-| Clinical Sciences | Dentistry | 68.625 | |
-| Clinical Sciences | Nursing Science | 71.375 | |
-| Clinical Sciences | Physiotherapy | 65.125 | |
-| Clinical Sciences | Pharmacy | 69.125 | |
-| Law | Law | 70.875 | Only 1 real program |
-| Engineering & Technology | Civil Engineering | 63.25 | |
-| Engineering & Technology | Mechanical Engineering | 70.5 | |
-| Engineering & Technology | Electrical and Electronic Engineering | 70 | |
-| Engineering & Technology | Agricultural and Environmental Engineering | 56.875 | |
-| Engineering & Technology | Petroleum Engineering | 62.75 | |
-| Arts | English | 56.5 | |
-| Arts | History | 50 | |
-| Arts | Linguistics and African Languages | 56.875 | Listed as "Linguistics" |
-| Arts | Theatre Arts | 56 | |
-| Arts | Religious Studies | 50 | |
-| Arts | Music | 50 | Law-shortfall reallocation |
-| Social & Management Sciences | Economics | 58.125 | |
-| Social & Management Sciences | Political Science | 55.375 | |
-| Social & Management Sciences | Psychology | 54.5 | |
-| Social & Management Sciences | Sociology | 51 | |
-| Social & Management Sciences | Geography | 50 | |
-| Science | Chemistry | 50 | |
-| Science | Physics | 51 | |
-| Science | Microbiology | 50.5 | |
-| Science | Computer Science | 63.5 | |
-| Science | Mathematics | 51 | |
-| Science | Statistics | 50 | Law-shortfall reallocation |
-| Science | Botany | 50 | Law-shortfall reallocation |
-| Agriculture | Agricultural Economics | 51.375 | Listed as "Agric. Economics" |
-| Agriculture | Crop and Horticultural Sciences | 50 | **Renamed** from "Agronomy" — no program by that exact name exists at UI |
-| Agriculture | Animal Science | 50 | |
-| Agriculture | Crop Protection and Environmental Biology | 50 | |
-| Agriculture | Aquaculture and Fisheries Management | 50 | Faculty of Renewable Natural Resources |
-| Agriculture | Forest Production and Products | 50 | **Renamed** from "Forest Resources Management" — no program by that exact name exists; Faculty of Renewable Natural Resources |
+**Formula** — still **Likely**: `Aggregate = (JAMB ÷ 8) + (Post-UTME ÷ 2)`, out of 100. O'Level is a pass/fail eligibility gate only, not part of the number. The official page gives cut-off numbers only — the formula itself remains secondary-sourced.
 
-**Catchment/ELDS** — **Uncertain**: app currently guesses Oyo, Ogun, Osun, Ondo, Ekiti, Kwara; not yet independently verified. UI publishes separate, lower cut-offs for Catchment/ELDS on competitive courses (e.g. Law 70.875 merit / 67.625 ELDS) — only Merit is shown above.
+**Correction — "Forest Resources Management" is the real name.** This dossier previously claimed no course by that name exists at UI and renamed it to "Forest Production and Products." That was wrong: UI's own official cut-off page lists "Forest Resources Management" verbatim. Reverted below. (The other rename, "Agronomy" → "Crop and Horticultural Sciences," is independently confirmed correct by this same source — "Crop and Horticultural Sciences" appears verbatim, "Agronomy" does not.)
+
+**New finding — at UI, Catchment cut-off equals Merit cut-off; only ELDS is discounted, and only for some competitive courses.** Every row in the official table gives three columns (Merit / Catch / ELDS), and Catch is identical to Merit in every single course — UI does not appear to give catchment candidates any cut-off advantage at all. ELDS is discounted only on a subset of competitive courses (e.g. Medicine 78.125/78.125/76.25; Law 67.25/67.25/66.75; Civil Engineering 61.625/61.625/53.625); most non-competitive courses show all three columns identical (50/50/50). This is a materially different pattern from UNILAG and OAU, where catchment carries a real, per-state discount — don't assume UI works the same way when building the catchment/ELDS logic.
+
+**Still unresolved — actual catchment/ELDS state names.** The official page gives cut-off numbers only, no state names at all. UI's catchment/ELDS state list therefore remains **Uncertain** — still the app's original unverified guess (Oyo, Ogun, Osun, Ondo, Ekiti, Kwara).
+
+| Faculty | Course | Merit | Catch | ELDS | Note |
+|---|---|---:|---:|---:|---|
+| Clinical Sciences | Medicine and Surgery | 78.125 | 78.125 | 76.25 | |
+| Clinical Sciences | Dentistry | 69.125 | 69.125 | 63.625 | |
+| Clinical Sciences | Nursing Science | 71.875 | 71.875 | 63.375 | |
+| Clinical Sciences | Physiotherapy | 64.75 | 64.75 | 61.125 | |
+| Clinical Sciences | Pharmacy | 68 | 68 | 65.625 | |
+| Law | Law | 67.25 | 67.25 | 66.75 | Only 1 real program |
+| Engineering & Technology | Civil Engineering | 61.625 | 61.625 | 53.625 | |
+| Engineering & Technology | Mechanical Engineering | 68 | 68 | 55.125 | |
+| Engineering & Technology | Electrical and Electronic Engineering | 67 | 67 | 50.25 | |
+| Engineering & Technology | Agricultural and Environmental Engineering | 50 | 50 | 50 | |
+| Engineering & Technology | Petroleum Engineering | 61.25 | 61.25 | 53.625 | |
+| Arts | English | 57.125 | 57.125 | 55.25 | |
+| Arts | History | 50 | 50 | 50 | |
+| Arts | Linguistics and African Languages | 58.125 | 58.125 | 51.625 | Listed simply as "Linguistics" |
+| Arts | Theatre Arts | 55.75 | 55.75 | 53.125 | |
+| Arts | Religious Studies | 50 | 50 | 50 | |
+| Arts | Music | 50 | 50 | 50 | Law-shortfall reallocation |
+| Social & Management Sciences | Economics | 58.5 | 58.5 | 52.375 | |
+| Social & Management Sciences | Political Science | 55.875 | 55.875 | 55.375 | |
+| Social & Management Sciences | Psychology | 53.75 | 53.75 | 53.75 | |
+| Social & Management Sciences | Sociology | 50.5 | 50.5 | 50.5 | |
+| Social & Management Sciences | Geography | 50 | 50 | 50 | |
+| Science | Chemistry | 50 | 50 | 50 | |
+| Science | Physics | 51 | 51 | 51 | |
+| Science | Microbiology | 52.75 | 52.75 | 52.125 | |
+| Science | Computer Science | 71 | 71 | 60.875 | |
+| Science | Mathematics | 52 | 52 | 52 | |
+| Science | Statistics | 50 | 50 | 50 | Law-shortfall reallocation |
+| Science | Botany | 50 | 50 | 50 | Law-shortfall reallocation |
+| Agriculture | Agricultural Economics | 50.375 | 50.375 | 50.375 | Listed as "Agric. Economics" |
+| Agriculture | Crop and Horticultural Sciences | 50 | 50 | 50 | Confirmed real name (not "Agronomy") |
+| Agriculture | Animal Science | 50 | 50 | 50 | |
+| Agriculture | Crop Protection and Environmental Biology | 50 | 50 | 50 | |
+| Agriculture | Aquaculture and Fisheries Management | 50 | 50 | 50 | Faculty of Renewable Natural Resources |
+| Agriculture | Forest Resources Management | 50 | 50 | 50 | **Corrected name** (was "Forest Production and Products") — Faculty of Renewable Natural Resources |
+
+**Bonus real UI programmes found in the official source that aren't in the current 35-course scope**: an entire **Faculty of Education** (21 programmes, nearly all at the 50 floor except Education and English at 57.75/57.75/52.375); **Environmental Design Management** — Architecture (51), Estate Management (50), Urban and Regional Planning (50), Quantity Surveying (50); more of **Renewable Natural Resources** — Wildlife & Ecotourism Management (50), Social and Environmental Forestry (50); more of **Technology** — Food Technology (51), Industrial and Production Engineering (50.25), Wood Products Engineering (50), Automotive Engineering (54.125); and a standalone **Veterinary Medicine** (60/60/60).
 
 ---
 
@@ -480,9 +488,10 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 
 - [ ] **OAU** — all 35 courses in scope now have Confirmed 2023/2024 merit cut-offs, sourced from OAU's own faculty documents (College of Health Sciences, Faculty of Pharmacy, Law, Technology, Arts, Social Sciences, Science, Agriculture, Administration). Formula is now Likely (`50% JAMB÷8 + 40% Post-UTME raw score + 10% O'Level`, A1=10…C6=5 ÷5 — see OAU section) rather than Uncertain, but is community-sourced, not an OAU official page. All figures are one cycle old (2023/24, not 2025/26) — re-verify before seeding for the current cycle if a more recent OAU document turns up.
 - [x] ~~**OAU Accounting / Business Administration faculty placement**~~ — resolved: both sit under a separate **Faculty of Administration** at OAU (Accounting appears there as "Management & Accounting"), not Faculty of Social Sciences. This dossier still files them under "Social & Management Sciences" for scope-list consistency with the other five universities — that's a deliberate simplification, not an error, but flag it if the backend ever needs OAU's real faculty structure.
-- [ ] **UI catchment & ELDS states** — still the app's original unverified guess. (UNILAG's and OAU's catchment states are now Confirmed — see their sections above; ELDS is Confirmed as a *sample*, not a complete list, for OAU only.)
+- [ ] **UI catchment & ELDS states** — still the app's original unverified guess; UI's own official cut-off page gives numbers only, no state names. (UNILAG's and OAU's catchment states are now Confirmed — see their sections above; ELDS is Confirmed as a *sample*, not a complete list, for OAU only.) Note UI's own pattern is unusual: Catchment cut-off = Merit cut-off everywhere (no discount at all), only ELDS is discounted, and only on some courses — don't assume UI's catchment/ELDS mechanics mirror UNILAG/OAU's once the actual states are found.
 - [ ] **ELDS state list** — the national 23-state list traces to a 2023 social-media post, not JAMB/NUC. OAU's own documents confirm real ELDS cut-offs for a smaller, different set of states (Kogi, Kano, Kwara, Ebonyi, Cross River, Benue, Nasarawa, Rivers) — see OAU section — which doesn't fully validate or fully contradict the national 23-state guess, since it's only a sample.
-- [ ] **UI** — two courses ("Agronomy," "Forest Resources Management") don't exist under those names; swapped for real equivalents ("Crop and Horticultural Sciences," "Forest Production and Products"). Confirm this is acceptable.
+- [x] ~~**UI course names**~~ — resolved by UI's own official cut-off page: "Agronomy" was correctly renamed to "Crop and Horticultural Sciences" (confirmed real), but "Forest Resources Management" was wrongly renamed to "Forest Production and Products" — reverted, since "Forest Resources Management" is itself the real, confirmed name.
+- [ ] **UI cut-offs are 2024/2025 cycle, not 2025/2026** — several courses shifted meaningfully between cycles in the past (Computer Science 63.5→71, Law 70.875→67.25, Agricultural and Environmental Engineering 56.875→50) — re-verify against a newer UI page before seeding if one becomes available.
 - [ ] **UNILAG** — three entries (Religious Studies, European Languages, Actuarial Science and Insurance) are each really two-to-three separate admission tracks with no single combined cut-off. Decide how to model this.
 - [ ] **Catchment (and, for OAU, ELDS) cut-off model** — both UNILAG and OAU publish a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course; OAU additionally does this for ELDS in 2 of its 5 sourced faculties. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See the UNILAG and OAU sections above for the full findings and example figures.
 - [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering are absent from two independent sources now, not just unfound — worth treating as likely nonexistent rather than "not yet located." MBBS admission is suspended for 2026/27. Forestry and Wood Technology has a genuine conflict (47.5 vs. 57.5) between sources.
