@@ -3,6 +3,9 @@ import type {
   AssessmentContext,
   CandidateProfile,
   CatchmentResult,
+  CatchmentRule,
+  CatchmentStatus,
+  Course,
   CourseRecommendation,
   OLevelGrade,
   VerificationIssue,
@@ -123,6 +126,38 @@ export function classifyCatchment(profile: CandidateProfile): CatchmentResult {
   };
 }
 
+/** Which of the candidate's two states actually matched the catchment list — mirrors classifyCatchment's own matching order. */
+function matchedCatchmentState(profile: CandidateProfile, rule: CatchmentRule | undefined): string | null {
+  if (!rule) return null;
+  if (rule.catchmentStates.includes(profile.stateOfOrigin)) return profile.stateOfOrigin;
+  if (rule.catchmentStates.includes(profile.schoolLocationState)) return profile.schoolLocationState;
+  return null;
+}
+
+/**
+ * Resolves the cut-off that actually applies to this candidate. Some universities (e.g. UNILAG, OAU)
+ * publish a distinct cut-off per catchment/ELDS state rather than one flat figure per course — this
+ * looks up the candidate's matched state first, falling back to the course's university-wide default.
+ */
+function resolveCutOff(
+  course: Course,
+  status: CatchmentStatus,
+  profile: CandidateProfile,
+  rule: CatchmentRule | undefined,
+): { value: number; state: string | null } {
+  if (status === "MERIT") return { value: course.meritCutOff, state: null };
+  if (status === "ELDS") {
+    const state = profile.stateOfOrigin;
+    const specific = course.eldsCutOffByState?.[state];
+    return specific !== undefined ? { value: specific, state } : { value: course.eldsCutOff, state: null };
+  }
+  const state = matchedCatchmentState(profile, rule);
+  const specific = state ? course.catchmentCutOffByState?.[state] : undefined;
+  return specific !== undefined && state !== null
+    ? { value: specific, state }
+    : { value: course.catchmentCutOff, state: null };
+}
+
 export function computeAggregate(profile: CandidateProfile): AggregateScoreResult {
   const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
   const course = mockCourses.find((c) => c.id === profile.targetCourseId);
@@ -168,12 +203,8 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
   ];
 
   const aggregate = round(breakdown.reduce((s, b) => s + b.contribution, 0));
-  const applicableCutOff =
-    catchment.status === "MERIT"
-      ? course.meritCutOff
-      : catchment.status === "CATCHMENT"
-        ? course.catchmentCutOff
-        : course.eldsCutOff;
+  const rule = mockCatchmentRules.find((r) => r.universityId === profile.targetUniversityId);
+  const applicableCutOff = resolveCutOff(course, catchment.status, profile, rule).value;
 
   return {
     aggregate,
@@ -194,12 +225,8 @@ export function recommendCourses(profile: CandidateProfile): CourseRecommendatio
     .filter((c) => c.id !== profile.targetCourseId)
     .map((course) => {
       const university = mockUniversities.find((u) => u.id === course.universityId)!;
-      const cutOff =
-        catchment.status === "MERIT"
-          ? course.meritCutOff
-          : catchment.status === "CATCHMENT"
-            ? course.catchmentCutOff
-            : course.eldsCutOff;
+      const courseRule = mockCatchmentRules.find((r) => r.universityId === course.universityId);
+      const cutOff = resolveCutOff(course, catchment.status, profile, courseRule).value;
       const headroom = score.aggregate - cutOff;
       const matchProbability = clamp(0.5 + headroom / 30, 0.02, 0.97);
       const rationale = [
@@ -245,9 +272,13 @@ export function buildAssessmentContext(profile: CandidateProfile): AssessmentCon
     requiredOLevelSubjects: requirement.requiredOLevelSubjects,
     minimumCredits: requirement.minimumCredits,
     cutOffs: {
-      merit: course.meritCutOff,
-      catchment: course.catchmentCutOff,
-      elds: course.eldsCutOff,
+      merit: resolveCutOff(course, "MERIT", profile, rule).value,
+      catchment: resolveCutOff(course, "CATCHMENT", profile, rule).value,
+      elds: resolveCutOff(course, "ELDS", profile, rule).value,
+    },
+    cutOffStates: {
+      catchment: resolveCutOff(course, "CATCHMENT", profile, rule).state,
+      elds: resolveCutOff(course, "ELDS", profile, rule).state,
     },
     quotaPercents: {
       merit: rule?.meritQuotaPercent ?? 45,

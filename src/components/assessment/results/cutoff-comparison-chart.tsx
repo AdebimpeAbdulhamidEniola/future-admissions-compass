@@ -22,9 +22,18 @@ export function CutoffComparisonChart({
 }) {
   const rows: { key: CatchmentStatus; label: string; value: number }[] = [
     { key: "MERIT", label: "Merit", value: context.cutOffs.merit },
-    { key: "CATCHMENT", label: "Catchment", value: context.cutOffs.catchment },
-    { key: "ELDS", label: "ELDS", value: context.cutOffs.elds },
+    {
+      key: "CATCHMENT",
+      label: context.cutOffStates.catchment ? `Catchment (${context.cutOffStates.catchment})` : "Catchment",
+      value: context.cutOffs.catchment,
+    },
+    {
+      key: "ELDS",
+      label: context.cutOffStates.elds ? `ELDS (${context.cutOffStates.elds})` : "ELDS",
+      value: context.cutOffs.elds,
+    },
   ];
+  const hasStateSpecificCutOff = context.cutOffStates.catchment !== null || context.cutOffStates.elds !== null;
 
   const tone = marginTone(score.margin);
   const maxVal = Math.max(...rows.map((r) => r.value), score.aggregate);
@@ -36,7 +45,7 @@ export function CutoffComparisonChart({
         <CardTitle className="font-display text-lg">Cut-off comparison</CardTitle>
         <p className="text-sm text-muted-foreground">
           How your aggregate stacks up against all three of {context.universityCode}'s cut-offs for
-          this course.
+          this course{hasStateSpecificCutOff ? " — catchment/ELDS cut-offs shown are for your state" : ""}.
         </p>
       </CardHeader>
       <CardContent>

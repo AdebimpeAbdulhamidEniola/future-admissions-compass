@@ -17,8 +17,14 @@ export interface Course {
   name: string;
   faculty: string;
   meritCutOff: number;
+  /** Default catchment cut-off, used when no state-specific figure is published. */
   catchmentCutOff: number;
+  /** Default ELDS cut-off, used when no state-specific figure is published. */
   eldsCutOff: number;
+  /** Per-catchment-state cut-off, for universities that publish one (e.g. UNILAG, OAU). Falls back to catchmentCutOff. */
+  catchmentCutOffByState?: Record<string, number>;
+  /** Per-ELDS-state cut-off, for universities that publish one (e.g. OAU). Falls back to eldsCutOff. */
+  eldsCutOffByState?: Record<string, number>;
 }
 
 export interface AdmissionRequirement {
@@ -122,7 +128,10 @@ export interface AssessmentContext {
   optionalUtmeSubjects: string[];
   requiredOLevelSubjects: string[];
   minimumCredits: number;
+  /** Resolved for this candidate: catchment/elds are the figure for their matched state, if the university publishes one, else the university-wide default. */
   cutOffs: { merit: number; catchment: number; elds: number };
+  /** The state each resolved catchment/elds figure above applies to, when it's state-specific rather than a flat default. */
+  cutOffStates: { catchment: string | null; elds: string | null };
   quotaPercents: { merit: number; catchment: number; elds: number };
 }
 

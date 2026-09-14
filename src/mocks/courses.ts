@@ -8,15 +8,15 @@ export const mockCourses: Course[] = [
   { id: "c-ui-eco", universityId: "uni-ui", name: "Economics", faculty: "Social Sciences", meritCutOff: 68, catchmentCutOff: 65, eldsCutOff: 62 },
   { id: "c-ui-agric", universityId: "uni-ui", name: "Agricultural Economics", faculty: "Agriculture", meritCutOff: 58, catchmentCutOff: 55, eldsCutOff: 52 },
 
-  // University of Lagos
-  { id: "c-unilag-med", universityId: "uni-unilag", name: "Medicine and Surgery", faculty: "Clinical Sciences", meritCutOff: 77, catchmentCutOff: 74, eldsCutOff: 71 },
-  { id: "c-unilag-acc", universityId: "uni-unilag", name: "Accounting", faculty: "Management Sciences", meritCutOff: 72, catchmentCutOff: 69, eldsCutOff: 66 },
+  // University of Lagos — UNILAG publishes a distinct catchment cut-off per state rather than one flat figure per course.
+  { id: "c-unilag-med", universityId: "uni-unilag", name: "Medicine and Surgery", faculty: "Clinical Sciences", meritCutOff: 77, catchmentCutOff: 74, eldsCutOff: 71, catchmentCutOffByState: { Lagos: 73, Ogun: 76, Oyo: 74, Osun: 74, Ondo: 72, Ekiti: 73 } },
+  { id: "c-unilag-acc", universityId: "uni-unilag", name: "Accounting", faculty: "Management Sciences", meritCutOff: 72, catchmentCutOff: 69, eldsCutOff: 66, catchmentCutOffByState: { Lagos: 68, Ogun: 71, Oyo: 69, Osun: 70, Ondo: 67, Ekiti: 68 } },
   { id: "c-unilag-cs", universityId: "uni-unilag", name: "Computer Science", faculty: "Science", meritCutOff: 73, catchmentCutOff: 70, eldsCutOff: 67 },
   { id: "c-unilag-mass", universityId: "uni-unilag", name: "Mass Communication", faculty: "Social Sciences", meritCutOff: 70, catchmentCutOff: 67, eldsCutOff: 64 },
   { id: "c-unilag-bot", universityId: "uni-unilag", name: "Botany", faculty: "Science", meritCutOff: 57, catchmentCutOff: 54, eldsCutOff: 51 },
 
-  // Obafemi Awolowo University
-  { id: "c-oau-med", universityId: "uni-oau", name: "Medicine and Surgery", faculty: "Clinical Sciences", meritCutOff: 76, catchmentCutOff: 73, eldsCutOff: 70 },
+  // Obafemi Awolowo University — OAU publishes a distinct ELDS cut-off per state for some faculties too.
+  { id: "c-oau-med", universityId: "uni-oau", name: "Medicine and Surgery", faculty: "Clinical Sciences", meritCutOff: 76, catchmentCutOff: 73, eldsCutOff: 70, eldsCutOffByState: { Kwara: 68, Ebonyi: 70, Bayelsa: 69, Borno: 67 } },
   { id: "c-oau-law", universityId: "uni-oau", name: "Law", faculty: "Law", meritCutOff: 72, catchmentCutOff: 69, eldsCutOff: 66 },
   { id: "c-oau-eee", universityId: "uni-oau", name: "Electronic and Electrical Engineering", faculty: "Technology", meritCutOff: 70, catchmentCutOff: 67, eldsCutOff: 64 },
   { id: "c-oau-eng", universityId: "uni-oau", name: "English Language", faculty: "Arts", meritCutOff: 61, catchmentCutOff: 58, eldsCutOff: 55 },
