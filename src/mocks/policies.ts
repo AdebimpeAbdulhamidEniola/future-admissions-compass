@@ -78,7 +78,19 @@ export const mockScoringPolicies: ScoringPolicy[] = [
   { id: "sp-unilag", universityId: "uni-unilag", utmeWeighting: 60, postUtmeWeighting: 40, oLevelWeighting: 0, utmeMaxScore: 400, postUtmeMaxScore: 100 },
   { id: "sp-oau", universityId: "uni-oau", utmeWeighting: 50, postUtmeWeighting: 30, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100 },
   { id: "sp-futa", universityId: "uni-futa", utmeWeighting: 50, postUtmeWeighting: 20, oLevelWeighting: 30, utmeMaxScore: 400, postUtmeMaxScore: 100 },
-  { id: "sp-funaab", universityId: "uni-funaab", utmeWeighting: 60, postUtmeWeighting: 20, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100 },
+  // Confirmed, helpdesk.funaab.edu.ng Article ID 30: straight 50% UTME + 50% O'Level, no
+  // Post-UTME/screening term. FUNAAB runs an online screening exercise, but it's an
+  // eligibility/verification step, not something that contributes to the aggregate.
+  {
+    id: "sp-funaab",
+    universityId: "uni-funaab",
+    utmeWeighting: 50,
+    postUtmeWeighting: 0,
+    oLevelWeighting: 50,
+    utmeMaxScore: 400,
+    postUtmeMaxScore: 100,
+    oLevelGradePoints: { A1: 6, B2: 5, B3: 4, C4: 3, C5: 2, C6: 1, D7: 0, E8: 0, F9: 0 },
+  },
   { id: "sp-fuoye", universityId: "uni-fuoye", utmeWeighting: 70, postUtmeWeighting: 10, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100 },
 ];
 

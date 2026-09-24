@@ -44,6 +44,10 @@ export interface ScoringPolicy {
   oLevelWeighting: number;
   utmeMaxScore: number;
   postUtmeMaxScore: number;
+  /** Per-university O'Level grade -> points override. Omitted means "use the engine's generic
+   * table" (A1=10..C6=5, max 50). FUNAAB's own confirmed formula uses a different table
+   * (A1=6..C6=1, max 30) — see docs/jamb-data-dossier.md's FUNAAB section. */
+  oLevelGradePoints?: Partial<Record<OLevelGrade, number>>;
 }
 
 export interface OLevelResult {
