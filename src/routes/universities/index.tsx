@@ -24,8 +24,10 @@ function useUniversitySummaries() {
       return Promise.all(
         universities.map(async (university) => {
           const courses = await listCourses(university.id);
-          const lowestCutOff =
-            courses.length > 0 ? Math.min(...courses.map((c) => c.eldsCutOff)) : null;
+          const knownCutOffs = courses
+            .map((c) => c.eldsCutOff)
+            .filter((v): v is number => v !== null);
+          const lowestCutOff = knownCutOffs.length > 0 ? Math.min(...knownCutOffs) : null;
           return { university, courseCount: courses.length, lowestCutOff };
         }),
       );

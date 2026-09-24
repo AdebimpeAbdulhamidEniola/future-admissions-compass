@@ -56,7 +56,10 @@ function useUniversityCards() {
       const withCutOffs = await Promise.all(
         universities.map(async (university) => {
           const courses = await listCourses(university.id);
-          const lowestCutOff = Math.min(...courses.map((c) => c.eldsCutOff));
+          const knownCutOffs = courses
+            .map((c) => c.eldsCutOff)
+            .filter((v): v is number => v !== null);
+          const lowestCutOff = knownCutOffs.length > 0 ? Math.min(...knownCutOffs) : null;
           return { university, lowestCutOff, courseCount: courses.length };
         }),
       );
@@ -172,7 +175,7 @@ function Landing() {
                       <p className="text-sm text-muted-foreground">
                         Lowest cut-off{" "}
                         <span className="text-numeral text-xl font-semibold text-foreground">
-                          {lowestCutOff}
+                          {lowestCutOff ?? "—"}
                         </span>
                       </p>
                     </Card>

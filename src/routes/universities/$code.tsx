@@ -127,7 +127,14 @@ function UniversityDetailRoute() {
       if (sortKey === "name" || sortKey === "faculty") {
         return a[sortKey].localeCompare(b[sortKey]) * dir;
       }
-      return (a[sortKey] - b[sortKey]) * dir;
+      // Null cut-offs ("not yet confirmed") always sort last, regardless of direction —
+      // never let a missing figure masquerade as the lowest/highest real one.
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      if (av === null && bv === null) return 0;
+      if (av === null) return 1;
+      if (bv === null) return -1;
+      return (av - bv) * dir;
     });
     return sorted;
   }, [courses, search, sortDir, sortKey]);
@@ -406,13 +413,13 @@ function UniversityDetailRoute() {
                           </TableCell>
                           <TableCell className="text-muted-foreground">{course.faculty}</TableCell>
                           <TableCell className="text-numeral text-right">
-                            {course.meritCutOff}
+                            {course.meritCutOff ?? "—"}
                           </TableCell>
                           <TableCell className="text-numeral text-right">
-                            {course.catchmentCutOff}
+                            {course.catchmentCutOff ?? "—"}
                           </TableCell>
                           <TableCell className="text-numeral text-right">
-                            {course.eldsCutOff}
+                            {course.eldsCutOff ?? "—"}
                           </TableCell>
                         </TableRow>
                       );
@@ -487,7 +494,7 @@ function CourseComparisonDialog({
                   <TableCell className="font-medium text-muted-foreground">Merit cut-off</TableCell>
                   {courses.map((c) => (
                     <TableCell key={c.id} className="text-numeral">
-                      {c.meritCutOff}
+                      {c.meritCutOff ?? "—"}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -497,7 +504,7 @@ function CourseComparisonDialog({
                   </TableCell>
                   {courses.map((c) => (
                     <TableCell key={c.id} className="text-numeral">
-                      {c.catchmentCutOff}
+                      {c.catchmentCutOff ?? "—"}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -505,7 +512,7 @@ function CourseComparisonDialog({
                   <TableCell className="font-medium text-muted-foreground">ELDS cut-off</TableCell>
                   {courses.map((c) => (
                     <TableCell key={c.id} className="text-numeral">
-                      {c.eldsCutOff}
+                      {c.eldsCutOff ?? "—"}
                     </TableCell>
                   ))}
                 </TableRow>

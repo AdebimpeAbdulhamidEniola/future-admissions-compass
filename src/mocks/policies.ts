@@ -74,10 +74,18 @@ function requirementFor(courseId: string): AdmissionRequirement {
 export const mockRequirements: AdmissionRequirement[] = mockCourses.map((c) => requirementFor(c.id));
 
 export const mockScoringPolicies: ScoringPolicy[] = [
-  { id: "sp-ui", universityId: "uni-ui", utmeWeighting: 50, postUtmeWeighting: 30, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100 },
-  { id: "sp-unilag", universityId: "uni-unilag", utmeWeighting: 60, postUtmeWeighting: 40, oLevelWeighting: 0, utmeMaxScore: 400, postUtmeMaxScore: 100 },
-  { id: "sp-oau", universityId: "uni-oau", utmeWeighting: 50, postUtmeWeighting: 30, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100 },
-  { id: "sp-futa", universityId: "uni-futa", utmeWeighting: 50, postUtmeWeighting: 20, oLevelWeighting: 30, utmeMaxScore: 400, postUtmeMaxScore: 100 },
+  // Likely: JAMB(÷8) + Post-UTME(÷2), out of 100. O'Level is a pass/fail eligibility gate only -
+  // not part of the number (oLevelWeighting: 0 is deliberate, not a placeholder).
+  { id: "sp-ui", universityId: "uni-ui", utmeWeighting: 50, postUtmeWeighting: 50, oLevelWeighting: 0, utmeMaxScore: 400, postUtmeMaxScore: 100 },
+  // Likely: 50% UTME(÷8) + 30% Post-UTME(÷2) + 20% O'Level. Candidates below 12% in Post-UTME
+  // are disqualified regardless of JAMB score — enforced in verifyEligibility, not the score.
+  { id: "sp-unilag", universityId: "uni-unilag", utmeWeighting: 50, postUtmeWeighting: 30, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100, minPostUtmePercent: 12 },
+  // Likely: 50% JAMB(÷8) + 40% Post-UTME (its own raw score, out of 40 - hence postUtmeMaxScore: 40,
+  // not 100) + 10% O'Level, A1=10..C6=5 (matches the engine's generic grade table already).
+  { id: "sp-oau", universityId: "uni-oau", utmeWeighting: 50, postUtmeWeighting: 40, oLevelWeighting: 10, utmeMaxScore: 400, postUtmeMaxScore: 40 },
+  // Doubting (see docs/jamb-data-dossier.md): 75% JAMB(÷400×75) + 25% O'Level, no Post-UTME -
+  // two independent sources say FUTA runs no scored Post-UTME, but this is disputed.
+  { id: "sp-futa", universityId: "uni-futa", utmeWeighting: 75, postUtmeWeighting: 0, oLevelWeighting: 25, utmeMaxScore: 400, postUtmeMaxScore: 100 },
   // Confirmed, helpdesk.funaab.edu.ng Article ID 30: straight 50% UTME + 50% O'Level, no
   // Post-UTME/screening term. FUNAAB runs an online screening exercise, but it's an
   // eligibility/verification step, not something that contributes to the aggregate.
@@ -91,7 +99,19 @@ export const mockScoringPolicies: ScoringPolicy[] = [
     postUtmeMaxScore: 100,
     oLevelGradePoints: { A1: 6, B2: 5, B3: 4, C4: 3, C5: 2, C6: 1, D7: 0, E8: 0, F9: 0 },
   },
-  { id: "sp-fuoye", universityId: "uni-fuoye", utmeWeighting: 70, postUtmeWeighting: 10, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100 },
+  // Likely: 60% UTME(÷400×60) + 30% O'Level (A1=6..C6=1) + 10% sitting bonus, no Post-UTME.
+  // The 10% sitting-bonus component (10pts one sitting, 6pts two) isn't modeled - see the note
+  // added to docs/jamb-data-dossier.md.
+  {
+    id: "sp-fuoye",
+    universityId: "uni-fuoye",
+    utmeWeighting: 60,
+    postUtmeWeighting: 0,
+    oLevelWeighting: 30,
+    utmeMaxScore: 400,
+    postUtmeMaxScore: 100,
+    oLevelGradePoints: { A1: 6, B2: 5, B3: 4, C4: 3, C5: 2, C6: 1, D7: 0, E8: 0, F9: 0 },
+  },
 ];
 
 const ELDS_STATES = [

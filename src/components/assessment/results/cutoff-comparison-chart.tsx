@@ -20,7 +20,7 @@ export function CutoffComparisonChart({
   score: AggregateScoreResult;
   context: AssessmentContext;
 }) {
-  const rows: { key: CatchmentStatus; label: string; value: number }[] = [
+  const allRows: { key: CatchmentStatus; label: string; value: number | null }[] = [
     { key: "MERIT", label: "Merit", value: context.cutOffs.merit },
     {
       key: "CATCHMENT",
@@ -33,10 +33,16 @@ export function CutoffComparisonChart({
       value: context.cutOffs.elds,
     },
   ];
+  // Not every status has a confirmed cut-off yet (see docs/jamb-data-dossier.md) — omit those bars
+  // rather than plotting a misleading 0, and say so plainly instead of pretending the chart is complete.
+  const rows = allRows.filter(
+    (r): r is { key: CatchmentStatus; label: string; value: number } => r.value !== null,
+  );
+  const omittedCount = allRows.length - rows.length;
   const hasStateSpecificCutOff = context.cutOffStates.catchment !== null || context.cutOffStates.elds !== null;
 
   const tone = marginTone(score.margin);
-  const maxVal = Math.max(...rows.map((r) => r.value), score.aggregate);
+  const maxVal = rows.length > 0 ? Math.max(...rows.map((r) => r.value), score.aggregate) : score.aggregate;
   const domainMax = Math.max(20, Math.ceil((maxVal * 1.15) / 10) * 10);
 
   return (
@@ -44,8 +50,12 @@ export function CutoffComparisonChart({
       <CardHeader>
         <CardTitle className="font-display text-lg">Cut-off comparison</CardTitle>
         <p className="text-sm text-muted-foreground">
-          How your aggregate stacks up against all three of {context.universityCode}'s cut-offs for
-          this course{hasStateSpecificCutOff ? " — catchment/ELDS cut-offs shown are for your state" : ""}.
+          How your aggregate stacks up against {rows.length === 3 ? "all three" : `${rows.length} of 3`} of{" "}
+          {context.universityCode}'s cut-offs for this course
+          {hasStateSpecificCutOff ? " — catchment/ELDS cut-offs shown are for your state" : ""}
+          {omittedCount > 0
+            ? `. ${omittedCount} status${omittedCount > 1 ? "es" : ""} omitted — not yet confirmed for this course.`
+            : "."}
         </p>
       </CardHeader>
       <CardContent>

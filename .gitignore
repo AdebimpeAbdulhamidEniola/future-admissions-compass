@@ -16,6 +16,11 @@ dist-ssr
 .nitro
 *.local
 
+# Local env config (VITE_USE_MOCKS / VITE_API_BASE_URL) — copy .env.example instead.
+.env
+.env.*
+!.env.example
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

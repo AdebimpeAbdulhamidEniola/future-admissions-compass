@@ -72,9 +72,10 @@ function CutoffInput({
   field: "meritCutOff" | "catchmentCutOff" | "eldsCutOff";
 }) {
   const queryClient = useQueryClient();
-  const [value, setValue] = useState(String(course[field]));
+  const toInputValue = (v: number | null) => (v === null ? "" : String(v));
+  const [value, setValue] = useState(toInputValue(course[field]));
 
-  useEffect(() => setValue(String(course[field])), [course, field]);
+  useEffect(() => setValue(toInputValue(course[field])), [course, field]);
 
   const mutation = useMutation({
     mutationFn: (next: number) => adminCourses.update(course.id, { [field]: next }),
@@ -84,7 +85,7 @@ function CutoffInput({
     },
     onError: () => {
       toast.error("Couldn't save that cut-off. Try again.");
-      setValue(String(course[field]));
+      setValue(toInputValue(course[field]));
     },
   });
 
@@ -92,11 +93,12 @@ function CutoffInput({
     <Input
       type="number"
       value={value}
+      placeholder="not confirmed"
       onChange={(e) => setValue(e.target.value)}
       onBlur={() => {
         const next = Number(value);
-        if (!Number.isFinite(next) || next === course[field]) {
-          setValue(String(course[field]));
+        if (!Number.isFinite(next) || value.trim() === "" || next === course[field]) {
+          setValue(toInputValue(course[field]));
           return;
         }
         mutation.mutate(next);
@@ -134,9 +136,12 @@ function CourseFormDialog({
         universityId: course.universityId,
         name: course.name,
         faculty: course.faculty,
-        meritCutOff: course.meritCutOff,
-        catchmentCutOff: course.catchmentCutOff,
-        eldsCutOff: course.eldsCutOff,
+        // Null means "not yet confirmed" (see docs/jamb-data-dossier.md) — the form still needs a
+        // number to edit, so it starts at 0 rather than silently carrying the null through.
+        // The admin must review and enter the real figure before saving.
+        meritCutOff: course.meritCutOff ?? 0,
+        catchmentCutOff: course.catchmentCutOff ?? 0,
+        eldsCutOff: course.eldsCutOff ?? 0,
       }
     : {
         universityId: "",
@@ -323,9 +328,13 @@ function BulkCutoffUpdate({ courses }: { courses: Course[] }) {
       await Promise.all(
         courses.map((c) =>
           adminCourses.update(c.id, {
-            meritCutOff: Math.max(0, c.meritCutOff + d),
-            catchmentCutOff: Math.max(0, c.catchmentCutOff + d),
-            eldsCutOff: Math.max(0, c.eldsCutOff + d),
+            // Never shift a null ("not yet confirmed") cut-off — that would silently fabricate a
+            // number where none is actually known. Only real, confirmed figures get bulk-shifted.
+            ...(c.meritCutOff !== null ? { meritCutOff: Math.max(0, c.meritCutOff + d) } : {}),
+            ...(c.catchmentCutOff !== null
+              ? { catchmentCutOff: Math.max(0, c.catchmentCutOff + d) }
+              : {}),
+            ...(c.eldsCutOff !== null ? { eldsCutOff: Math.max(0, c.eldsCutOff + d) } : {}),
           }),
         ),
       );

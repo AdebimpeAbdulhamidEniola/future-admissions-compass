@@ -125,8 +125,9 @@ export function TargetChoiceStep() {
             <div>
               <dt className="text-xs font-medium uppercase text-muted-foreground">Cut-offs</dt>
               <dd className="mt-1 text-sm text-foreground">
-                Merit {selectedCourse.meritCutOff} · Catchment {selectedCourse.catchmentCutOff} · ELDS{" "}
-                {selectedCourse.eldsCutOff}
+                Merit {selectedCourse.meritCutOff ?? "not yet confirmed"} · Catchment{" "}
+                {selectedCourse.catchmentCutOff ?? "not yet confirmed"} · ELDS{" "}
+                {selectedCourse.eldsCutOff ?? "not yet confirmed"}
               </dd>
             </div>
           </dl>

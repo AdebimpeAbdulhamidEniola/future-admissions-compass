@@ -42,8 +42,23 @@ function resolveGradePointsTable(policy: ScoringPolicy): Record<OLevelGrade, num
   return { ...GENERIC_GRADE_POINTS, ...policy.oLevelGradePoints };
 }
 
+/**
+ * Per the dossier (docs/jamb-data-dossier.md, UNILAG section): the 5 O'Level subjects that count
+ * toward the aggregate are the course's own required combination for the candidate's stream, NOT
+ * the candidate's 5 highest-graded credits overall. A candidate who lists more than 5 results, or
+ * lists them in a different order, must still be scored on exactly the required subjects.
+ */
+function requiredOLevelResults(
+  profile: CandidateProfile,
+  requirement: { requiredOLevelSubjects: string[] } | undefined,
+) {
+  const required = new Set((requirement?.requiredOLevelSubjects ?? []).map((s) => s.toLowerCase()));
+  return profile.oLevelResults.filter((r) => required.has(r.subject.toLowerCase()));
+}
+
 export function verifyEligibility(profile: CandidateProfile): VerificationResult {
   const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId);
+  const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
   const issues: VerificationIssue[] = [];
 
   const subjects = profile.utmeSubjects.filter((s) => s !== "Use of English");
@@ -94,11 +109,28 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
     });
   }
 
+  // Some universities disqualify below a minimum Post-UTME percentage regardless of JAMB score
+  // (e.g. UNILAG, Likely 12% — see docs/jamb-data-dossier.md). Only checked when the candidate
+  // has actually sat Post-UTME; a null score is "can't score yet," handled elsewhere, not a fail.
+  let postUtmePassed = true;
+  if (policy?.minPostUtmePercent != null && profile.postUtmeScore !== null) {
+    const postUtmePercent = (profile.postUtmeScore / policy.postUtmeMaxScore) * 100;
+    postUtmePassed = postUtmePercent >= policy.minPostUtmePercent;
+    if (!postUtmePassed) {
+      issues.push({
+        code: "POST_UTME_BELOW_MINIMUM",
+        severity: "ERROR",
+        message: `This university disqualifies candidates scoring below ${policy.minPostUtmePercent}% in Post-UTME screening, regardless of JAMB score.`,
+        field: "postUtmeScore",
+      });
+    }
+  }
+
   const utmePassed = missing.length === 0;
   const oLevelPassed = missingCredits.length === 0 && credits.length >= minimumCredits;
 
   return {
-    eligible: utmePassed && oLevelPassed,
+    eligible: utmePassed && oLevelPassed && postUtmePassed,
     checkedAt: new Date().toISOString(),
     utmeSubjectCheck: { passed: utmePassed, missing, invalid },
     oLevelCheck: { passed: oLevelPassed, missingCredits, creditCount: credits.length },
@@ -157,7 +189,7 @@ function resolveCutOff(
   status: CatchmentStatus,
   profile: CandidateProfile,
   rule: CatchmentRule | undefined,
-): { value: number; state: string | null } {
+): { value: number | null; state: string | null } {
   if (status === "MERIT") return { value: course.meritCutOff, state: null };
   if (status === "ELDS") {
     const state = profile.stateOfOrigin;
@@ -169,6 +201,20 @@ function resolveCutOff(
   return specific !== undefined && state !== null
     ? { value: specific, state }
     : { value: course.catchmentCutOff, state: null };
+}
+
+/** Mirrors the backend's requireCutOffValue: refuse rather than silently comparing against null. */
+function requireCutOffValue(
+  resolved: { value: number | null; state: string | null },
+  courseName: string,
+  status: CatchmentStatus,
+): { value: number; state: string | null } {
+  if (resolved.value === null) {
+    throw new Error(
+      `No confirmed ${status.toLowerCase()} cut-off is available yet for "${courseName}" — see docs/jamb-data-dossier.md.`,
+    );
+  }
+  return { value: resolved.value, state: resolved.state };
 }
 
 export function computeAggregate(profile: CandidateProfile): AggregateScoreResult {
@@ -186,14 +232,16 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
     } as AggregateScoreResult;
   }
   const catchment = classifyCatchment(profile);
+  const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId);
 
   const utmePercent = (profile.utmeScore / policy.utmeMaxScore) * 100;
   const postUtmePercent = ((profile.postUtmeScore ?? 0) / policy.postUtmeMaxScore) * 100;
   const gradePoints = resolveGradePointsTable(policy);
   const oLevelMaxPoints = Math.max(...Object.values(gradePoints)) * 5;
-  const oLevelPoints = profile.oLevelResults
-    .slice(0, 5)
-    .reduce((sum, r) => sum + gradePoints[r.grade], 0);
+  const oLevelPoints = requiredOLevelResults(profile, requirement).reduce(
+    (sum, r) => sum + gradePoints[r.grade],
+    0,
+  );
   const oLevelPercent = (oLevelPoints / oLevelMaxPoints) * 100;
 
   const breakdown: AggregateScoreResult["breakdown"] = [
@@ -219,7 +267,11 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
 
   const aggregate = round(breakdown.reduce((s, b) => s + b.contribution, 0));
   const rule = mockCatchmentRules.find((r) => r.universityId === profile.targetUniversityId);
-  const applicableCutOff = resolveCutOff(course, catchment.status, profile, rule).value;
+  const applicableCutOff = requireCutOffValue(
+    resolveCutOff(course, catchment.status, profile, rule),
+    course.name,
+    catchment.status,
+  ).value;
 
   return {
     aggregate,
@@ -241,7 +293,10 @@ export function recommendCourses(profile: CandidateProfile): CourseRecommendatio
     .map((course) => {
       const university = mockUniversities.find((u) => u.id === course.universityId)!;
       const courseRule = mockCatchmentRules.find((r) => r.universityId === course.universityId);
+      // Skip courses with no confirmed cut-off yet, rather than fabricating a comparison — one
+      // missing figure shouldn't break the whole recommendation list (mirrors the backend).
       const cutOff = resolveCutOff(course, catchment.status, profile, courseRule).value;
+      if (cutOff === null) return null;
       const headroom = score.aggregate - cutOff;
       const matchProbability = clamp(0.5 + headroom / 30, 0.02, 0.97);
       const rationale = [
@@ -261,6 +316,7 @@ export function recommendCourses(profile: CandidateProfile): CourseRecommendatio
         rationale,
       };
     })
+    .filter((r): r is CourseRecommendation => r !== null)
     .sort((a, b) => b.matchProbability - a.matchProbability)
     .slice(0, 8)
     .map((r, i) => ({ ...r, rank: i + 1 }));

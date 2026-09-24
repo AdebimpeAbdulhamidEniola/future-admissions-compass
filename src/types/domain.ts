@@ -16,11 +16,12 @@ export interface Course {
   universityId: string;
   name: string;
   faculty: string;
-  meritCutOff: number;
-  /** Default catchment cut-off, used when no state-specific figure is published. */
-  catchmentCutOff: number;
-  /** Default ELDS cut-off, used when no state-specific figure is published. */
-  eldsCutOff: number;
+  /** Null means no confirmed figure exists yet (see docs/jamb-data-dossier.md) — never a guess. */
+  meritCutOff: number | null;
+  /** Default catchment cut-off, used when no state-specific figure is published. Null means no confirmed figure exists yet. */
+  catchmentCutOff: number | null;
+  /** Default ELDS cut-off, used when no state-specific figure is published. Null means no confirmed figure exists yet. */
+  eldsCutOff: number | null;
   /** Per-catchment-state cut-off, for universities that publish one (e.g. UNILAG, OAU). Falls back to catchmentCutOff. */
   catchmentCutOffByState?: Record<string, number>;
   /** Per-ELDS-state cut-off, for universities that publish one (e.g. OAU). Falls back to eldsCutOff. */
@@ -48,6 +49,10 @@ export interface ScoringPolicy {
    * table" (A1=10..C6=5, max 50). FUNAAB's own confirmed formula uses a different table
    * (A1=6..C6=1, max 30) — see docs/jamb-data-dossier.md's FUNAAB section. */
   oLevelGradePoints?: Partial<Record<OLevelGrade, number>>;
+  /** Minimum Post-UTME percent (of postUtmeMaxScore) below which a candidate is disqualified
+   * outright, regardless of JAMB score. Omitted means no such floor. UNILAG's is Likely 12% —
+   * see docs/jamb-data-dossier.md's UNILAG section. Checked in verifyEligibility, not the score. */
+  minPostUtmePercent?: number;
 }
 
 export interface OLevelResult {
@@ -132,8 +137,8 @@ export interface AssessmentContext {
   optionalUtmeSubjects: string[];
   requiredOLevelSubjects: string[];
   minimumCredits: number;
-  /** Resolved for this candidate: catchment/elds are the figure for their matched state, if the university publishes one, else the university-wide default. */
-  cutOffs: { merit: number; catchment: number; elds: number };
+  /** Resolved for this candidate: catchment/elds are the figure for their matched state, if the university publishes one, else the university-wide default. Null means no confirmed figure exists yet. */
+  cutOffs: { merit: number | null; catchment: number | null; elds: number | null };
   /** The state each resolved catchment/elds figure above applies to, when it's state-specific rather than a flat default. */
   cutOffStates: { catchment: string | null; elds: string | null };
   quotaPercents: { merit: number; catchment: number; elds: number };
