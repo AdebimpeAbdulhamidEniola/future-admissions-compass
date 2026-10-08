@@ -111,9 +111,11 @@ function Dashboard() {
   const profileQuery = useQuery({ queryKey: ["myProfile"], queryFn: getMyProfile, retry: false });
   const assessmentsQuery = useQuery({ queryKey: ["assessments"], queryFn: listAssessments });
 
-  const myAssessments = (assessmentsQuery.data ?? [])
-    .filter((r) => r.candidateId === user?.id)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  // GET /assessments already returns only the signed-in user's reports. Their candidateId is the
+  // candidate-profile id, not the user id, so filtering on user.id hid every saved report.
+  const myAssessments = [...(assessmentsQuery.data ?? [])].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
   const mostRecent = myAssessments[0];
 
   const profile = profileQuery.data;

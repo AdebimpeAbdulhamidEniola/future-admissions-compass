@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -62,7 +62,15 @@ export function ReviewStep() {
   const [processing, setProcessing] = useState(false);
   const [stageIndex, setStageIndex] = useState(0);
 
-  const mutation = useMutation({ mutationFn: createAssessment });
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: createAssessment,
+    // The new report and the profile it saved should show on the dashboard straight away.
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["assessments"] });
+      void queryClient.invalidateQueries({ queryKey: ["myProfile"] });
+    },
+  });
 
   async function handleSubmit() {
     if (!user) return;
