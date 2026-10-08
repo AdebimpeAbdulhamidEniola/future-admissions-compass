@@ -5,7 +5,13 @@ import type { AggregateScoreResult, AssessmentContext } from "@/types/domain";
 import { CATCHMENT_LABEL, COMPONENT_COLOR, COMPONENT_LABEL, marginTone } from "./constants";
 
 function formulaSentence(score: AggregateScoreResult, universityName: string) {
-  const parts = score.breakdown.map((b) => `${COMPONENT_LABEL[b.component]} at ${b.weighting}%`);
+  const parts = score.breakdown
+    .filter((b) => b.weighting > 0)
+    .map((b) =>
+      b.component === "SITTING_BONUS"
+        ? `a sitting bonus of up to ${b.weighting} points`
+        : `${COMPONENT_LABEL[b.component]} at ${b.weighting}%`,
+    );
   const joined =
     parts.length <= 1
       ? (parts[0] ?? "")
@@ -27,15 +33,22 @@ export function AggregateScoreCard({
       <Card className="avoid-break p-6">
         <CardTitle className="font-display text-lg">Aggregate score</CardTitle>
         <p className="mt-2 text-sm text-muted-foreground">
-          Not available yet — add your Post-UTME score to see your full aggregate against{" "}
-          {context.universityName}'s cut-offs.
+          Not available yet — {context.universityName}'s formula includes a Post-UTME score. Add
+          yours to see your full aggregate against its cut-offs.
         </p>
       </Card>
     );
   }
 
-  const tone = marginTone(score.margin);
-  const trackMax = Math.max(100, score.aggregate, score.applicableCutOff);
+  // FUNAAB publishes only a raw JAMB cut-off (0–400), so the candidate is judged on their UTME
+  // score there; the 0–100 aggregate is still shown, just without a cut-off marker on its track.
+  const utmeBasis = score.cutOffBasis === "UTME";
+  // A UTME-basis margin is in JAMB points (0–400); scale it to the aggregate's 0–100 for the colour.
+  const tone = marginTone(utmeBasis ? score.margin / 4 : score.margin);
+  const trackMax = utmeBasis ? 100 : Math.max(100, score.aggregate, score.applicableCutOff);
+  const cutOffLabel = utmeBasis
+    ? `${context.universityCode}'s JAMB cut-off of ${score.applicableCutOff} for ${CATCHMENT_LABEL[score.cutOffType]} candidates (your UTME score is compared, not your aggregate — ${context.universityCode} publishes no aggregate cut-off)`
+    : `the ${CATCHMENT_LABEL[score.cutOffType]} cut-off of ${score.applicableCutOff}`;
 
   return (
     <Card className="avoid-break">
@@ -60,7 +73,7 @@ export function AggregateScoreCard({
                 <span className="font-medium text-success">
                   {Math.abs(score.margin).toFixed(1)} points above
                 </span>{" "}
-                the {CATCHMENT_LABEL[score.cutOffType]} cut-off of {score.applicableCutOff}.
+                {cutOffLabel}.
               </>
             ) : (
               <>
@@ -72,7 +85,7 @@ export function AggregateScoreCard({
                 >
                   {Math.abs(score.margin).toFixed(1)} points below
                 </span>{" "}
-                the {CATCHMENT_LABEL[score.cutOffType]} cut-off of {score.applicableCutOff}.
+                {cutOffLabel}.
               </>
             )}
           </p>
@@ -95,17 +108,21 @@ export function AggregateScoreCard({
                 </div>
               ))}
             </div>
-            <div
-              className="absolute -top-1 bottom-0 w-0.5 bg-foreground"
-              style={{ left: `${(score.applicableCutOff / trackMax) * 100}%` }}
-              aria-hidden
-            />
-            <div
-              className="absolute -top-6 -translate-x-1/2 whitespace-nowrap text-[11px] font-medium text-foreground"
-              style={{ left: `${(score.applicableCutOff / trackMax) * 100}%` }}
-            >
-              Cut-off · {score.applicableCutOff}
-            </div>
+            {!utmeBasis && (
+              <>
+                <div
+                  className="absolute -top-1 bottom-0 w-0.5 bg-foreground"
+                  style={{ left: `${(score.applicableCutOff / trackMax) * 100}%` }}
+                  aria-hidden
+                />
+                <div
+                  className="absolute -top-6 -translate-x-1/2 whitespace-nowrap text-[11px] font-medium text-foreground"
+                  style={{ left: `${(score.applicableCutOff / trackMax) * 100}%` }}
+                >
+                  Cut-off · {score.applicableCutOff}
+                </div>
+              </>
+            )}
           </div>
 
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">

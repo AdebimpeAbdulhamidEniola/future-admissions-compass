@@ -1,4 +1,4 @@
-import type { CatchmentStatus } from "@/types/domain";
+import type { CatchmentStatus, ScoreComponent } from "@/types/domain";
 
 export const CATCHMENT_LABEL: Record<CatchmentStatus, string> = {
   MERIT: "Merit",
@@ -13,12 +13,13 @@ export const CATCHMENT_COLOR: Record<CatchmentStatus, string> = {
   ELDS: "var(--chart-4)",
 };
 
-export type ScoreComponent = "UTME" | "POST_UTME" | "OLEVEL";
+export type { ScoreComponent };
 
 export const COMPONENT_LABEL: Record<ScoreComponent, string> = {
   UTME: "UTME",
   POST_UTME: "Post-UTME",
   OLEVEL: "O'Level",
+  SITTING_BONUS: "Sitting bonus",
 };
 
 /** Fixed hue per score component — reused wherever the UTME/Post-UTME/O'Level split appears. */
@@ -26,6 +27,7 @@ export const COMPONENT_COLOR: Record<ScoreComponent, string> = {
   UTME: "var(--chart-1)",
   POST_UTME: "var(--chart-2)",
   OLEVEL: "var(--chart-4)",
+  SITTING_BONUS: "var(--chart-3)",
 };
 
 /** How far below cut-off still reads as "so close" (amber) vs clearly short (rose). */

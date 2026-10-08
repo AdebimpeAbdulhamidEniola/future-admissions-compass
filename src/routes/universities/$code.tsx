@@ -231,7 +231,10 @@ function UniversityDetailRoute() {
                     { component: "UTME" as const, weighting: policy.utmeWeighting },
                     { component: "POST_UTME" as const, weighting: policy.postUtmeWeighting },
                     { component: "OLEVEL" as const, weighting: policy.oLevelWeighting },
-                  ].map((seg) => (
+                    { component: "SITTING_BONUS" as const, weighting: policy.sittingBonus?.oneSitting ?? 0 },
+                  ]
+                    .filter((seg) => seg.weighting > 0)
+                    .map((seg) => (
                     <div
                       key={seg.component}
                       className="flex h-full items-center justify-center border-r-2 border-card text-[11px] font-medium text-white last:border-r-0"
@@ -267,6 +270,16 @@ function UniversityDetailRoute() {
                     />
                     {COMPONENT_LABEL.OLEVEL} {policy.oLevelWeighting}%
                   </span>
+                  {policy.sittingBonus && (
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        className="size-2 rounded-full"
+                        style={{ background: COMPONENT_COLOR.SITTING_BONUS }}
+                      />
+                      {COMPONENT_LABEL.SITTING_BONUS} {policy.sittingBonus.oneSitting} pts (
+                      {policy.sittingBonus.twoSittings} for two sittings)
+                    </span>
+                  )}
                 </div>
               </>
             ) : (

@@ -1,6 +1,7 @@
 import { http, mockDelay, mockFailure, USE_MOCKS } from "@/lib/http";
 import {
   buildAssessmentContext,
+  canComputeAggregate,
   classifyCatchment,
   computeAggregate,
   recommendCourses,
@@ -23,7 +24,7 @@ export async function createAssessment(
       createdAt: new Date().toISOString(),
       candidateId: candidate.id,
       verification,
-      score: candidate.postUtmeScore === null ? null : computeAggregate(candidate),
+      score: canComputeAggregate(candidate) ? computeAggregate(candidate) : null,
       catchment: classifyCatchment(candidate),
       recommendations: recommendCourses(candidate),
       context: buildAssessmentContext(candidate),

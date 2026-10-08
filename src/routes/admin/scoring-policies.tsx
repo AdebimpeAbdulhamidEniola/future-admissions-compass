@@ -42,7 +42,9 @@ function PolicyRow({
     setOLevel(policy.oLevelWeighting);
   }, [policy]);
 
-  const total = utme + postUtme + oLevel;
+  // FUOYE's sitting bonus is a fourth component that also counts toward the 100% total.
+  const sittingBonus = policy.sittingBonus?.oneSitting ?? 0;
+  const total = utme + postUtme + oLevel + sittingBonus;
   const isValid = total === 100;
   const isDirty =
     utme !== policy.utmeWeighting ||
@@ -98,7 +100,7 @@ function PolicyRow({
           )}
         >
           {!isValid && <AlertTriangle className="size-3.5 shrink-0" />}
-          {total}%
+          {total}%{sittingBonus > 0 ? ` (incl. ${sittingBonus}% sitting bonus)` : ""}
         </span>
       </TableCell>
       <TableCell className="text-right">

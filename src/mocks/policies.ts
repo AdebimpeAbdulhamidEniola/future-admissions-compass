@@ -125,8 +125,7 @@ export const mockScoringPolicies: ScoringPolicy[] = [
     twoSittingDeductionPoints: 1,
   },
   // Likely: 60% UTME(÷400×60) + 30% O'Level (A1=6..C6=1) + 10% sitting bonus, no Post-UTME.
-  // The 10% sitting-bonus component (10pts one sitting, 6pts two) isn't modeled - see the note
-  // added to docs/jamb-data-dossier.md.
+  // The sitting bonus is 10 points for one sitting, 6 for two.
   {
     id: "sp-fuoye",
     universityId: "uni-fuoye",
@@ -136,6 +135,7 @@ export const mockScoringPolicies: ScoringPolicy[] = [
     utmeMaxScore: 400,
     postUtmeMaxScore: 100,
     oLevelGradePoints: { A1: 6, B2: 5, B3: 4, C4: 3, C5: 2, C6: 1, D7: 0, E8: 0, F9: 0 },
+    sittingBonus: { oneSitting: 10, twoSittings: 6 },
   },
 ];
 

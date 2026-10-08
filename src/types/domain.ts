@@ -26,6 +26,9 @@ export interface Course {
   catchmentCutOffByState?: Record<string, number>;
   /** Per-ELDS-state cut-off, for universities that publish one (e.g. OAU). Falls back to eldsCutOff. */
   eldsCutOffByState?: Record<string, number>;
+  /** Raw JAMB (0–400) cut-off, for courses whose university publishes no 0–100 aggregate cut-off
+   * (every FUNAAB course). The candidate's UTME score is compared against it instead. */
+  utmeCutOff?: number | null;
 }
 
 export interface AdmissionRequirement {
@@ -66,6 +69,9 @@ export interface ScoringPolicy {
   /** O'Level points deducted when a candidate combines two sittings (best grade per subject is
    * taken first). Omitted means no deduction. FUNAAB's is 1 (Confirmed). */
   twoSittingDeductionPoints?: number;
+  /** Points added straight onto the aggregate for one vs two O'Level sittings. FUOYE's is Likely
+   * 10/6. oneSitting counts toward the weightings' 100% total. */
+  sittingBonus?: { oneSitting: number; twoSittings: number };
 }
 
 export interface OLevelResult {
@@ -106,10 +112,13 @@ export interface VerificationResult {
   issues: VerificationIssue[];
 }
 
+export type ScoreComponent = "UTME" | "POST_UTME" | "OLEVEL" | "SITTING_BONUS";
+export type CutOffBasis = "AGGREGATE" | "UTME";
+
 export interface AggregateScoreResult {
   aggregate: number;
   breakdown: {
-    component: "UTME" | "POST_UTME" | "OLEVEL";
+    component: ScoreComponent;
     rawScore: number;
     weighting: number;
     contribution: number;
@@ -117,6 +126,10 @@ export interface AggregateScoreResult {
   formulaDescription: string;
   applicableCutOff: number;
   cutOffType: CatchmentStatus;
+  /** AGGREGATE (or omitted, on older reports): applicableCutOff/margin are on the 0–100 aggregate
+   * scale. UTME: the course publishes only a raw JAMB cut-off (FUNAAB), so applicableCutOff/margin
+   * compare the candidate's UTME score (0–400) instead. */
+  cutOffBasis?: CutOffBasis;
   meetsCutOff: boolean;
   margin: number;
 }
@@ -155,6 +168,8 @@ export interface AssessmentContext {
   minimumCredits: number;
   /** Resolved for this candidate: catchment/elds are the figure for their matched state, if the university publishes one, else the university-wide default. Null means no confirmed figure exists yet. */
   cutOffs: { merit: number | null; catchment: number | null; elds: number | null };
+  /** Raw JAMB (0–400) cut-off for courses that publish only that (FUNAAB). */
+  utmeCutOff?: number | null;
   /** The state each resolved catchment/elds figure above applies to, when it's state-specific rather than a flat default. */
   cutOffStates: { catchment: string | null; elds: string | null };
   quotaPercents: { merit: number; catchment: number; elds: number };

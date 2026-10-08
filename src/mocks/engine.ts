@@ -8,6 +8,7 @@ import type {
   CatchmentStatus,
   Course,
   CourseRecommendation,
+  CutOffBasis,
   OLevelGrade,
   OLevelResult,
   ScoringPolicy,
@@ -316,85 +317,167 @@ function resolveCutOff(
     : { value: course.catchmentCutOff, state: null };
 }
 
-/** Mirrors the backend's requireCutOffValue: refuse rather than silently comparing against null. */
-function requireCutOffValue(
-  resolved: { value: number | null; state: string | null },
-  courseName: string,
+interface ApplicableCutOff {
+  value: number;
+  type: CatchmentStatus;
+  basis: CutOffBasis;
+  state: string | null;
+}
+
+/**
+ * The cut-off this candidate is actually judged against (mirrors the backend). A published 0–100
+ * cut-off for their status wins; failing that, a course that only publishes a raw JAMB cut-off
+ * (Course.utmeCutOff — FUNAAB) is judged on the candidate's UTME score. Null when neither exists.
+ */
+function resolveApplicableCutOff(
+  course: Course,
   status: CatchmentStatus,
-): { value: number; state: string | null } {
-  if (resolved.value === null) {
+  profile: CandidateProfile,
+  rule: CatchmentRule | undefined,
+): ApplicableCutOff | null {
+  const resolved = resolveCutOff(course, status, profile, rule);
+  if (resolved.value !== null) {
+    return { value: resolved.value, type: status, basis: "AGGREGATE", state: resolved.state };
+  }
+  if (course.utmeCutOff != null) {
+    return { value: course.utmeCutOff, type: status, basis: "UTME", state: null };
+  }
+  return null;
+}
+
+/** Mirrors the backend: refuse rather than silently comparing against null. */
+function requireApplicableCutOff(cutOff: ApplicableCutOff | null, courseName: string, status: CatchmentStatus) {
+  if (cutOff === null) {
     throw new Error(
       `No confirmed ${status.toLowerCase()} cut-off is available yet for "${courseName}" — see docs/jamb-data-dossier.md.`,
     );
   }
-  return { value: resolved.value, state: resolved.state };
+  return cutOff;
 }
 
-export function computeAggregate(profile: CandidateProfile): AggregateScoreResult {
-  const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
-  const course = mockCourses.find((c) => c.id === profile.targetCourseId);
-  if (!policy || !course) {
-    return {
-      aggregate: 0,
-      breakdown: [],
-      formulaDescription: "",
-      applicableCutOff: 0,
-      cutOffType: "MERIT",
-      meetsCutOff: false,
-      margin: 0,
-    } as AggregateScoreResult;
-  }
-  const catchment = classifyCatchment(profile);
-  const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId);
-  if (!requirement) {
-    throw new Error("No admission requirement is configured for this course yet.");
-  }
+function compareWithCutOff(cutOff: ApplicableCutOff, aggregate: number, utmeScore: number) {
+  const score = cutOff.basis === "UTME" ? utmeScore : aggregate;
+  return { meetsCutOff: score >= cutOff.value, margin: round(score - cutOff.value) };
+}
 
+/** True when this university's formula has a Post-UTME term, so a missing score blocks the aggregate. */
+function needsPostUtmeScore(policy: Pick<ScoringPolicy, "postUtmeWeighting">) {
+  return policy.postUtmeWeighting > 0;
+}
+
+/** Whether an aggregate can be computed yet: false only when the formula needs a Post-UTME score the candidate doesn't have. */
+export function canComputeAggregate(profile: CandidateProfile) {
+  if (profile.postUtmeScore !== null) return true;
+  const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
+  return !policy || !needsPostUtmeScore(policy);
+}
+
+/**
+ * The aggregate itself, on a 0–100 scale (mirrors the backend's scoreCandidate). postUtme is
+ * passed in so the same candidate can be scored under another university's formula. Components
+ * with a 0% weighting are left out of the breakdown.
+ */
+function scoreCandidate(
+  profile: CandidateProfile,
+  policy: ScoringPolicy,
+  requirement: AdmissionRequirement,
+  postUtme: { rawScore: number; percent: number },
+) {
   const utmePercent = (profile.utmeScore / policy.utmeMaxScore) * 100;
-  const postUtmePercent = ((profile.postUtmeScore ?? 0) / policy.postUtmeMaxScore) * 100;
   const { points: oLevelPoints, percent: oLevelPercent } = scoreOLevel(profile, requirement, policy);
+  const sittings = profile.oLevelSittings ?? 1;
 
   const breakdown: AggregateScoreResult["breakdown"] = [
     {
-      component: "UTME",
+      component: "UTME" as const,
       rawScore: profile.utmeScore,
       weighting: policy.utmeWeighting,
       contribution: round((utmePercent * policy.utmeWeighting) / 100),
     },
     {
-      component: "POST_UTME",
-      rawScore: profile.postUtmeScore ?? 0,
+      component: "POST_UTME" as const,
+      rawScore: postUtme.rawScore,
       weighting: policy.postUtmeWeighting,
-      contribution: round((postUtmePercent * policy.postUtmeWeighting) / 100),
+      contribution: round((postUtme.percent * policy.postUtmeWeighting) / 100),
     },
     {
-      component: "OLEVEL",
+      component: "OLEVEL" as const,
       rawScore: oLevelPoints,
       weighting: policy.oLevelWeighting,
       contribution: round((oLevelPercent * policy.oLevelWeighting) / 100),
     },
+  ].filter((b) => b.weighting > 0);
+
+  // FUOYE (Likely): 10 points for a single sitting, 6 for two — added straight onto the aggregate.
+  const bonus = policy.sittingBonus;
+  if (bonus) {
+    breakdown.push({
+      component: "SITTING_BONUS",
+      rawScore: sittings,
+      weighting: bonus.oneSitting,
+      contribution: sittings === 2 ? bonus.twoSittings : bonus.oneSitting,
+    });
+  }
+
+  const formulaParts = [
+    `UTME ${policy.utmeWeighting}%`,
+    ...(policy.postUtmeWeighting > 0 ? [`Post-UTME ${policy.postUtmeWeighting}%`] : []),
+    ...(policy.oLevelWeighting > 0 ? [`O'Level ${policy.oLevelWeighting}%`] : []),
+    ...(bonus ? [`sitting bonus ${bonus.oneSitting}% (${bonus.twoSittings} for two sittings)`] : []),
   ];
 
-  const aggregate = round(breakdown.reduce((s, b) => s + b.contribution, 0));
+  return {
+    aggregate: round(breakdown.reduce((s, b) => s + b.contribution, 0)),
+    breakdown,
+    formulaDescription: formulaParts.join(" + "),
+  };
+}
+
+export function computeAggregate(profile: CandidateProfile): AggregateScoreResult {
+  const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
+  const course = mockCourses.find((c) => c.id === profile.targetCourseId);
+  const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId);
+  if (!policy || !course || course.universityId !== profile.targetUniversityId) {
+    throw new Error("targetCourseId does not belong to targetUniversityId");
+  }
+  if (!requirement) {
+    throw new Error("No admission requirement is configured for this course yet.");
+  }
+  if (needsPostUtmeScore(policy) && profile.postUtmeScore === null) {
+    throw new Error(
+      "This university's formula includes a Post-UTME component, so an aggregate cannot be computed yet.",
+    );
+  }
+
+  const catchment = classifyCatchment(profile);
   const rule = mockCatchmentRules.find((r) => r.universityId === profile.targetUniversityId);
-  const applicableCutOff = requireCutOffValue(
-    resolveCutOff(course, catchment.status, profile, rule),
+  const postUtmeRaw = profile.postUtmeScore ?? 0;
+  const { aggregate, breakdown, formulaDescription } = scoreCandidate(profile, policy, requirement, {
+    rawScore: postUtmeRaw,
+    percent: (postUtmeRaw / policy.postUtmeMaxScore) * 100,
+  });
+
+  const cutOff = requireApplicableCutOff(
+    resolveApplicableCutOff(course, catchment.status, profile, rule),
     course.name,
     catchment.status,
-  ).value;
+  );
+  const { meetsCutOff, margin } = compareWithCutOff(cutOff, aggregate, profile.utmeScore);
 
   return {
     aggregate,
     breakdown,
-    formulaDescription: `UTME ${policy.utmeWeighting}% + Post-UTME ${policy.postUtmeWeighting}% + O'Level ${policy.oLevelWeighting}%`,
-    applicableCutOff,
-    cutOffType: catchment.status,
-    meetsCutOff: aggregate >= applicableCutOff,
-    margin: round(aggregate - applicableCutOff),
+    formulaDescription,
+    applicableCutOff: cutOff.value,
+    cutOffType: cutOff.type,
+    cutOffBasis: cutOff.basis,
+    meetsCutOff,
+    margin,
   };
 }
 
 export function recommendCourses(profile: CandidateProfile): CourseRecommendation[] {
+  if (!canComputeAggregate(profile)) return [];
   const score = computeAggregate(profile);
   const catchment = classifyCatchment(profile);
 
@@ -457,6 +540,7 @@ export function buildAssessmentContext(profile: CandidateProfile): AssessmentCon
       catchment: resolveCutOff(course, "CATCHMENT", profile, rule).value,
       elds: resolveCutOff(course, "ELDS", profile, rule).value,
     },
+    utmeCutOff: course.utmeCutOff ?? null,
     cutOffStates: {
       catchment: resolveCutOff(course, "CATCHMENT", profile, rule).state,
       elds: resolveCutOff(course, "ELDS", profile, rule).state,

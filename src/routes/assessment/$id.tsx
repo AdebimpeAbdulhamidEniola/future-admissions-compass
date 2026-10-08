@@ -95,7 +95,7 @@ function AssessmentResult() {
         <VerdictBanner report={report} />
         <EligibilityBreakdown verification={verification} context={context} />
         <AggregateScoreCard score={score} context={context} />
-        {score && <CutoffComparisonChart score={score} context={context} />}
+        {score && score.cutOffBasis !== "UTME" && <CutoffComparisonChart score={score} context={context} />}
         <CatchmentCard catchment={catchment} context={context} />
         {showRecommendations && (
           <RecommendationsSection
