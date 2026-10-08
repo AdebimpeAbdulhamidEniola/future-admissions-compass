@@ -41,7 +41,7 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 
 **New finding — at UI, Catchment cut-off equals Merit cut-off; only ELDS is discounted, and only for some competitive courses.** Every row in the official table gives three columns (Merit / Catch / ELDS), and Catch is identical to Merit in every single course — UI does not appear to give catchment candidates any cut-off advantage at all. ELDS is discounted only on a subset of competitive courses (e.g. Medicine 78.125/78.125/76.25; Law 67.25/67.25/66.75; Civil Engineering 61.625/61.625/53.625); most non-competitive courses show all three columns identical (50/50/50). This is a materially different pattern from UNILAG and OAU, where catchment carries a real, per-state discount — don't assume UI works the same way when building the catchment/ELDS logic.
 
-**Still unresolved — actual catchment/ELDS state names.** The official page gives cut-off numbers only, no state names at all. UI's catchment/ELDS state list therefore remains **Uncertain** — still the app's original unverified guess (Oyo, Ogun, Osun, Ondo, Ekiti, Kwara).
+**Still unresolved — actual catchment/ELDS state names.** The official page gives cut-off numbers only, no state names at all. UI's catchment/ELDS state list therefore remains **Uncertain** — the app's original guess was Oyo, Ogun, Osun, Ondo, Ekiti, Kwara. **Kwara is ELDS, not catchment** (user-confirmed; also where most secondary sources and a 2025 UI Postgraduate College policy brief place it), so it has been removed from UI's catchment list. Secondary sources (Likely, blog-level) also include Lagos in UI's catchment — not yet applied, pending confirmation.
 
 | Faculty | Course | Merit | Catch | ELDS | Note |
 |---|---|---:|---:|---:|---|
