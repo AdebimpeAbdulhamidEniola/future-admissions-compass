@@ -154,12 +154,12 @@ The scoring engine should average the grades of *these* subjects, not the candid
 
 | Course | Merit | Ekiti | Lagos | Ogun | Ondo | Osun | Oyo | Conf. |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
-| Medicine and Surgery | 83.425 | 79.425 | 79.1 | 81.75 | 81.35 | 79.825 | 80.05 | L (Ogun/Ondo U) |
+| Medicine and Surgery | 83.425 | 79.425 | 79.1 | 81.75 | 81.35 | 79.825 | 80.05 | L (Ogun/Ondo re-checked: Crispng, The Sun) |
 | Dentistry | 79.025 | 74.575 | 72.725 | 77.3 | 76.325 | 77.775 | 76.65 | L |
 | Nursing Science | 77.925 | 72.775 | 73.95 | 76.275 | 74.875 | 75.2 | 74.1 | L (Oyo U — same as Pharmacy's, possible mix-up) |
 | Physiotherapy | 76 | 72.75 | 67.4 | 75.375 | 74.7 | 73.675 | 72.3 | L |
 | Medical Laboratory Science | 75.075 | 66.525 | 71.55 | 73.425 | 71.625 | 74.35 | 69.875 | L (Oyo U) |
-| Pharmacy | 78.325 | 72.875 | 72.175 | 76.3 | 75.275 | 75.85 | 74.1 | Merit/Ekiti/Lagos L; rest U |
+| Pharmacy | 78.325 | 72.875 | 72.175 | 76.3 | 75.275 | 75.85 | 74.1 | L (re-checked) |
 | Law | 79.125 | 75.975 | 75.15 | 77.275 | 75.55 | 75.25 | 76.35 | L |
 | Civil Engineering | 74.35 | 62.675 | 69.7 | 71.9 | 67.775 | 71.55 | 68.575 | L |
 | Mechanical Engineering | 79.275 | 67.625 | 76.35 | 77.05 | 68.8 | 70.525 | 74.325 | L |
@@ -175,16 +175,16 @@ The scoring engine should average the grades of *these* subjects, not the candid
 | European Languages (French track) | 64 | NIL | 62.2 | 60.45 | NIL | NIL | 59.85 | L (German 69.125 U; Russian 55.45 L) |
 | Accounting | 73 | 61.6 | 65.275 | 69.35 | 65.9 | 68.625 | 67.85 | L |
 | Business Administration | 66.725 | 55.45 | 60.025 | 62.7 | 57.1 | 60.25 | 57.175 | L |
-| Actuarial Science and Insurance (Actuarial track) | 65.875 | 65.575 | 62.925 | 64.175 | 52.3 | 61.5 | 54.1 | U (Insurance 63.125, U) |
+| Actuarial Science and Insurance (Actuarial track) | 65.875 | 65.575 | 62.925 | 64.175 | 52.3 | 61.5 | 54.1 | L (re-checked; Insurance merit 63.125 L) |
 | Banking and Finance | 70.35 | 62.775 | 60.375 | 68.875 | 55.6 | 65.925 | 64.275 | L |
-| Industrial Relations and Personnel Management | — | — | — | — | — | — | — | Not found under that name; probably renamed "Employment Relations & HRM" (66.025, U). Seed keeps the 2025/26 figure 60.775 until confirmed. |
-| Economics | 73.625 | 62.525 | 64.9 | 68.05 | 62.175 | 67.35 | 69.35 | Merit L; states U |
+| Employment Relations and HRM (formerly Industrial Relations and Personnel Management) | 66.025 | 59 | 54.975 | 64 | 60.125 | 57.4 | 59.9 | L (official-page snippet + a second site; the department was already renamed before 2026/27) |
+| Economics | 73.625 | 62.525 | 64.9 | 68.05 | 62.175 | 67.35 | 69.35 | L (states from one site) |
 | Psychology | 70.15 | 56.975 | 67.125 | 62.95 | 55.8 | 58.05 | 60.975 | L |
 | Political Science | 65.65 | 59.75 | 51.5 | 61.975 | 58.825 | 51.5 | 55.275 | Merit/Ekiti L; rest U |
-| Computer Science | 82.05 | 78.4 | 73.225 | 79.175 | 79.675 | 78.85 | 79.875 | Merit L; states U |
+| Computer Science | 82.05 | 78.4 | 73.225 | 79.175 | 79.675 | 78.85 | 79.875 | L (re-checked) |
 | Physics | 54.5 | NIL | NIL | NIL | NIL | NIL | NIL | Merit L; NIL row U |
 | Chemistry | 65.4 | 62.8 | 59.15 | 61.25 | 55.625 | 59.975 | 59.875 | Merit/Ekiti L; rest U |
-| Mathematics | 58.775 | 57.5 | 58.275 | 57.8 | NIL | 55.125 | NIL | U |
+| Mathematics | 58.775 | 57.5 | 58.275 | 57.8 | NIL | 55.125 | NIL | L (re-checked) |
 | Biochemistry | 67.9 | 55.95 | 63.15 | 63.65 | 60.625 | 64.025 | 57.03 | L (Oyo possibly 57.025) |
 | Botany | 54.3 | NIL | 50.95 | NIL | NIL | NIL | NIL | L |
 | Zoology | 54.825 | NIL | NIL | NIL | NIL | NIL | NIL | L |
@@ -538,10 +538,10 @@ Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this du
 | Medical Laboratory Science | 75.7 | Likely |
 | Radiography and Radiation Science | 74.05 | Likely |
 | Law | 77.75 | Likely (not admitting 2026/27) |
-| Civil Engineering | 66.25 | Uncertain — two mirrors shift the engineering rows down by one (Civil 58.9 …); the official page's order is used |
-| Mechanical Engineering | 66.4 | Uncertain (same) |
-| Electrical and Electronic Engineering | 66.0 | Uncertain (same) |
-| Computer Engineering | 65.9 | Uncertain (some mirrors give 65.9 to ICT Engineering) |
+| Civil Engineering | 66.25 | Likely (re-checked: myschoolgist, tertiaryupdate; mirrors that shift the engineering rows are a transcription error) |
+| Mechanical Engineering | 66.4 | Likely (re-checked: myschoolgist, tertiaryupdate; mirrors that shift the engineering rows are a transcription error) |
+| Electrical and Electronic Engineering | 66.0 | Likely (re-checked: myschoolgist, tertiaryupdate; mirrors that shift the engineering rows are a transcription error) |
+| Computer Engineering | 65.9 | Likely (re-checked: myschoolgist, tertiaryupdate; mirrors that shift the engineering rows are a transcription error) |
 | Mechatronics Engineering | 69.85 | Likely |
 | English and Literary Studies | 66.35 | Likely |
 | History and International Studies | 67.9 | Likely |
@@ -554,12 +554,12 @@ Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this du
 | Business Administration | 66.05 | Likely |
 | Mass Communication | 68.5 | Likely |
 | Computer Science | 69.2 | Likely |
-| Biochemistry | 64.4 | Uncertain (other list 63.75) |
-| Microbiology | 63.95 | Uncertain (other list 65.75) |
-| Physics | 54.4 | Uncertain (other list 56.5) |
-| Chemistry | 56.55 | Uncertain (other list 62.5) |
-| Mathematics | 56.85 | Uncertain (other list 55.5) |
-| Statistics | 54.8 | Uncertain (other list 54.5) |
+| Biochemistry | 64.4 | Likely (re-checked; the 63.75 list comes only from myschool.ng, which is wrong elsewhere too) |
+| Microbiology | 63.95 | Likely (re-checked; the 65.75 list comes only from myschool.ng, which is wrong elsewhere too) |
+| Physics | 54.4 | Likely (re-checked; the 56.5 list comes only from myschool.ng, which is wrong elsewhere too) |
+| Chemistry | 56.55 | Likely (re-checked; the 62.5 list comes only from myschool.ng, which is wrong elsewhere too) |
+| Mathematics | 56.85 | Likely (re-checked; the 55.5 list comes only from myschool.ng, which is wrong elsewhere too) |
+| Statistics | 54.8 | Likely (re-checked; the 54.5 list comes only from myschool.ng, which is wrong elsewhere too) |
 | Animal Production and Health | 58.1 | Likely |
 | Crop Science and Horticulture | 57.3 | Likely |
 | Agricultural Economics and Extension | 57.6 | Likely |
