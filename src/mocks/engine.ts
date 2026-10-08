@@ -612,7 +612,10 @@ export function recommendCourses(profile: CandidateProfile): CourseRecommendatio
         (c) => c.universityId === profile.targetUniversityId && c.id !== profile.targetCourseId,
       )
       .map((course) => evaluateCourse(profile, postUtmePercent, course))
-      .filter((e): e is NonNullable<ReturnType<typeof evaluateCourse>> => e !== null)
+      // Only courses whose cut-off the candidate already meets (mirrors the backend).
+      .filter(
+        (e): e is NonNullable<ReturnType<typeof evaluateCourse>> => e !== null && e.meetsCutOff,
+      )
       .map((e) => {
         const university = mockUniversities.find((u) => u.id === e.course.universityId)!;
         const utmeBasis = e.cutOff.basis === "UTME";

@@ -113,8 +113,9 @@ export function RecommendationsSection({
         </div>
         <p className="text-sm text-muted-foreground">
           Your score doesn't clear this course's cut-off. These are other courses your UTME subjects
-          and O'Level credits already qualify you for, at the same university, scored with its
-          formula and ranked by a decision-tree model's estimate of your chance of admission:
+          and O'Level credits qualify you for, and whose cut-off your score already meets, at the
+          same university, scored with its formula and ranked by a decision-tree model's estimate of
+          your chance of admission:
         </p>
 
         <div className="mt-4 flex flex-col gap-3">
