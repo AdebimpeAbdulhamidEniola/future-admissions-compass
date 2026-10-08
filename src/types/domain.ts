@@ -35,6 +35,16 @@ export interface AdmissionRequirement {
   optionalUtmeSubjects: string[];
   requiredOLevelSubjects: string[];
   minimumCredits: number;
+  /** Subjects accepted in place of a required O'Level subject. A credit in an alternative satisfies
+   * eligibility; countsTowardPoints says whether its grade is also scored (FUNAAB accepts
+   * Agriculture for Biology but scores it as zero — see docs/jamb-data-dossier.md). */
+  oLevelSubstitutions?: OLevelSubstitution[];
+}
+
+export interface OLevelSubstitution {
+  subject: string;
+  alternatives: string[];
+  countsTowardPoints: boolean;
 }
 
 export interface ScoringPolicy {
@@ -53,6 +63,9 @@ export interface ScoringPolicy {
    * outright, regardless of JAMB score. Omitted means no such floor. UNILAG's is Likely 12% —
    * see docs/jamb-data-dossier.md's UNILAG section. Checked in verifyEligibility, not the score. */
   minPostUtmePercent?: number;
+  /** O'Level points deducted when a candidate combines two sittings (best grade per subject is
+   * taken first). Omitted means no deduction. FUNAAB's is 1 (Confirmed). */
+  twoSittingDeductionPoints?: number;
 }
 
 export interface OLevelResult {
@@ -70,7 +83,10 @@ export interface CandidateProfile {
   utmeScore: number;
   postUtmeScore: number | null;
   utmeSubjects: string[];
+  /** One entry per subject — the best grade when two sittings were combined. */
   oLevelResults: OLevelResult[];
+  /** How many O'Level sittings the results come from. Omitted means 1. */
+  oLevelSittings?: 1 | 2;
   targetCourseId: string;
   targetUniversityId: string;
 }

@@ -71,7 +71,30 @@ function requirementFor(courseId: string): AdmissionRequirement {
   };
 }
 
-export const mockRequirements: AdmissionRequirement[] = mockCourses.map((c) => requirementFor(c.id));
+/**
+ * University-specific substitutions (mirrors the backend seed): FUNAAB accepts Agriculture in lieu
+ * of Biology for eligibility but scores it as zero (Confirmed); FUTA's agriculture and science
+ * schools accept Biology or Agricultural Science interchangeably (Likely).
+ */
+function withSubstitutions(requirement: AdmissionRequirement): AdmissionRequirement {
+  const course = mockCourses.find((c) => c.id === requirement.courseId)!;
+  if (!requirement.requiredOLevelSubjects.includes("Biology")) return requirement;
+  if (course.universityId === "uni-funaab") {
+    return {
+      ...requirement,
+      oLevelSubstitutions: [{ subject: "Biology", alternatives: ["Agricultural Science"], countsTowardPoints: false }],
+    };
+  }
+  if (course.universityId === "uni-futa") {
+    return {
+      ...requirement,
+      oLevelSubstitutions: [{ subject: "Biology", alternatives: ["Agricultural Science"], countsTowardPoints: true }],
+    };
+  }
+  return requirement;
+}
+
+export const mockRequirements: AdmissionRequirement[] = mockCourses.map((c) => withSubstitutions(requirementFor(c.id)));
 
 export const mockScoringPolicies: ScoringPolicy[] = [
   // Likely: JAMB(÷8) + Post-UTME(÷2), out of 100. O'Level is a pass/fail eligibility gate only -
@@ -98,6 +121,8 @@ export const mockScoringPolicies: ScoringPolicy[] = [
     utmeMaxScore: 400,
     postUtmeMaxScore: 100,
     oLevelGradePoints: { A1: 6, B2: 5, B3: 4, C4: 3, C5: 2, C6: 1, D7: 0, E8: 0, F9: 0 },
+    // Same source: two O'Level results (WAEC + NECO) — best grade per subject, minus 1 point.
+    twoSittingDeductionPoints: 1,
   },
   // Likely: 60% UTME(÷400×60) + 30% O'Level (A1=6..C6=1) + 10% sitting bonus, no Post-UTME.
   // The 10% sitting-bonus component (10pts one sitting, 6pts two) isn't modeled - see the note

@@ -26,6 +26,11 @@ export function mergeOLevelRows(rows: OLevelRowValue[]): OLevelResult[] {
   });
 }
 
+/** 2 only when the second sitting is switched on and actually has results in it. */
+export function countSittings(values: Pick<AssessmentFormValues, "secondSittingEnabled" | "oLevelRows">): 1 | 2 {
+  return values.secondSittingEnabled && values.oLevelRows.some((row) => row.sitting === "SECOND") ? 2 : 1;
+}
+
 export function buildCandidateProfile(values: AssessmentFormValues, user: AuthUser): CandidateProfile {
   return {
     id: user.id,
@@ -38,6 +43,7 @@ export function buildCandidateProfile(values: AssessmentFormValues, user: AuthUs
     postUtmeScore: values.postUtmeScore,
     utmeSubjects: [COMPULSORY_UTME_SUBJECT, values.utmeElective1, values.utmeElective2, values.utmeElective3],
     oLevelResults: mergeOLevelRows(values.oLevelRows),
+    oLevelSittings: countSittings(values),
     targetCourseId: values.targetCourseId,
     targetUniversityId: values.targetUniversityId,
   };

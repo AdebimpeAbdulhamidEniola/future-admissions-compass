@@ -1,4 +1,5 @@
 import type {
+  AdmissionRequirement,
   AggregateScoreResult,
   AssessmentContext,
   CandidateProfile,
@@ -8,6 +9,7 @@ import type {
   Course,
   CourseRecommendation,
   OLevelGrade,
+  OLevelResult,
   ScoringPolicy,
   VerificationIssue,
   VerificationResult,
@@ -42,33 +44,135 @@ function resolveGradePointsTable(policy: ScoringPolicy): Record<OLevelGrade, num
   return { ...GENERIC_GRADE_POINTS, ...policy.oLevelGradePoints };
 }
 
+const GRADE_ORDER: OLevelGrade[] = ["A1", "B2", "B3", "C4", "C5", "C6", "D7", "E8", "F9"];
+
 /**
- * Per the dossier (docs/jamb-data-dossier.md, UNILAG section): the 5 O'Level subjects that count
- * toward the aggregate are the course's own required combination for the candidate's stream, NOT
- * the candidate's 5 highest-graded credits overall. A candidate who lists more than 5 results, or
- * lists them in a different order, must still be scored on exactly the required subjects.
+ * One result per subject (keyed case-insensitively), keeping the best grade. A candidate who
+ * combines two sittings lists the same subject twice; only the better grade counts.
  */
-function requiredOLevelResults(
-  profile: CandidateProfile,
-  requirement: { requiredOLevelSubjects: string[] } | undefined,
-) {
-  const required = new Set((requirement?.requiredOLevelSubjects ?? []).map((s) => s.toLowerCase()));
-  return profile.oLevelResults.filter((r) => required.has(r.subject.toLowerCase()));
+function bestResultsBySubject(results: OLevelResult[]): Map<string, OLevelResult> {
+  const best = new Map<string, OLevelResult>();
+  for (const result of results) {
+    const key = result.subject.toLowerCase();
+    const existing = best.get(key);
+    if (!existing || GRADE_ORDER.indexOf(result.grade) < GRADE_ORDER.indexOf(existing.grade)) {
+      best.set(key, result);
+    }
+  }
+  return best;
+}
+
+function checkUtmeSubjects(utmeSubjects: string[], requirement: AdmissionRequirement) {
+  const subjects = utmeSubjects.filter((s) => s !== "Use of English");
+  const allowed = [...requirement.requiredUtmeSubjects, ...requirement.optionalUtmeSubjects];
+  const missing = requirement.requiredUtmeSubjects.filter((s) => !subjects.includes(s));
+  const invalid = subjects.filter((s) => !allowed.includes(s));
+  return { passed: missing.length === 0, missing, invalid };
+}
+
+interface UsedSubstitution {
+  subject: string;
+  usedSubject: string;
+  countsTowardPoints: boolean;
+}
+
+/**
+ * Every required O'Level subject needs a credit (C6 or better) — either in the subject itself or
+ * in one of the alternatives the course accepts in its place (AdmissionRequirement.oLevelSubstitutions).
+ */
+function checkOLevelCredits(results: OLevelResult[], requirement: AdmissionRequirement) {
+  const best = bestResultsBySubject(results);
+  const hasCredit = (subject: string) => {
+    const result = best.get(subject.toLowerCase());
+    return result !== undefined && CREDIT_GRADES.includes(result.grade);
+  };
+  const substitutionRules = requirement.oLevelSubstitutions ?? [];
+
+  const missingCredits: string[] = [];
+  const substitutions: UsedSubstitution[] = [];
+  for (const subject of requirement.requiredOLevelSubjects) {
+    if (hasCredit(subject)) continue;
+    const rule = substitutionRules.find((r) => r.subject.toLowerCase() === subject.toLowerCase());
+    const usedSubject = rule?.alternatives.find(hasCredit);
+    if (rule && usedSubject) {
+      substitutions.push({ subject, usedSubject, countsTowardPoints: rule.countsTowardPoints });
+    } else {
+      missingCredits.push(subject);
+    }
+  }
+
+  const creditCount = [...best.values()].filter((r) => CREDIT_GRADES.includes(r.grade)).length;
+  return {
+    passed: missingCredits.length === 0 && creditCount >= requirement.minimumCredits,
+    missingCredits,
+    creditCount,
+    substitutions,
+  };
+}
+
+const SCORED_OLEVEL_SUBJECTS = 5;
+
+/**
+ * O'Level points over exactly 5 subjects. Per the dossier (UNILAG and FUNAAB sections) these are
+ * the course's own required combination for the candidate's stream, not their 5 best credits
+ * overall. Where a course requires fewer than 5 named subjects (e.g. "English, Maths, Economics +
+ * 2 relevant subjects"), the remaining slots are filled with the candidate's best other results —
+ * the rule base doesn't yet say which subjects count as "relevant" per course.
+ *
+ * A substitute (e.g. Agriculture for Biology) fills its required subject's slot, scoring its own
+ * grade only when the substitution counts toward points; FUNAAB's doesn't, so that slot scores 0.
+ * Two sittings cost policy.twoSittingDeductionPoints off the total.
+ */
+function scoreOLevel(profile: CandidateProfile, requirement: AdmissionRequirement, policy: ScoringPolicy) {
+  const gradePoints = resolveGradePointsTable(policy);
+  const best = bestResultsBySubject(profile.oLevelResults);
+  const { substitutions } = checkOLevelCredits(profile.oLevelResults, requirement);
+
+  const used = new Set<string>();
+  let points = 0;
+  const required = requirement.requiredOLevelSubjects.slice(0, SCORED_OLEVEL_SUBJECTS);
+  for (const subject of required) {
+    const substitution = substitutions.find((s) => s.subject === subject);
+    if (substitution) {
+      const key = substitution.usedSubject.toLowerCase();
+      used.add(key);
+      if (substitution.countsTowardPoints) points += gradePoints[best.get(key)!.grade];
+      continue;
+    }
+    const own = best.get(subject.toLowerCase());
+    used.add(subject.toLowerCase());
+    if (own) points += gradePoints[own.grade];
+  }
+
+  const fillers = [...best.entries()]
+    .filter(([key]) => !used.has(key))
+    .map(([, result]) => gradePoints[result.grade])
+    .sort((a, b) => b - a)
+    .slice(0, Math.max(0, SCORED_OLEVEL_SUBJECTS - required.length));
+  points += fillers.reduce((sum, p) => sum + p, 0);
+
+  if (profile.oLevelSittings === 2 && policy.twoSittingDeductionPoints) {
+    points = Math.max(0, points - policy.twoSittingDeductionPoints);
+  }
+
+  const maxPoints = Math.max(...Object.values(gradePoints)) * SCORED_OLEVEL_SUBJECTS;
+  return { points, percent: (points / maxPoints) * 100 };
 }
 
 export function verifyEligibility(profile: CandidateProfile): VerificationResult {
   const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId);
   const policy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
+  const university = mockUniversities.find((u) => u.id === profile.targetUniversityId);
+  // Use Case 2's exception: a course with no rule base can't be verified (mirrors the backend).
+  if (!requirement) {
+    throw new Error(
+      "No admission requirement is configured for this course yet, so eligibility can't be checked. An administrator needs to add one.",
+    );
+  }
   const issues: VerificationIssue[] = [];
 
-  const subjects = profile.utmeSubjects.filter((s) => s !== "Use of English");
-  const required = requirement?.requiredUtmeSubjects ?? [];
-  const allowed = [...required, ...(requirement?.optionalUtmeSubjects ?? [])];
-
-  const missing = required.filter((s) => !subjects.includes(s));
-  const invalid = subjects.filter((s) => !allowed.includes(s));
-
-  missing.forEach((s) =>
+  const utme = checkUtmeSubjects(profile.utmeSubjects, requirement);
+  utme.missing.forEach((s) =>
     issues.push({
       code: "UTME_SUBJECT_MISSING",
       severity: "ERROR",
@@ -76,7 +180,7 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
       field: "utmeSubjects",
     }),
   );
-  invalid.forEach((s) =>
+  utme.invalid.forEach((s) =>
     issues.push({
       code: "UTME_SUBJECT_NOT_ACCEPTED",
       severity: "WARNING",
@@ -85,14 +189,8 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
     }),
   );
 
-  const credits = profile.oLevelResults.filter((r) => CREDIT_GRADES.includes(r.grade));
-  const creditSubjects = credits.map((r) => r.subject);
-  const missingCredits = (requirement?.requiredOLevelSubjects ?? []).filter(
-    (s) => !creditSubjects.includes(s),
-  );
-  const minimumCredits = requirement?.minimumCredits ?? 5;
-
-  missingCredits.forEach((s) =>
+  const oLevel = checkOLevelCredits(profile.oLevelResults, requirement);
+  oLevel.missingCredits.forEach((s) =>
     issues.push({
       code: "OLEVEL_CREDIT_MISSING",
       severity: "ERROR",
@@ -100,11 +198,29 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
       field: "oLevelResults",
     }),
   );
-  if (credits.length < minimumCredits) {
+  if (oLevel.creditCount < requirement.minimumCredits) {
     issues.push({
       code: "OLEVEL_CREDIT_COUNT",
       severity: "ERROR",
-      message: `This course requires ${minimumCredits} credit passes; you currently have ${credits.length}.`,
+      message: `This course requires ${requirement.minimumCredits} credit passes; you currently have ${oLevel.creditCount}.`,
+      field: "oLevelResults",
+    });
+  }
+  oLevel.substitutions.forEach((sub) =>
+    issues.push({
+      code: "OLEVEL_SUBSTITUTE_USED",
+      severity: "WARNING",
+      message: sub.countsTowardPoints
+        ? `Your ${sub.usedSubject} credit is accepted in place of ${sub.subject} for this course.`
+        : `Your ${sub.usedSubject} credit is accepted in place of ${sub.subject} for eligibility, but it adds no points to your O'Level score at this university.`,
+      field: "oLevelResults",
+    }),
+  );
+  if (profile.oLevelSittings === 2 && policy?.twoSittingDeductionPoints) {
+    issues.push({
+      code: "OLEVEL_TWO_SITTINGS",
+      severity: "WARNING",
+      message: `You combined two O'Level sittings. ${university?.name ?? "This university"} takes your best grade in each subject, then deducts ${policy.twoSittingDeductionPoints} point(s) from your O'Level score.`,
       field: "oLevelResults",
     });
   }
@@ -126,14 +242,11 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
     }
   }
 
-  const utmePassed = missing.length === 0;
-  const oLevelPassed = missingCredits.length === 0 && credits.length >= minimumCredits;
-
   return {
-    eligible: utmePassed && oLevelPassed && postUtmePassed,
+    eligible: utme.passed && oLevel.passed && postUtmePassed,
     checkedAt: new Date().toISOString(),
-    utmeSubjectCheck: { passed: utmePassed, missing, invalid },
-    oLevelCheck: { passed: oLevelPassed, missingCredits, creditCount: credits.length },
+    utmeSubjectCheck: { passed: utme.passed, missing: utme.missing, invalid: utme.invalid },
+    oLevelCheck: { passed: oLevel.passed, missingCredits: oLevel.missingCredits, creditCount: oLevel.creditCount },
     issues,
   };
 }
@@ -233,16 +346,13 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
   }
   const catchment = classifyCatchment(profile);
   const requirement = mockRequirements.find((r) => r.courseId === profile.targetCourseId);
+  if (!requirement) {
+    throw new Error("No admission requirement is configured for this course yet.");
+  }
 
   const utmePercent = (profile.utmeScore / policy.utmeMaxScore) * 100;
   const postUtmePercent = ((profile.postUtmeScore ?? 0) / policy.postUtmeMaxScore) * 100;
-  const gradePoints = resolveGradePointsTable(policy);
-  const oLevelMaxPoints = Math.max(...Object.values(gradePoints)) * 5;
-  const oLevelPoints = requiredOLevelResults(profile, requirement).reduce(
-    (sum, r) => sum + gradePoints[r.grade],
-    0,
-  );
-  const oLevelPercent = (oLevelPoints / oLevelMaxPoints) * 100;
+  const { points: oLevelPoints, percent: oLevelPercent } = scoreOLevel(profile, requirement, policy);
 
   const breakdown: AggregateScoreResult["breakdown"] = [
     {
