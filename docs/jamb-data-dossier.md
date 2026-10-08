@@ -366,6 +366,8 @@ To upgrade rows to Confirmed, open the unilag.edu.ng release and kofastudy.com/u
 
 "Financial Management" was replaced with "Procurement Management Technology" (confirmed real; the former doesn't exist at FUTA) — though see the "Social & Management Sciences" open question above, since neither appears in the newer source.
 
+**Correction — the FUTA aggregate column below is the 2018/19 cycle, not 2026/27** (Likely: the same figures — CPE 69.62, CVE 71.87, MEE 73.75, EEE 74.37, CSC 69, AGE 55.12, MME 54.87, MNE 54.75, ICT 49.75, IPE 47.5 — appear in 2018–19 posts on myschool.ng, nairaleaveforum and thestudentquora; Campusdesk and others re-post them yearly under new labels). Several aggregators say FUTA hasn't released departmental cut-offs since 2018. A second pass found no 0–100 figure for Chemical Engineering, Mechatronics Engineering, MBBS or the SLIT programmes (blog UTME-scale estimates — e.g. MBBS 250, EMT/LTT 190, PMT 200 — conflict and aren't comparable to the 0–100 aggregate, so they aren't used).
+
 | Faculty | Course | Aggregate (0–100) | Est. JAMB (0–400) | Note |
 |---|---|---:|---:|---|
 | Clinical Sciences | Medicine and Surgery (MBBS) | — | ~250–260 | Admission **reinstated** for 2026/27 after an earlier suspension (Confirmed, futa.edu.ng/home/newsd/1399); no 0–100 cut-off found |
