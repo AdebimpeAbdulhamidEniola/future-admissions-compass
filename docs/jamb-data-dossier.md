@@ -150,6 +150,48 @@ The scoring engine should average the grades of *these* subjects, not the candid
 
 *Source: [unilag.edu.ng, 3 October 2025](https://unilag.edu.ng/unilag-releases-2025-2026-utme-merit-cut-off-marks/) — full table covers all ~78 UNILAG programs across 9 faculties (Arts, College of Medicine, Education, Engineering, Environmental Sciences, Law, Management Sciences, Pharmacy, Science, Social Sciences), not just the 28 in this dossier's 35-course-per-university scope.*
 
+**Update — 2026/27 release (applied to the seed).** UNILAG published "UNILAG Releases 2026/2027 UTME Merit Cut-Off Marks" (unilag.edu.ng, ~16 Sep 2026). The official page couldn't be opened from the research environment; figures were read from search-index text quoting the release and news coverage dated 16–18 Sep 2026 (legit.ng, The Sun, P.M. News, lawnigeria.com, kofastudy, myschoolgist). Tied to 2026/27 by English merit 68.15 (2025/26: 68.175) and Medicine 83.425 (2025/26: 85.025); pages showing 2025/26 numbers under a 2026/27 label were rejected. No ELDS figures. "NIL" = the release lists no figure for that state (falls back to merit). Confidence: **L** Likely (2+ retrievals agree), **U** Uncertain (single source).
+
+| Course | Merit | Ekiti | Lagos | Ogun | Ondo | Osun | Oyo | Conf. |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| Medicine and Surgery | 83.425 | 79.425 | 79.1 | 81.75 | 81.35 | 79.825 | 80.05 | L (Ogun/Ondo U) |
+| Dentistry | 79.025 | 74.575 | 72.725 | 77.3 | 76.325 | 77.775 | 76.65 | L |
+| Nursing Science | 77.925 | 72.775 | 73.95 | 76.275 | 74.875 | 75.2 | 74.1 | L (Oyo U — same as Pharmacy's, possible mix-up) |
+| Physiotherapy | 76 | 72.75 | 67.4 | 75.375 | 74.7 | 73.675 | 72.3 | L |
+| Medical Laboratory Science | 75.075 | 66.525 | 71.55 | 73.425 | 71.625 | 74.35 | 69.875 | L (Oyo U) |
+| Pharmacy | 78.325 | 72.875 | 72.175 | 76.3 | 75.275 | 75.85 | 74.1 | Merit/Ekiti/Lagos L; rest U |
+| Law | 79.125 | 75.975 | 75.15 | 77.275 | 75.55 | 75.25 | 76.35 | L |
+| Civil Engineering | 74.35 | 62.675 | 69.7 | 71.9 | 67.775 | 71.55 | 68.575 | L |
+| Mechanical Engineering | 79.275 | 67.625 | 76.35 | 77.05 | 68.8 | 70.525 | 74.325 | L |
+| Electrical and Electronics Engineering | 79.025 | 67.925 | 74.625 | 73.975 | 67.7 | 69.2 | 71.3 | L |
+| Chemical Engineering | 72.925 | 62.625 | 63.525 | 70.925 | 67.525 | 64.675 | 62.75 | Merit/Ekiti L; rest U |
+| Surveying and Geoinformatics | 66.075 | 58.075 | 62.5 | 64.35 | 58.875 | 59.75 | 64.3 | Merit/Ekiti L; rest U |
+| Metallurgical and Materials | 67.025 | 64.875 | 60.825 | 65.45 | 60.3 | 59.375 | 60.95 | Merit/Ekiti L; rest U |
+| English | 68.15 | 56.65 | 63.475 | 63.7 | 57.1 | 53.475 | 61.325 | L |
+| History and Strategic Studies | 70.8 | 62.65 | 67.425 | 68.65 | 63.2 | 64.225 | 66.6 | Merit L; states U |
+| Philosophy | 67.725 | 67.3 | 61.15 | 66.6 | 57.925 | 55.5 | 58.15 | Merit L; states U |
+| Linguistics | 72.575 | 69.525 | 59.575 | 70.6 | 66.425 | 68.375 | 69.1 | L |
+| Religious Studies (CRS track) | 55.825 | NIL | NIL | NIL | NIL | NIL | NIL | L (IRS 56.35, Osun 51.95 — U) |
+| European Languages (French track) | 64 | NIL | 62.2 | 60.45 | NIL | NIL | 59.85 | L (German 69.125 U; Russian 55.45 L) |
+| Accounting | 73 | 61.6 | 65.275 | 69.35 | 65.9 | 68.625 | 67.85 | L |
+| Business Administration | 66.725 | 55.45 | 60.025 | 62.7 | 57.1 | 60.25 | 57.175 | L |
+| Actuarial Science and Insurance (Actuarial track) | 65.875 | 65.575 | 62.925 | 64.175 | 52.3 | 61.5 | 54.1 | U (Insurance 63.125, U) |
+| Banking and Finance | 70.35 | 62.775 | 60.375 | 68.875 | 55.6 | 65.925 | 64.275 | L |
+| Industrial Relations and Personnel Management | — | — | — | — | — | — | — | Not found under that name; probably renamed "Employment Relations & HRM" (66.025, U). Seed keeps the 2025/26 figure 60.775 until confirmed. |
+| Economics | 73.625 | 62.525 | 64.9 | 68.05 | 62.175 | 67.35 | 69.35 | Merit L; states U |
+| Psychology | 70.15 | 56.975 | 67.125 | 62.95 | 55.8 | 58.05 | 60.975 | L |
+| Political Science | 65.65 | 59.75 | 51.5 | 61.975 | 58.825 | 51.5 | 55.275 | Merit/Ekiti L; rest U |
+| Computer Science | 82.05 | 78.4 | 73.225 | 79.175 | 79.675 | 78.85 | 79.875 | Merit L; states U |
+| Physics | 54.5 | NIL | NIL | NIL | NIL | NIL | NIL | Merit L; NIL row U |
+| Chemistry | 65.4 | 62.8 | 59.15 | 61.25 | 55.625 | 59.975 | 59.875 | Merit/Ekiti L; rest U |
+| Mathematics | 58.775 | 57.5 | 58.275 | 57.8 | NIL | 55.125 | NIL | U |
+| Biochemistry | 67.9 | 55.95 | 63.15 | 63.65 | 60.625 | 64.025 | 57.03 | L (Oyo possibly 57.025) |
+| Botany | 54.3 | NIL | 50.95 | NIL | NIL | NIL | NIL | L |
+| Zoology | 54.825 | NIL | NIL | NIL | NIL | NIL | NIL | L |
+| Marine Biology ("Marine Science") | 64.825 | 54.25 | 54.95 | 60.975 | 50.55 | 59.3 | 59.075 | Merit/Ekiti L; rest U |
+
+To upgrade rows to Confirmed, open the unilag.edu.ng release and kofastudy.com/unilag-cut-off-marks-2026-2027/ in a browser.
+
 ---
 
 ## Obafemi Awolowo University (OAU · Osun State)
@@ -505,6 +547,7 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 - [x] ~~**UI course names**~~ — resolved by UI's own official cut-off page: "Agronomy" was correctly renamed to "Crop and Horticultural Sciences" (confirmed real), but "Forest Resources Management" was wrongly renamed to "Forest Production and Products" — reverted, since "Forest Resources Management" is itself the real, confirmed name.
 - [ ] **UI cut-offs are 2024/2025 cycle, not 2025/2026** — several courses shifted meaningfully between cycles in the past (Computer Science 63.5→71, Law 70.875→67.25, Agricultural and Environmental Engineering 56.875→50) — re-verify against a newer UI page before seeding if one becomes available.
 - [ ] **UNILAG** — three entries (Religious Studies, European Languages, Actuarial Science and Insurance) are each really two-to-three separate admission tracks with no single combined cut-off. Decide how to model this.
+- [x] ~~**UNILAG per-state catchment cut-offs for the other 30 courses**~~ — all UNILAG courses now use the 2026/27 release with per-state figures (see the 2026/27 table in the UNILAG section; most rows Likely, some Uncertain).
 - [ ] **Catchment (and, for OAU, ELDS) cut-off model** — both UNILAG and OAU publish a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course; OAU additionally does this for ELDS in 2 of its 5 sourced faculties. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See the UNILAG and OAU sections above for the full findings and example figures.
 - [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering are absent from two independent sources now, not just unfound — worth treating as likely nonexistent rather than "not yet located." MBBS admission is suspended for 2026/27. Forestry and Wood Technology has a genuine conflict (47.5 vs. 57.5) between sources.
 - [x] ~~**FUTA "Social & Management Sciences" faculty**~~ — resolved: all five courses are in FUTA's **School of Logistics and Innovation Technology (SLIT)**, formerly the School of Management Technology (Likely, slit.futa.edu.ng; Procurement Management Technology is a newly approved SLIT programme from 2025/26). Seeded under a "Logistics & Innovation Technology" faculty. Previous note: doesn't appear at all in FUTA's real 7-school structure (SAAT, SEET, SEMS, SET, SOC, SOS, SHHT) per a newer, more complete source. The 5 courses this dossier files there (Business Information Technology, Entrepreneurship Management Technology, Logistics and Transport Technology, Project Management Technology, Procurement Management Technology) may belong to an uncovered school rather than being invented — needs verification, similar to the OAU Accounting/Business Administration question that was resolved earlier.
