@@ -74,8 +74,8 @@ function RecommendationsPage() {
                 Alternative courses for {report.context.candidateName}
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Every course below is ranked against your current UTME, O'Level and Post-UTME
-                results — not just {report.context.courseName} at {report.context.universityName}.
+                Other courses at {report.context.universityName} you qualify for, ranked against
+                your current UTME, O'Level and Post-UTME results.
               </p>
             </div>
 

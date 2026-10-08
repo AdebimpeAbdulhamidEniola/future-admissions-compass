@@ -113,8 +113,8 @@ export function RecommendationsSection({
         </div>
         <p className="text-sm text-muted-foreground">
           Your score doesn't clear this course's cut-off. These are other courses your UTME subjects
-          and O'Level credits already qualify you for, scored with each university's own formula and
-          ranked by a decision-tree model's estimate of your chance of admission:
+          and O'Level credits already qualify you for, at the same university, scored with its
+          formula and ranked by a decision-tree model's estimate of your chance of admission:
         </p>
 
         <div className="mt-4 flex flex-col gap-3">
@@ -175,8 +175,8 @@ export function RecommendationsSection({
       <CardContent>
         {maxConfidence < 0.25 ? (
           <div className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
-            We couldn't find a confident alternative course for this profile right now. Try updating
-            your target course or compare other universities to see more options.
+            We couldn't find a confident alternative course for this profile right now. Try a
+            different target course or run an assessment for another university.
           </div>
         ) : visibleRecommendations.length === 0 ? (
           <div className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
@@ -220,7 +220,9 @@ export function RecommendationsSection({
                         </div>
                         <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs">
                           <p className="text-muted-foreground">
-                            {utmeBasis ? "Your UTME score" : `Your aggregate at ${rec.universityCode}`}
+                            {utmeBasis
+                              ? "Your UTME score"
+                              : `Your aggregate at ${rec.universityCode}`}
                           </p>
                           <p className="font-semibold text-foreground">{candidateScore || "—"}</p>
                         </div>

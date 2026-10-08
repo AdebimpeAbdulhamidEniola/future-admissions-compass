@@ -124,7 +124,11 @@ const SCORED_OLEVEL_SUBJECTS = 5;
  * grade only when the substitution counts toward points; FUNAAB's doesn't, so that slot scores 0.
  * Two sittings cost policy.twoSittingDeductionPoints off the total.
  */
-function scoreOLevel(profile: CandidateProfile, requirement: AdmissionRequirement, policy: ScoringPolicy) {
+function scoreOLevel(
+  profile: CandidateProfile,
+  requirement: AdmissionRequirement,
+  policy: ScoringPolicy,
+) {
   const gradePoints = resolveGradePointsTable(policy);
   const best = bestResultsBySubject(profile.oLevelResults);
   const { substitutions } = checkOLevelCredits(profile.oLevelResults, requirement);
@@ -247,7 +251,11 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
     eligible: utme.passed && oLevel.passed && postUtmePassed,
     checkedAt: new Date().toISOString(),
     utmeSubjectCheck: { passed: utme.passed, missing: utme.missing, invalid: utme.invalid },
-    oLevelCheck: { passed: oLevel.passed, missingCredits: oLevel.missingCredits, creditCount: oLevel.creditCount },
+    oLevelCheck: {
+      passed: oLevel.passed,
+      missingCredits: oLevel.missingCredits,
+      creditCount: oLevel.creditCount,
+    },
     issues,
   };
 }
@@ -286,10 +294,14 @@ export function classifyCatchment(profile: CandidateProfile): CatchmentResult {
 }
 
 /** Which of the candidate's two states actually matched the catchment list — mirrors classifyCatchment's own matching order. */
-function matchedCatchmentState(profile: CandidateProfile, rule: CatchmentRule | undefined): string | null {
+function matchedCatchmentState(
+  profile: CandidateProfile,
+  rule: CatchmentRule | undefined,
+): string | null {
   if (!rule) return null;
   if (rule.catchmentStates.includes(profile.stateOfOrigin)) return profile.stateOfOrigin;
-  if (rule.catchmentStates.includes(profile.schoolLocationState)) return profile.schoolLocationState;
+  if (rule.catchmentStates.includes(profile.schoolLocationState))
+    return profile.schoolLocationState;
   return null;
 }
 
@@ -308,7 +320,9 @@ function resolveCutOff(
   if (status === "ELDS") {
     const state = profile.stateOfOrigin;
     const specific = course.eldsCutOffByState?.[state];
-    return specific !== undefined ? { value: specific, state } : { value: course.eldsCutOff, state: null };
+    return specific !== undefined
+      ? { value: specific, state }
+      : { value: course.eldsCutOff, state: null };
   }
   const state = matchedCatchmentState(profile, rule);
   const specific = state ? course.catchmentCutOffByState?.[state] : undefined;
@@ -363,7 +377,11 @@ function resolveApplicableCutOff(
 }
 
 /** Mirrors the backend: refuse rather than silently comparing against null. */
-function requireApplicableCutOff(cutOff: ApplicableCutOff | null, courseName: string, status: CatchmentStatus) {
+function requireApplicableCutOff(
+  cutOff: ApplicableCutOff | null,
+  courseName: string,
+  status: CatchmentStatus,
+) {
   if (cutOff === null) {
     throw new Error(
       `No confirmed ${status.toLowerCase()} cut-off is available yet for "${courseName}" — see docs/jamb-data-dossier.md.`,
@@ -401,7 +419,11 @@ function scoreCandidate(
   postUtme: { rawScore: number; percent: number },
 ) {
   const utmePercent = (profile.utmeScore / policy.utmeMaxScore) * 100;
-  const { points: oLevelPoints, percent: oLevelPercent } = scoreOLevel(profile, requirement, policy);
+  const { points: oLevelPoints, percent: oLevelPercent } = scoreOLevel(
+    profile,
+    requirement,
+    policy,
+  );
   const sittings = profile.oLevelSittings ?? 1;
 
   const breakdown: AggregateScoreResult["breakdown"] = [
@@ -440,7 +462,9 @@ function scoreCandidate(
     `UTME ${policy.utmeWeighting}%`,
     ...(policy.postUtmeWeighting > 0 ? [`Post-UTME ${policy.postUtmeWeighting}%`] : []),
     ...(policy.oLevelWeighting > 0 ? [`O'Level ${policy.oLevelWeighting}%`] : []),
-    ...(bonus ? [`sitting bonus ${bonus.oneSitting}% (${bonus.twoSittings} for two sittings)`] : []),
+    ...(bonus
+      ? [`sitting bonus ${bonus.oneSitting}% (${bonus.twoSittings} for two sittings)`]
+      : []),
   ];
 
   return {
@@ -469,10 +493,15 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
   const catchment = classifyCatchment(profile);
   const rule = mockCatchmentRules.find((r) => r.universityId === profile.targetUniversityId);
   const postUtmeRaw = profile.postUtmeScore ?? 0;
-  const { aggregate, breakdown, formulaDescription } = scoreCandidate(profile, policy, requirement, {
-    rawScore: postUtmeRaw,
-    percent: (postUtmeRaw / policy.postUtmeMaxScore) * 100,
-  });
+  const { aggregate, breakdown, formulaDescription } = scoreCandidate(
+    profile,
+    policy,
+    requirement,
+    {
+      rawScore: postUtmeRaw,
+      percent: (postUtmeRaw / policy.postUtmeMaxScore) * 100,
+    },
+  );
 
   const cutOff = requireApplicableCutOff(
     resolveApplicableCutOff(course, catchment.status, profile, rule, aggregate),
@@ -494,7 +523,10 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
 }
 
 /** ELDS state of origin first, then catchment by state of origin or school location, else merit. */
-function classifyStatus(profile: CandidateProfile, rule: CatchmentRule | undefined): CatchmentStatus {
+function classifyStatus(
+  profile: CandidateProfile,
+  rule: CatchmentRule | undefined,
+): CatchmentStatus {
   if (!rule) return "MERIT";
   if (rule.eldsStates.includes(profile.stateOfOrigin)) return "ELDS";
   if (
@@ -535,7 +567,7 @@ function evaluateCourse(profile: CandidateProfile, postUtmePercent: number | nul
   const cutOff = resolveApplicableCutOff(course, status, profile, rule, aggregate);
   if (!cutOff) return null;
   const { meetsCutOff, margin } = compareWithCutOff(cutOff, aggregate, profile.utmeScore);
-  return { course, status, aggregate, cutOff, meetsCutOff, margin, postUtmeAssumed: percent > 0 };
+  return { course, status, aggregate, cutOff, meetsCutOff, margin };
 }
 
 /**
@@ -549,50 +581,54 @@ export function recommendCourses(profile: CandidateProfile): CourseRecommendatio
   const score = computeAggregate(profile);
   if (score.meetsCutOff) return [];
 
-  const targetPolicy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
+  const targetPolicy = mockScoringPolicies.find(
+    (p) => p.universityId === profile.targetUniversityId,
+  );
   const postUtmePercent =
     profile.postUtmeScore !== null && targetPolicy
       ? (profile.postUtmeScore / targetPolicy.postUtmeMaxScore) * 100
       : null;
 
-  return mockCourses
-    .filter((c) => c.id !== profile.targetCourseId)
-    .map((course) => evaluateCourse(profile, postUtmePercent, course))
-    .filter((e): e is NonNullable<ReturnType<typeof evaluateCourse>> => e !== null)
-    .map((e) => {
-      const university = mockUniversities.find((u) => u.id === e.course.universityId)!;
-      const utmeBasis = e.cutOff.basis === "UTME";
-      const normalizedMargin = utmeBasis ? e.margin / 4 : e.margin;
-      const matchProbability = 1 / (1 + Math.exp(-normalizedMargin / 2.5));
-      const candidateScore = utmeBasis ? profile.utmeScore : e.aggregate;
-      const what = utmeBasis ? "UTME score" : "aggregate";
-      const rationale = [
-        e.margin >= 0
-          ? `Your ${what} of ${candidateScore} is ${round(e.margin)} point(s) above the ${e.cutOff.value} cut-off.`
-          : `Your ${what} of ${candidateScore} is ${Math.abs(round(e.margin))} point(s) short of the ${e.cutOff.value} cut-off.`,
-        `${university.name} classifies you as ${e.status.toLowerCase()} and its formula gives you ${e.aggregate}/100.`,
-        ...(e.postUtmeAssumed && e.course.universityId !== profile.targetUniversityId
-          ? [`Assumes you score the same percentage in ${university.code}'s Post-UTME as in your current one.`]
-          : []),
-      ];
-      return {
-        rank: 0,
-        courseId: e.course.id,
-        courseName: e.course.name,
-        universityCode: university.code,
-        faculty: e.course.faculty,
-        matchProbability: round(matchProbability, 2),
-        requiredAggregate: e.cutOff.value,
-        candidateScore,
-        cutOffBasis: e.cutOff.basis,
-        lowConfidence: false,
-        rationale,
-        margin: e.margin,
-      };
-    })
-    .sort((a, b) => b.matchProbability - a.matchProbability || b.margin - a.margin)
-    .slice(0, 8)
-    .map(({ margin: _margin, ...r }, i) => ({ ...r, rank: i + 1 }));
+  return (
+    mockCourses
+      // Same university only — each university applies its own formula and cut-offs (mirrors the backend).
+      .filter(
+        (c) => c.universityId === profile.targetUniversityId && c.id !== profile.targetCourseId,
+      )
+      .map((course) => evaluateCourse(profile, postUtmePercent, course))
+      .filter((e): e is NonNullable<ReturnType<typeof evaluateCourse>> => e !== null)
+      .map((e) => {
+        const university = mockUniversities.find((u) => u.id === e.course.universityId)!;
+        const utmeBasis = e.cutOff.basis === "UTME";
+        const normalizedMargin = utmeBasis ? e.margin / 4 : e.margin;
+        const matchProbability = 1 / (1 + Math.exp(-normalizedMargin / 2.5));
+        const candidateScore = utmeBasis ? profile.utmeScore : e.aggregate;
+        const what = utmeBasis ? "UTME score" : "aggregate";
+        const rationale = [
+          e.margin >= 0
+            ? `Your ${what} of ${candidateScore} is ${round(e.margin)} point(s) above the ${e.cutOff.value} cut-off.`
+            : `Your ${what} of ${candidateScore} is ${Math.abs(round(e.margin))} point(s) short of the ${e.cutOff.value} cut-off.`,
+          `${university.name} classifies you as ${e.status.toLowerCase()} and its formula gives you ${e.aggregate}/100.`,
+        ];
+        return {
+          rank: 0,
+          courseId: e.course.id,
+          courseName: e.course.name,
+          universityCode: university.code,
+          faculty: e.course.faculty,
+          matchProbability: round(matchProbability, 2),
+          requiredAggregate: e.cutOff.value,
+          candidateScore,
+          cutOffBasis: e.cutOff.basis,
+          lowConfidence: false,
+          rationale,
+          margin: e.margin,
+        };
+      })
+      .sort((a, b) => b.matchProbability - a.matchProbability || b.margin - a.margin)
+      .slice(0, 8)
+      .map(({ margin: _margin, ...r }, i) => ({ ...r, rank: i + 1 }))
+  );
 }
 
 export function buildAssessmentContext(profile: CandidateProfile): AssessmentContext {
