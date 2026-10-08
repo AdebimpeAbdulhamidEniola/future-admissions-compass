@@ -526,6 +526,46 @@ Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this du
 | Agriculture | Food Science and Technology | 180 | 60.9 | **Confirmed** by new source; aggregate is a 2023 figure; Law-shortfall reallocation |
 | Agriculture | Water Resources Management and Agrometeorology | 150 | 57.3 | **Confirmed** by new source; aggregate is a 2023 figure; Law-shortfall reallocation |
 
+**Update — 2025/26 departmental cut-offs (applied to the seed).** From FUOYE's own release "Federal University Oye-Ekiti releases 2025/2026 Post-UTME screening cut-off marks" (news.fuoye.edu.ng, ~Sep 2025), read via search-index text quoting that page and mirrors (thenigeriaeducationnews.com, kollegeapply, myschoolgist, campusdesk) — the page itself couldn't be opened. These **replace the "Aggregate (0–100)" column above**, which matches a separate, unofficial list (e.g. Anatomy 63.3, Nursing 74.6) carried by myschool.ng/preps.ng under 2025/26–2026/27 labels. One cut-off per course; no merit/catchment/ELDS split.
+
+| Course | 2025/26 | Conf. |
+|---|---:|---|
+| Anatomy | 66.15 | Likely |
+| Physiology | 65.8 | Likely |
+| Nursing Science | 78.55 | Likely |
+| Medical Laboratory Science | 75.7 | Likely |
+| Radiography and Radiation Science | 74.05 | Likely |
+| Law | 77.75 | Likely (not admitting 2026/27) |
+| Civil Engineering | 66.25 | Uncertain — two mirrors shift the engineering rows down by one (Civil 58.9 …); the official page's order is used |
+| Mechanical Engineering | 66.4 | Uncertain (same) |
+| Electrical and Electronic Engineering | 66.0 | Uncertain (same) |
+| Computer Engineering | 65.9 | Uncertain (some mirrors give 65.9 to ICT Engineering) |
+| Mechatronics Engineering | 69.85 | Likely |
+| English and Literary Studies | 66.35 | Likely |
+| History and International Studies | 67.9 | Likely |
+| Linguistics and Languages | 63.7 | Likely |
+| Philosophy | 60.35 | Likely |
+| Religious Studies | 52.95 | Likely |
+| Economics and Development Studies | 64.55 | Likely |
+| Political Science | 67.05 | Likely |
+| Accounting | 71.25 | Likely |
+| Business Administration | 66.05 | Likely |
+| Mass Communication | 68.5 | Likely |
+| Computer Science | 69.2 | Likely |
+| Biochemistry | 64.4 | Uncertain (other list 63.75) |
+| Microbiology | 63.95 | Uncertain (other list 65.75) |
+| Physics | 54.4 | Uncertain (other list 56.5) |
+| Chemistry | 56.55 | Uncertain (other list 62.5) |
+| Mathematics | 56.85 | Uncertain (other list 55.5) |
+| Statistics | 54.8 | Uncertain (other list 54.5) |
+| Animal Production and Health | 58.1 | Likely |
+| Crop Science and Horticulture | 57.3 | Likely |
+| Agricultural Economics and Extension | 57.6 | Likely |
+| Soil Science and Land Resources Management | 52.4 | Likely |
+| Fisheries and Aquaculture | 57.3 | Likely |
+| Food Science and Technology | 60.95 | Likely |
+| Water Resources Management and Agrometeorology | 52.9 | Likely |
+
 **Bonus real FUOYE programmes found in the new admission-requirements source** (from the finer-grained faculty structure described above): Medicine and Surgery (280, College of Medicine) and Doctor of Pharmacy (230, Faculty of Pharmacy) — both major omissions from the current scope; System Engineering (150) and Information and Communication Engineering (150) — Computer and Information Engineering; Cyber Security (180), Software Engineering (160), Data Science and Analytic (150) — Computing; Agricultural Engineering (150), Materials and Metallurgical Engineering (150) — Engineering; Plant Science and Biotechnology (150), Animal and Environmental Biology (150), Environmental Management and Toxicology (150) — Life Sciences; Industrial Chemistry (150), Geology (150), Geophysics (150) — Physical Sciences; Finance (180), Public Administration (170) — Management Sciences; Criminology and Security Studies (210), Demography and Social Statistics (150), Peace and Conflict Studies (150), Psychology (150), Sociology (160) — Social Sciences; Mass Communication's siblings — Broadcasting (160), Public Relations (160), Journalism and Media Studies (160); Architecture (170), Building (150), Estate Management (150), Quantity Surveying (150), Surveying and Geoinformatics (150), Urban and Regional Planning — Environmental Design and Management; and an entire Faculty of Education (~16 departments, mostly at 150).
 
 **Catchment vs. ELDS** — **Likely**: catchment is Ekiti, Ondo, Osun, Oyo. Kwara and Kogi, which the app currently lists as catchment, actually belong on FUOYE's ELDS list instead.
