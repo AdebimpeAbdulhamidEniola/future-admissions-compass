@@ -493,43 +493,106 @@ export function computeAggregate(profile: CandidateProfile): AggregateScoreResul
   };
 }
 
+/** ELDS state of origin first, then catchment by state of origin or school location, else merit. */
+function classifyStatus(profile: CandidateProfile, rule: CatchmentRule | undefined): CatchmentStatus {
+  if (!rule) return "MERIT";
+  if (rule.eldsStates.includes(profile.stateOfOrigin)) return "ELDS";
+  if (
+    rule.catchmentStates.includes(profile.stateOfOrigin) ||
+    rule.catchmentStates.includes(profile.schoolLocationState)
+  ) {
+    return "CATCHMENT";
+  }
+  return "MERIT";
+}
+
+/**
+ * How the candidate stands for another course (mirrors the backend's evaluateCourse): null when
+ * they don't meet its requirements, can't be scored under its formula, or it has no cut-off.
+ */
+function evaluateCourse(profile: CandidateProfile, postUtmePercent: number | null, course: Course) {
+  const requirement = mockRequirements.find((r) => r.courseId === course.id);
+  const policy = mockScoringPolicies.find((p) => p.universityId === course.universityId);
+  if (!requirement || !policy) return null;
+  if (!checkUtmeSubjects(profile.utmeSubjects, requirement).passed) return null;
+  if (!checkOLevelCredits(profile.oLevelResults, requirement).passed) return null;
+  if (needsPostUtmeScore(policy) && postUtmePercent === null) return null;
+  if (
+    policy.minPostUtmePercent != null &&
+    postUtmePercent !== null &&
+    postUtmePercent < policy.minPostUtmePercent
+  ) {
+    return null;
+  }
+
+  const rule = mockCatchmentRules.find((r) => r.universityId === course.universityId);
+  const status = classifyStatus(profile, rule);
+  const percent = needsPostUtmeScore(policy) ? (postUtmePercent ?? 0) : 0;
+  const { aggregate } = scoreCandidate(profile, policy, requirement, {
+    rawScore: round((percent / 100) * policy.postUtmeMaxScore),
+    percent,
+  });
+  const cutOff = resolveApplicableCutOff(course, status, profile, rule, aggregate);
+  if (!cutOff) return null;
+  const { meetsCutOff, margin } = compareWithCutOff(cutOff, aggregate, profile.utmeScore);
+  return { course, status, aggregate, cutOff, meetsCutOff, margin, postUtmeAssumed: percent > 0 };
+}
+
+/**
+ * Mock stand-in for the backend's Decision Tree recommender: same trigger (eligible but below the
+ * cut-off), same eligibility filter and per-university scoring, but the match probability is a
+ * simple logistic curve over the cut-off margin instead of a trained model — the browser mocks
+ * don't ship ml-cart or a training set.
+ */
 export function recommendCourses(profile: CandidateProfile): CourseRecommendation[] {
-  if (!canComputeAggregate(profile)) return [];
+  if (!verifyEligibility(profile).eligible || !canComputeAggregate(profile)) return [];
   const score = computeAggregate(profile);
-  const catchment = classifyCatchment(profile);
+  if (score.meetsCutOff) return [];
+
+  const targetPolicy = mockScoringPolicies.find((p) => p.universityId === profile.targetUniversityId);
+  const postUtmePercent =
+    profile.postUtmeScore !== null && targetPolicy
+      ? (profile.postUtmeScore / targetPolicy.postUtmeMaxScore) * 100
+      : null;
 
   return mockCourses
     .filter((c) => c.id !== profile.targetCourseId)
-    .map((course) => {
-      const university = mockUniversities.find((u) => u.id === course.universityId)!;
-      const courseRule = mockCatchmentRules.find((r) => r.universityId === course.universityId);
-      // Skip courses with no confirmed cut-off yet, rather than fabricating a comparison — one
-      // missing figure shouldn't break the whole recommendation list (mirrors the backend).
-      const cutOff = resolveCutOff(course, catchment.status, profile, courseRule).value;
-      if (cutOff === null) return null;
-      const headroom = score.aggregate - cutOff;
-      const matchProbability = clamp(0.5 + headroom / 30, 0.02, 0.97);
+    .map((course) => evaluateCourse(profile, postUtmePercent, course))
+    .filter((e): e is NonNullable<ReturnType<typeof evaluateCourse>> => e !== null)
+    .map((e) => {
+      const university = mockUniversities.find((u) => u.id === e.course.universityId)!;
+      const utmeBasis = e.cutOff.basis === "UTME";
+      const normalizedMargin = utmeBasis ? e.margin / 4 : e.margin;
+      const matchProbability = 1 / (1 + Math.exp(-normalizedMargin / 2.5));
+      const candidateScore = utmeBasis ? profile.utmeScore : e.aggregate;
+      const what = utmeBasis ? "UTME score" : "aggregate";
       const rationale = [
-        headroom >= 0
-          ? `Your aggregate of ${score.aggregate} is ${round(headroom)} point(s) above the ${cutOff} cut-off.`
-          : `Your aggregate of ${score.aggregate} is ${Math.abs(round(headroom))} point(s) short of the ${cutOff} cut-off.`,
-        `${university.name} applies a ${catchment.status.toLowerCase()} cut-off in your case.`,
+        e.margin >= 0
+          ? `Your ${what} of ${candidateScore} is ${round(e.margin)} point(s) above the ${e.cutOff.value} cut-off.`
+          : `Your ${what} of ${candidateScore} is ${Math.abs(round(e.margin))} point(s) short of the ${e.cutOff.value} cut-off.`,
+        `${university.name} classifies you as ${e.status.toLowerCase()} and its formula gives you ${e.aggregate}/100.`,
+        ...(e.postUtmeAssumed && e.course.universityId !== profile.targetUniversityId
+          ? [`Assumes you score the same percentage in ${university.code}'s Post-UTME as in your current one.`]
+          : []),
       ];
       return {
         rank: 0,
-        courseId: course.id,
-        courseName: course.name,
+        courseId: e.course.id,
+        courseName: e.course.name,
         universityCode: university.code,
-        faculty: course.faculty,
+        faculty: e.course.faculty,
         matchProbability: round(matchProbability, 2),
-        requiredAggregate: cutOff,
+        requiredAggregate: e.cutOff.value,
+        candidateScore,
+        cutOffBasis: e.cutOff.basis,
+        lowConfidence: false,
         rationale,
+        margin: e.margin,
       };
     })
-    .filter((r): r is CourseRecommendation => r !== null)
-    .sort((a, b) => b.matchProbability - a.matchProbability)
+    .sort((a, b) => b.matchProbability - a.matchProbability || b.margin - a.margin)
     .slice(0, 8)
-    .map((r, i) => ({ ...r, rank: i + 1 }));
+    .map(({ margin: _margin, ...r }, i) => ({ ...r, rank: i + 1 }));
 }
 
 export function buildAssessmentContext(profile: CandidateProfile): AssessmentContext {
@@ -573,8 +636,4 @@ export function buildAssessmentContext(profile: CandidateProfile): AssessmentCon
 function round(n: number, dp = 1) {
   const f = 10 ** dp;
   return Math.round(n * f) / f;
-}
-
-function clamp(n: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, n));
 }

@@ -40,15 +40,18 @@ function MatchProbabilityRing({ value }: { value: number }) {
   );
 }
 
+/** The candidate's score for this course on its own basis (older reports only have the target aggregate). */
+function scoreFor(rec: CourseRecommendation, candidateAggregate: number) {
+  return rec.candidateScore ?? candidateAggregate;
+}
+
 export function RecommendationsSection({
   recommendations,
   candidateAggregate,
-  ineligible,
   viewAllAssessmentId,
 }: {
   recommendations: CourseRecommendation[];
   candidateAggregate: number;
-  ineligible: boolean;
   /** When set, shows a "view all" link to the standalone /assessment/$id/recommendations page. */
   viewAllAssessmentId?: string;
 }) {
@@ -75,8 +78,8 @@ export function RecommendationsSection({
       if (sortBy === "match") {
         return b.matchProbability - a.matchProbability;
       }
-      const aMargin = candidateAggregate - a.requiredAggregate;
-      const bMargin = candidateAggregate - b.requiredAggregate;
+      const aMargin = scoreFor(a, candidateAggregate) - a.requiredAggregate;
+      const bMargin = scoreFor(b, candidateAggregate) - b.requiredAggregate;
       return bMargin - aMargin;
     });
   }, [candidateAggregate, facultyFilter, recommendations, sortBy, universityFilter]);
@@ -109,9 +112,9 @@ export function RecommendationsSection({
           )}
         </div>
         <p className="text-sm text-muted-foreground">
-          {ineligible
-            ? "While you work on the requirements above, here are courses your current UTME subjects and O'Level credits already support:"
-            : "Your aggregate doesn't clear this course's cut-off. Here are alternatives where your score gives you a stronger chance:"}
+          Your score doesn't clear this course's cut-off. These are other courses your UTME subjects
+          and O'Level credits already qualify you for, scored with each university's own formula and
+          ranked by a decision-tree model's estimate of your chance of admission:
         </p>
 
         <div className="mt-4 flex flex-col gap-3">
@@ -183,8 +186,10 @@ export function RecommendationsSection({
         ) : (
           <ul className="space-y-4">
             {visibleRecommendations.slice(0, 5).map((rec) => {
-              const margin = Math.round(candidateAggregate - rec.requiredAggregate);
+              const candidateScore = scoreFor(rec, candidateAggregate);
+              const margin = Math.round(candidateScore - rec.requiredAggregate);
               const isStrong = margin >= 0;
+              const utmeBasis = rec.cutOffBasis === "UTME";
               return (
                 <li key={rec.courseId} className="rounded-3xl border border-border p-4 shadow-sm">
                   <div className="flex items-start gap-4 sm:items-center">
@@ -197,20 +202,27 @@ export function RecommendationsSection({
                         <Badge variant={isStrong ? "success" : "secondary"} className="text-[11px]">
                           {Math.abs(margin)} {margin >= 0 ? "points ahead" : "points short"}
                         </Badge>
+                        {rec.lowConfidence && (
+                          <Badge variant="outline" className="text-[11px]">
+                            Low confidence
+                          </Badge>
+                        )}
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground">
                         {rec.universityCode} · {rec.faculty}
                       </p>
                       <div className="mt-2 grid gap-2 sm:grid-cols-2">
                         <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs">
-                          <p className="text-muted-foreground">Required aggregate</p>
+                          <p className="text-muted-foreground">
+                            {utmeBasis ? "JAMB cut-off" : "Required aggregate"}
+                          </p>
                           <p className="font-semibold text-foreground">{rec.requiredAggregate}</p>
                         </div>
                         <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs">
-                          <p className="text-muted-foreground">Your current aggregate</p>
-                          <p className="font-semibold text-foreground">
-                            {candidateAggregate || "—"}
+                          <p className="text-muted-foreground">
+                            {utmeBasis ? "Your UTME score" : `Your aggregate at ${rec.universityCode}`}
                           </p>
+                          <p className="font-semibold text-foreground">{candidateScore || "—"}</p>
                         </div>
                       </div>
                     </div>

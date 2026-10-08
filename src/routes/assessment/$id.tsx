@@ -83,7 +83,9 @@ function AssessmentResult() {
   }
 
   const { verification, score, catchment, recommendations, context } = report;
-  const showRecommendations = !verification.eligible || (score !== null && !score.meetsCutOff);
+  // Recommendations are only generated for a candidate who passed the subject/O'Level checks but
+  // scored below the cut-off (thesis §3.2.2).
+  const showRecommendations = verification.eligible && score !== null && !score.meetsCutOff;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -101,7 +103,6 @@ function AssessmentResult() {
           <RecommendationsSection
             recommendations={recommendations}
             candidateAggregate={score?.aggregate ?? 0}
-            ineligible={!verification.eligible}
             viewAllAssessmentId={report.id}
           />
         )}

@@ -83,11 +83,11 @@ function RecommendationsPage() {
               <RecommendationsSection
                 recommendations={report.recommendations}
                 candidateAggregate={report.score?.aggregate ?? 0}
-                ineligible={!report.verification.eligible}
               />
             ) : (
               <div className="rounded-xl border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
-                No alternative courses are available for this assessment yet.
+                No alternative courses for this assessment. Recommendations are generated only when
+                you meet a course's subject and O'Level requirements but score below its cut-off.
               </div>
             )}
 

@@ -147,8 +147,16 @@ export interface CourseRecommendation {
   courseName: string;
   universityCode: UniversityCode;
   faculty: string;
+  /** Estimated probability (0–1) of admission, from the backend's Decision Tree model. */
   matchProbability: number;
+  /** This course's cut-off — a 0–100 aggregate, or a raw JAMB score when cutOffBasis is "UTME". */
   requiredAggregate: number;
+  /** The candidate's own score for this course (its university's formula), on the same basis as
+   * requiredAggregate. Omitted on older reports. */
+  candidateScore?: number;
+  cutOffBasis?: CutOffBasis;
+  /** The model saw too few comparable profiles to be confident about this course. */
+  lowConfidence?: boolean;
   rationale: string[];
 }
 
