@@ -63,12 +63,26 @@ function bestResultsBySubject(results: OLevelResult[]): Map<string, OLevelResult
   return best;
 }
 
+/**
+ * Mirrors the backend: every compulsory subject present, one subject from each "one of" group,
+ * and no subject outside the accepted list. Unmet groups are reported as "A or B" in `missing`.
+ */
 function checkUtmeSubjects(utmeSubjects: string[], requirement: AdmissionRequirement) {
   const subjects = utmeSubjects.filter((s) => s !== "Use of English");
-  const allowed = [...requirement.requiredUtmeSubjects, ...requirement.optionalUtmeSubjects];
-  const missing = requirement.requiredUtmeSubjects.filter((s) => !subjects.includes(s));
+  const groups = requirement.utmeSubjectGroups ?? [];
+  const allowed = [
+    ...requirement.requiredUtmeSubjects,
+    ...requirement.optionalUtmeSubjects,
+    ...groups.flat(),
+  ];
+  const missing = [
+    ...requirement.requiredUtmeSubjects.filter((s) => !subjects.includes(s)),
+    ...groups
+      .filter((group) => !group.some((s) => subjects.includes(s)))
+      .map((g) => g.join(" or ")),
+  ];
   const invalid = subjects.filter((s) => !allowed.includes(s));
-  return { passed: missing.length === 0, missing, invalid };
+  return { passed: missing.length === 0 && invalid.length === 0, missing, invalid };
 }
 
 interface UsedSubstitution {
@@ -181,15 +195,17 @@ export function verifyEligibility(profile: CandidateProfile): VerificationResult
     issues.push({
       code: "UTME_SUBJECT_MISSING",
       severity: "ERROR",
-      message: `${s} is a compulsory UTME subject for this course but is not in your combination.`,
+      message: s.includes(" or ")
+        ? `You need ${s} in your UTME combination for this course.`
+        : `${s} is a compulsory UTME subject for this course but is not in your combination.`,
       field: "utmeSubjects",
     }),
   );
   utme.invalid.forEach((s) =>
     issues.push({
       code: "UTME_SUBJECT_NOT_ACCEPTED",
-      severity: "WARNING",
-      message: `${s} is not among the subjects accepted for this course, so it will not count.`,
+      severity: "ERROR",
+      message: `${s} is not among the UTME subjects accepted for this course. All three subjects besides Use of English must be on the course's list.`,
       field: "utmeSubjects",
     }),
   );

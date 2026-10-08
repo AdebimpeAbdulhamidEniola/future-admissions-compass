@@ -17,7 +17,13 @@ function requirementFor(courseId: string): AdmissionRequirement {
       courseId,
       requiredUtmeSubjects: ["Biology", "Chemistry", "Physics"],
       optionalUtmeSubjects: ["Mathematics"],
-      requiredOLevelSubjects: ["English Language", "Mathematics", "Biology", "Chemistry", "Physics"],
+      requiredOLevelSubjects: [
+        "English Language",
+        "Mathematics",
+        "Biology",
+        "Chemistry",
+        "Physics",
+      ],
       minimumCredits: 5,
     };
   }
@@ -46,7 +52,14 @@ function requirementFor(courseId: string): AdmissionRequirement {
       id: `req-${courseId}`,
       courseId,
       requiredUtmeSubjects: ["Literature in English"],
-      optionalUtmeSubjects: ["History", "Government", "Christian Religious Studies", "Yoruba"],
+      optionalUtmeSubjects: [
+        "History",
+        "Government",
+        "Christian Religious Studies",
+        "Yoruba",
+        "Economics",
+        "Geography",
+      ],
       requiredOLevelSubjects: ["English Language", "Literature in English"],
       minimumCredits: 5,
     };
@@ -56,7 +69,13 @@ function requirementFor(courseId: string): AdmissionRequirement {
       id: `req-${courseId}`,
       courseId,
       requiredUtmeSubjects: ["Mathematics", "Economics"],
-      optionalUtmeSubjects: ["Government", "Geography", "Commerce"],
+      optionalUtmeSubjects: [
+        "Government",
+        "Geography",
+        "Commerce",
+        "History",
+        "Literature in English",
+      ],
       requiredOLevelSubjects: ["English Language", "Mathematics", "Economics"],
       minimumCredits: 5,
     };
@@ -82,33 +101,72 @@ function withSubstitutions(requirement: AdmissionRequirement): AdmissionRequirem
   if (course.universityId === "uni-funaab") {
     return {
       ...requirement,
-      oLevelSubstitutions: [{ subject: "Biology", alternatives: ["Agricultural Science"], countsTowardPoints: false }],
+      oLevelSubstitutions: [
+        { subject: "Biology", alternatives: ["Agricultural Science"], countsTowardPoints: false },
+      ],
     };
   }
   if (course.universityId === "uni-futa") {
     return {
       ...requirement,
-      oLevelSubstitutions: [{ subject: "Biology", alternatives: ["Agricultural Science"], countsTowardPoints: true }],
+      oLevelSubstitutions: [
+        { subject: "Biology", alternatives: ["Agricultural Science"], countsTowardPoints: true },
+      ],
     };
   }
   return requirement;
 }
 
-export const mockRequirements: AdmissionRequirement[] = mockCourses.map((c) => withSubstitutions(requirementFor(c.id)));
+export const mockRequirements: AdmissionRequirement[] = mockCourses.map((c) =>
+  withSubstitutions(requirementFor(c.id)),
+);
 
 export const mockScoringPolicies: ScoringPolicy[] = [
   // Likely: JAMB(÷8) + Post-UTME(÷2), out of 100. O'Level is a pass/fail eligibility gate only -
   // not part of the number (oLevelWeighting: 0 is deliberate, not a placeholder).
-  { id: "sp-ui", universityId: "uni-ui", utmeWeighting: 50, postUtmeWeighting: 50, oLevelWeighting: 0, utmeMaxScore: 400, postUtmeMaxScore: 100 },
+  {
+    id: "sp-ui",
+    universityId: "uni-ui",
+    utmeWeighting: 50,
+    postUtmeWeighting: 50,
+    oLevelWeighting: 0,
+    utmeMaxScore: 400,
+    postUtmeMaxScore: 100,
+  },
   // Likely: 50% UTME(÷8) + 30% Post-UTME(÷2) + 20% O'Level. Candidates below 12% in Post-UTME
   // are disqualified regardless of JAMB score — enforced in verifyEligibility, not the score.
-  { id: "sp-unilag", universityId: "uni-unilag", utmeWeighting: 50, postUtmeWeighting: 30, oLevelWeighting: 20, utmeMaxScore: 400, postUtmeMaxScore: 100, minPostUtmePercent: 12 },
+  {
+    id: "sp-unilag",
+    universityId: "uni-unilag",
+    utmeWeighting: 50,
+    postUtmeWeighting: 30,
+    oLevelWeighting: 20,
+    utmeMaxScore: 400,
+    postUtmeMaxScore: 100,
+    minPostUtmePercent: 12,
+  },
   // Likely: 50% JAMB(÷8) + 40% Post-UTME (its own raw score, out of 40 - hence postUtmeMaxScore: 40,
   // not 100) + 10% O'Level, A1=10..C6=5 (matches the engine's generic grade table already).
-  { id: "sp-oau", universityId: "uni-oau", utmeWeighting: 50, postUtmeWeighting: 40, oLevelWeighting: 10, utmeMaxScore: 400, postUtmeMaxScore: 40 },
+  {
+    id: "sp-oau",
+    universityId: "uni-oau",
+    utmeWeighting: 50,
+    postUtmeWeighting: 40,
+    oLevelWeighting: 10,
+    utmeMaxScore: 400,
+    postUtmeMaxScore: 40,
+  },
   // Doubting (see docs/jamb-data-dossier.md): 75% JAMB(÷400×75) + 25% O'Level, no Post-UTME -
   // two independent sources say FUTA runs no scored Post-UTME, but this is disputed.
-  { id: "sp-futa", universityId: "uni-futa", utmeWeighting: 75, postUtmeWeighting: 0, oLevelWeighting: 25, utmeMaxScore: 400, postUtmeMaxScore: 100 },
+  {
+    id: "sp-futa",
+    universityId: "uni-futa",
+    utmeWeighting: 75,
+    postUtmeWeighting: 0,
+    oLevelWeighting: 25,
+    utmeMaxScore: 400,
+    postUtmeMaxScore: 100,
+  },
   // Confirmed, helpdesk.funaab.edu.ng Article ID 30: straight 50% UTME + 50% O'Level, no
   // Post-UTME/screening term. FUNAAB runs an online screening exercise, but it's an
   // eligibility/verification step, not something that contributes to the aggregate.
@@ -140,16 +198,74 @@ export const mockScoringPolicies: ScoringPolicy[] = [
 ];
 
 const ELDS_STATES = [
-  "Bayelsa", "Borno", "Ebonyi", "Gombe", "Jigawa", "Kebbi", "Kwara", "Sokoto",
-  "Taraba", "Yobe", "Zamfara", "Adamawa",
+  "Bayelsa",
+  "Borno",
+  "Ebonyi",
+  "Gombe",
+  "Jigawa",
+  "Kebbi",
+  "Kwara",
+  "Sokoto",
+  "Taraba",
+  "Yobe",
+  "Zamfara",
+  "Adamawa",
 ];
 
 export const mockCatchmentRules: CatchmentRule[] = [
-  { id: "cr-ui", universityId: "uni-ui", catchmentStates: ["Oyo", "Ogun", "Osun", "Ondo", "Ekiti", "Lagos"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
-  { id: "cr-unilag", universityId: "uni-unilag", catchmentStates: ["Lagos", "Ogun", "Oyo", "Osun", "Ondo", "Ekiti"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
-  { id: "cr-oau", universityId: "uni-oau", catchmentStates: ["Osun", "Oyo", "Ogun", "Ondo", "Ekiti", "Lagos"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
-  { id: "cr-futa", universityId: "uni-futa", catchmentStates: ["Ondo", "Ekiti", "Osun", "Oyo", "Ogun", "Edo"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
-  { id: "cr-funaab", universityId: "uni-funaab", catchmentStates: ["Ogun", "Lagos", "Oyo", "Osun", "Ondo", "Ekiti"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
+  {
+    id: "cr-ui",
+    universityId: "uni-ui",
+    catchmentStates: ["Oyo", "Ogun", "Osun", "Ondo", "Ekiti", "Lagos"],
+    eldsStates: ELDS_STATES,
+    meritQuotaPercent: 45,
+    catchmentQuotaPercent: 35,
+    eldsQuotaPercent: 20,
+  },
+  {
+    id: "cr-unilag",
+    universityId: "uni-unilag",
+    catchmentStates: ["Lagos", "Ogun", "Oyo", "Osun", "Ondo", "Ekiti"],
+    eldsStates: ELDS_STATES,
+    meritQuotaPercent: 45,
+    catchmentQuotaPercent: 35,
+    eldsQuotaPercent: 20,
+  },
+  {
+    id: "cr-oau",
+    universityId: "uni-oau",
+    catchmentStates: ["Osun", "Oyo", "Ogun", "Ondo", "Ekiti", "Lagos"],
+    eldsStates: ELDS_STATES,
+    meritQuotaPercent: 45,
+    catchmentQuotaPercent: 35,
+    eldsQuotaPercent: 20,
+  },
+  {
+    id: "cr-futa",
+    universityId: "uni-futa",
+    catchmentStates: ["Ondo", "Ekiti", "Osun", "Oyo", "Ogun", "Edo"],
+    eldsStates: ELDS_STATES,
+    meritQuotaPercent: 45,
+    catchmentQuotaPercent: 35,
+    eldsQuotaPercent: 20,
+  },
+  {
+    id: "cr-funaab",
+    universityId: "uni-funaab",
+    catchmentStates: ["Ogun", "Lagos", "Oyo", "Osun", "Ondo", "Ekiti"],
+    eldsStates: ELDS_STATES,
+    meritQuotaPercent: 45,
+    catchmentQuotaPercent: 35,
+    eldsQuotaPercent: 20,
+  },
   // Likely (docs/jamb-data-dossier.md): Kwara and Kogi are on FUOYE's ELDS list, not its catchment.
-  { id: "cr-fuoye", universityId: "uni-fuoye", catchmentStates: ["Ekiti", "Ondo", "Osun", "Oyo"], eldsStates: [...ELDS_STATES, "Kogi"], meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
+  {
+    id: "cr-fuoye",
+    universityId: "uni-fuoye",
+    catchmentStates: ["Ekiti", "Ondo", "Osun", "Oyo"],
+    eldsStates: [...ELDS_STATES, "Kogi"],
+    meritQuotaPercent: 45,
+    catchmentQuotaPercent: 35,
+    eldsQuotaPercent: 20,
+  },
 ];

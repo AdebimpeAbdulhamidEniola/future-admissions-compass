@@ -36,6 +36,8 @@ export interface AdmissionRequirement {
   courseId: string;
   requiredUtmeSubjects: string[];
   optionalUtmeSubjects: string[];
+  /** "One of" UTME groups, e.g. [["Biology", "Agricultural Science"]]: at least one from each. */
+  utmeSubjectGroups?: string[][];
   requiredOLevelSubjects: string[];
   minimumCredits: number;
   /** Subjects accepted in place of a required O'Level subject. A credit in an alternative satisfies
