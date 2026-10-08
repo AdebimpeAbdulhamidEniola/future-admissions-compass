@@ -150,5 +150,6 @@ export const mockCatchmentRules: CatchmentRule[] = [
   { id: "cr-oau", universityId: "uni-oau", catchmentStates: ["Osun", "Oyo", "Ogun", "Ondo", "Ekiti", "Lagos"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
   { id: "cr-futa", universityId: "uni-futa", catchmentStates: ["Ondo", "Ekiti", "Osun", "Oyo", "Ogun", "Edo"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
   { id: "cr-funaab", universityId: "uni-funaab", catchmentStates: ["Ogun", "Lagos", "Oyo", "Osun", "Ondo", "Ekiti"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
-  { id: "cr-fuoye", universityId: "uni-fuoye", catchmentStates: ["Ekiti", "Ondo", "Osun", "Oyo", "Kwara", "Kogi"], eldsStates: ELDS_STATES, meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
+  // Likely (docs/jamb-data-dossier.md): Kwara and Kogi are on FUOYE's ELDS list, not its catchment.
+  { id: "cr-fuoye", universityId: "uni-fuoye", catchmentStates: ["Ekiti", "Ondo", "Osun", "Oyo"], eldsStates: [...ELDS_STATES, "Kogi"], meritQuotaPercent: 45, catchmentQuotaPercent: 35, eldsQuotaPercent: 20 },
 ];
