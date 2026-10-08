@@ -35,14 +35,20 @@ function runStagedAnimation(onStage: (index: number) => void): Promise<void> {
 function EditButton({ step }: { step: StepId }) {
   const { goToStep } = useAssessmentWizard();
   return (
-    <Button type="button" variant="link" size="sm" className="h-auto p-0" onClick={() => goToStep(step)}>
+    <Button
+      type="button"
+      variant="link"
+      size="sm"
+      className="h-auto p-0"
+      onClick={() => goToStep(step)}
+    >
       Edit
     </Button>
   );
 }
 
 export function ReviewStep() {
-  const { form, goBack } = useAssessmentWizard();
+  const { form, goBack, asksPostUtme } = useAssessmentWizard();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -62,15 +68,23 @@ export function ReviewStep() {
     if (!user) return;
     setProcessing(true);
     setStageIndex(0);
-    const candidate = buildCandidateProfile(values, user);
+    const candidate = buildCandidateProfile(
+      asksPostUtme ? values : { ...values, postUtmeScore: null },
+      user,
+    );
 
     try {
-      const [report] = await Promise.all([mutation.mutateAsync({ candidate }), runStagedAnimation(setStageIndex)]);
+      const [report] = await Promise.all([
+        mutation.mutateAsync({ candidate }),
+        runStagedAnimation(setStageIndex),
+      ]);
       await navigate({ to: "/assessment/$id", params: { id: report.id } });
     } catch (error) {
       setProcessing(false);
       toast.error(
-        error instanceof ApiError ? error.message : "Something went wrong while generating your assessment. Try again.",
+        error instanceof ApiError
+          ? error.message
+          : "Something went wrong while generating your assessment. Try again.",
       );
     }
   }
@@ -83,7 +97,9 @@ export function ReviewStep() {
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-xl font-semibold text-foreground">Review your details</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Check everything below, then submit for your assessment.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Check everything below, then submit for your assessment.
+        </p>
       </div>
 
       <Card className="p-4">
@@ -136,12 +152,15 @@ export function ReviewStep() {
         <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-muted-foreground">Score</dt>
-            <dd className="text-foreground">{Number.isNaN(values.utmeScore) ? "—" : values.utmeScore}</dd>
+            <dd className="text-foreground">
+              {Number.isNaN(values.utmeScore) ? "—" : values.utmeScore}
+            </dd>
           </div>
           <div className="sm:col-span-2">
             <dt className="text-muted-foreground">Subjects</dt>
             <dd className="text-foreground">
-              Use of English, {values.utmeElective1 || "—"}, {values.utmeElective2 || "—"}, {values.utmeElective3 || "—"}
+              Use of English, {values.utmeElective1 || "—"}, {values.utmeElective2 || "—"},{" "}
+              {values.utmeElective3 || "—"}
             </dd>
           </div>
         </dl>
@@ -157,24 +176,29 @@ export function ReviewStep() {
             <li key={`${row.subject}-${row.sitting}-${index}`} className="text-foreground">
               {row.subject || "—"}: <span className="font-medium">{row.grade || "—"}</span>
               {values.secondSittingEnabled && (
-                <span className="text-muted-foreground"> ({row.sitting === "SECOND" ? "2nd sitting" : "1st sitting"})</span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  ({row.sitting === "SECOND" ? "2nd sitting" : "1st sitting"})
+                </span>
               )}
             </li>
           ))}
         </ul>
       </Card>
 
-      <Card className="p-4">
-        <div className="flex items-center justify-between">
-          <p className="font-medium text-foreground">Post-UTME</p>
-          <EditButton step="postUtme" />
-        </div>
-        <p className="mt-2 text-sm text-foreground">
-          {values.postUtmeScore === null
-            ? "Not provided — aggregate will use UTME and O'Level only."
-            : values.postUtmeScore}
-        </p>
-      </Card>
+      {asksPostUtme && (
+        <Card className="p-4">
+          <div className="flex items-center justify-between">
+            <p className="font-medium text-foreground">Post-UTME</p>
+            <EditButton step="postUtme" />
+          </div>
+          <p className="mt-2 text-sm text-foreground">
+            {values.postUtmeScore === null
+              ? "Not provided — aggregate will use UTME and O'Level only."
+              : values.postUtmeScore}
+          </p>
+        </Card>
+      )}
 
       <div className="flex items-center justify-between border-t border-border pt-4">
         <Button type="button" variant="outline" onClick={goBack}>

@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getCourseRequirements, listCourses, listUniversities } from "@/lib/api/catalog";
+import {
+  getCourseRequirements,
+  getScoringPolicy,
+  listCourses,
+  listUniversities,
+} from "@/lib/api/catalog";
 
 export function useUniversitiesQuery() {
   return useQuery({ queryKey: ["universities"], queryFn: listUniversities });
@@ -19,5 +24,13 @@ export function useCourseRequirementQuery(courseId: string) {
     queryKey: ["courseRequirement", courseId],
     queryFn: () => getCourseRequirements(courseId),
     enabled: courseId.length > 0,
+  });
+}
+
+export function useScoringPolicyQuery(universityId: string) {
+  return useQuery({
+    queryKey: ["scoringPolicy", universityId],
+    queryFn: () => getScoringPolicy(universityId),
+    enabled: universityId.length > 0,
   });
 }

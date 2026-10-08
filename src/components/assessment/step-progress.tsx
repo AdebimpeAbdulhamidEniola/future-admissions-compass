@@ -2,19 +2,19 @@ import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { STEP_IDS, STEP_LABELS } from "./schema";
+import { STEP_LABELS } from "./schema";
 import { useAssessmentWizard } from "./wizard-context";
 
 export function StepProgress() {
-  const { stepIndex, isReviewing } = useAssessmentWizard();
+  const { steps, stepIndex, isReviewing } = useAssessmentWizard();
 
   return (
     <nav aria-label="Assessment progress">
       <ol className="flex items-center">
-        {STEP_IDS.map((id, index) => {
+        {steps.map((id, index) => {
           const isDone = isReviewing || index < stepIndex;
           const isCurrent = !isReviewing && index === stepIndex;
-          const isLast = index === STEP_IDS.length - 1;
+          const isLast = index === steps.length - 1;
           const status = isDone ? "completed" : isCurrent ? "current step" : "not started";
 
           return (
@@ -58,7 +58,7 @@ export function StepProgress() {
       <p className="mt-3 text-center text-sm text-muted-foreground sm:hidden">
         {isReviewing
           ? "Review your details"
-          : `Step ${stepIndex + 1} of ${STEP_IDS.length}: ${STEP_LABELS[STEP_IDS[stepIndex] ?? STEP_IDS[0]]}`}
+          : `Step ${stepIndex + 1} of ${steps.length}: ${STEP_LABELS[steps[stepIndex] ?? steps[0]]}`}
       </p>
     </nav>
   );
