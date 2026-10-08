@@ -41,7 +41,7 @@ The 23-state list repeated most often: Adamawa, Bauchi, Bayelsa, Benue, Borno, C
 
 **New finding — at UI, Catchment cut-off equals Merit cut-off; only ELDS is discounted, and only for some competitive courses.** Every row in the official table gives three columns (Merit / Catch / ELDS), and Catch is identical to Merit in every single course — UI does not appear to give catchment candidates any cut-off advantage at all. ELDS is discounted only on a subset of competitive courses (e.g. Medicine 78.125/78.125/76.25; Law 67.25/67.25/66.75; Civil Engineering 61.625/61.625/53.625); most non-competitive courses show all three columns identical (50/50/50). This is a materially different pattern from UNILAG and OAU, where catchment carries a real, per-state discount — don't assume UI works the same way when building the catchment/ELDS logic.
 
-**Still unresolved — actual catchment/ELDS state names.** The official page gives cut-off numbers only, no state names at all. UI's catchment/ELDS state list therefore remains **Uncertain** — the app's original guess was Oyo, Ogun, Osun, Ondo, Ekiti, Kwara. **Kwara is ELDS, not catchment** (user-confirmed; also where most secondary sources and a 2025 UI Postgraduate College policy brief place it), so it has been removed from UI's catchment list. Secondary sources (Likely, blog-level) also include Lagos in UI's catchment — not yet applied, pending confirmation.
+**Still unresolved — actual catchment/ELDS state names.** The official page gives cut-off numbers only, no state names at all. UI's catchment/ELDS state list therefore remains **Uncertain** — the app's original guess was Oyo, Ogun, Osun, Ondo, Ekiti, Kwara. **Kwara is ELDS, not catchment** (user-confirmed; also where most secondary sources and a 2025 UI Postgraduate College policy brief place it), so it has been removed from UI's catchment list. Lagos is now included in UI's catchment (**Likely** — three independent secondary sources: schoolbeginners.com, servantboy.ng, sabiabuja.com; user-approved). UI's catchment is therefore Oyo, Ogun, Osun, Ondo, Ekiti, Lagos; ELDS stays on the national 23-state list (a 2025 UI Postgraduate College policy brief refers to "the 23 states on the current list of ELDS", including Kwara and Kogi).
 
 | Faculty | Course | Merit | Catch | ELDS | Note |
 |---|---|---:|---:|---:|---|
@@ -326,7 +326,7 @@ The scoring engine should average the grades of *these* subjects, not the candid
 
 | Faculty | Course | Aggregate (0–100) | Est. JAMB (0–400) | Note |
 |---|---|---:|---:|---|
-| Clinical Sciences | Medicine and Surgery (MBBS) | — | ~250–260 | **Admission suspended 2026/27** |
+| Clinical Sciences | Medicine and Surgery (MBBS) | — | ~250–260 | Admission **reinstated** for 2026/27 after an earlier suspension (Confirmed, futa.edu.ng/home/newsd/1399); no 0–100 cut-off found |
 | Clinical Sciences | Nursing Science | 75.00 | 220–240 | New program, 2025/26 |
 | Clinical Sciences | Human Anatomy | 59.5 | ~260 | |
 | Clinical Sciences | Physiology | 57.25 | 230 | |
@@ -334,19 +334,19 @@ The scoring engine should average the grades of *these* subjects, not the candid
 | Engineering & Technology | Civil Engineering | 71.87 | 235 | **Corrected name** — real programme is "Civil and Environmental Engineering" |
 | Engineering & Technology | Mechanical Engineering | 73.75 | 240 | |
 | Engineering & Technology | Electrical/Electronics Engineering | 74.37 | 245 | |
-| Engineering & Technology | Chemical Engineering | — | — | Absent from the newer, more complete departmental list too — see finding above |
+| Engineering & Technology | Chemical Engineering | — | — | **Department exists** (Confirmed, cee.futa.edu.ng — created 2023); no 0–100 cut-off found |
 | Engineering & Technology | Agricultural Engineering | 55.12 | 210 | **Corrected name** — real programme is "Agricultural and Environmental Engineering" |
 | Engineering & Technology | Computer Engineering | 69.62 | 250 | Law/Arts-shortfall reallocation |
 | Engineering & Technology | Industrial and Production Engineering | 47.5 | — | Law/Arts-shortfall reallocation |
 | Engineering & Technology | Metallurgical and Materials Engineering | 54.87 | — | Law/Arts-shortfall reallocation |
 | Engineering & Technology | Mining Engineering | 54.75 | — | Law/Arts-shortfall reallocation |
-| Engineering & Technology | Mechatronics Engineering | — | — | Absent from the newer, more complete departmental list too — see finding above |
+| Engineering & Technology | Mechatronics Engineering | — | — | **Department exists** (Confirmed, mce.futa.edu.ng — created 2023, School of Electrical Systems Engineering); no 0–100 cut-off found |
 | Arts | — | — | — | No Arts/Humanities faculty exists |
-| Social & Management Sciences | Business Information Technology | — | 210 | Estimate only |
-| Social & Management Sciences | Entrepreneurship Management Technology | — | 190 | Estimate only |
-| Social & Management Sciences | Logistics and Transport Technology | — | 190 | Estimate only |
-| Social & Management Sciences | Project Management Technology | — | 200 | Estimate only |
-| Social & Management Sciences | Procurement Management Technology | — | — | Replaces "Financial Management"; new 2025/26, no cut-off found yet |
+| Logistics & Innovation Technology | Business Information Technology | — | 210 | Estimate only |
+| Logistics & Innovation Technology | Entrepreneurship Management Technology | — | 190 | Estimate only |
+| Logistics & Innovation Technology | Logistics and Transport Technology | — | 190 | Estimate only |
+| Logistics & Innovation Technology | Project Management Technology | — | 200 | Estimate only |
+| Logistics & Innovation Technology | Procurement Management Technology | — | — | Replaces "Financial Management"; new 2025/26, no cut-off found yet |
 | Science | Physics | 47.5 | 200 | |
 | Science | Chemistry | 47.5 | — | |
 | Science | Mathematics | 59 | 200 | |
@@ -453,7 +453,7 @@ Two scales shown (UTME floor 0–400, FUOYE's own aggregate 0–100) — this du
 | Clinical Sciences | Nursing Science | 240 | 74.6 | Resolved (new source): 240, not 220–240 |
 | Clinical Sciences | Medical Laboratory Science | 230 | 72.3 | Resolved (new source): 230, not 220–230 |
 | Clinical Sciences | Radiography and Radiation Science | 220 | 71.3 | Resolved (new source): 220, not 200–220 |
-| Law | Law | 150 | — | **Confirmed real** (user-verified) — absent from the admission-requirements document, but that's a gap in that source, not evidence against the faculty; the cut-off figure itself is still Uncertain (prior 150/220/260 conflict) |
+| Law | Law | 150 | 77.75 | **Confirmed real**; 77.75 is the 2025/26 departmental cut-off (Confirmed, news.fuoye.edu.ng "FUOYE releases 2025/2026 Post-UTME screening cut-off marks"). The old 150/220/260 figures were UTME (0–400) numbers, not this aggregate. **Not admitting into Law for 2026/27** (Confirmed, putme.fuoye.edu.ng). |
 | Engineering & Technology | Civil Engineering | 190 | 65.0 | Resolved (new source): 190, not 190–200 |
 | Engineering & Technology | Mechanical Engineering | 180 | 65.0 | **Confirmed** by new source |
 | Engineering & Technology | Electrical and Electronic Engineering | 190 | 63.3 | Resolved (new source): 190, not 190–200 |
@@ -507,11 +507,12 @@ Law is a single real program everywhere (UI, UNILAG, OAU, FUOYE) or entirely abs
 - [ ] **UNILAG** — three entries (Religious Studies, European Languages, Actuarial Science and Insurance) are each really two-to-three separate admission tracks with no single combined cut-off. Decide how to model this.
 - [ ] **Catchment (and, for OAU, ELDS) cut-off model** — both UNILAG and OAU publish a distinct catchment cut-off per state (Ekiti/Lagos/Ogun/Ondo/Osun/Oyo), not one figure per course; OAU additionally does this for ELDS in 2 of its 5 sourced faculties. `Course.catchmentCutOff` currently models a single value — decide whether to simplify (lowest/average of the six) or extend the schema to a per-state cut-off. See the UNILAG and OAU sections above for the full findings and example figures.
 - [ ] **FUTA** — "Financial Management" isn't a real FUTA program; replaced with "Procurement Management Technology." Chemical Engineering and Mechatronics Engineering are absent from two independent sources now, not just unfound — worth treating as likely nonexistent rather than "not yet located." MBBS admission is suspended for 2026/27. Forestry and Wood Technology has a genuine conflict (47.5 vs. 57.5) between sources.
-- [ ] **FUTA "Social & Management Sciences" faculty** — doesn't appear at all in FUTA's real 7-school structure (SAAT, SEET, SEMS, SET, SOC, SOS, SHHT) per a newer, more complete source. The 5 courses this dossier files there (Business Information Technology, Entrepreneurship Management Technology, Logistics and Transport Technology, Project Management Technology, Procurement Management Technology) may belong to an uncovered school rather than being invented — needs verification, similar to the OAU Accounting/Business Administration question that was resolved earlier.
+- [x] ~~**FUTA "Social & Management Sciences" faculty**~~ — resolved: all five courses are in FUTA's **School of Logistics and Innovation Technology (SLIT)**, formerly the School of Management Technology (Likely, slit.futa.edu.ng; Procurement Management Technology is a newly approved SLIT programme from 2025/26). Seeded under a "Logistics & Innovation Technology" faculty. Previous note: doesn't appear at all in FUTA's real 7-school structure (SAAT, SEET, SEMS, SET, SOC, SOS, SHHT) per a newer, more complete source. The 5 courses this dossier files there (Business Information Technology, Entrepreneurship Management Technology, Logistics and Transport Technology, Project Management Technology, Procurement Management Technology) may belong to an uncovered school rather than being invented — needs verification, similar to the OAU Accounting/Business Administration question that was resolved earlier.
 - [ ] **FUTA general JAMB floor** — newly found at 180 (vs. 200 at UI/UNILAG/OAU) — only Likely confidence, not yet cross-checked against futa.edu.ng directly.
 - [x] ~~**FUTA O'Level requirements by school**~~ — seeded (`requirementForCourse()` in the backend's seed script): SOS sciences need English, Mathematics, Physics, Chemistry + Biology or Agricultural Science; SAAT agriculture accepts Agricultural Science for Biology; Computing courses use the SEET/SOC rule.
 - [x] ~~**FUNAAB raw-JAMB cut-offs**~~ — stored as `Course.utmeCutOff`; FUNAAB candidates are judged on their UTME score against it (`AggregateScoreResult.cutOffBasis: "UTME"`), with no invented conversion to the 0–100 scale.
 - [ ] **FUOYE** — most previously-flagged UTME-floor conflicts are now resolved against FUOYE's own 2026/2027 admission-requirements document (see FUOYE section); two new conflicts surfaced (Linguistics and Languages, Religious Studies); the aggregate-scale figures are mostly still dated 2023.
+- [x] ~~**FUOYE Law cut-off**~~ — 77.75 (2025/26, Confirmed); not admitting for 2026/27.
 - [x] ~~**FUOYE Law faculty — open question.**~~ Resolved (user-verified): FUOYE does have a Law faculty, despite its absence from the otherwise-exhaustive 14-faculty/college admission-requirements document. The cut-off figure itself (150) is still Uncertain — prior 150/220/260 conflict, no resolving source found yet.
 - [ ] **FUOYE `AdmissionRequirement` seeding** — FUOYE's own admission-requirements document gives exact per-course UTME major/minor and O'Level major/minor subject combinations, more granular than this dossier's general science/arts/commercial rule. Use it directly as the seed source for `AdmissionRequirement.requiredUtmeSubjects`/`optionalUtmeSubjects`/`requiredOLevelSubjects` rather than the general rule alone.
 - [ ] **Thesis document** — Chapter 1.4's "35 courses across seven faculties" wording needs updating to reflect the confirmed 210-course (35-per-university) scope.
