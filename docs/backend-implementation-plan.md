@@ -107,6 +107,10 @@ This is the largest stage; split it into sub-steps but ship together since they 
 - Load-test the assessment endpoints against the latency targets implied by `AdminMetrics.latencyTargetMs` / `latencyTimeSeries`.
 - Verify: `VITE_USE_MOCKS=false` end-to-end for the whole app, including error states (wrong password, invalid course ID, expired token) — the frontend already has UI for the rose-colored ineligible/error states, so confirm the backend actually triggers them correctly rather than 500ing.
 
+## Stage 8 — ML Decision Tree course recommender (done)
+
+`src/modules/recommender/` in the backend: 2,000 seeded synthetic candidate profiles checked against real catalog courses and labelled by their cut-off margin, an ml-cart `DecisionTreeClassifier` trained on 80% and evaluated on 20% (those metrics feed `GET /admin/metrics`), recommendations only for eligible candidates below the cut-off, ranked by predicted admission probability, persisted as `Recommendation` rows. See the backend README's "ML recommender" section.
+
 ## Suggested repo layout
 
 ```
