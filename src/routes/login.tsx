@@ -49,7 +49,8 @@ function LoginPage() {
     onSuccess: (session) => {
       authStore.setSession(session);
       toast.success(`Welcome back, ${session.user.fullName.split(" ")[0]}`);
-      void navigate({ to: "/onboarding" });
+      // Returning users go straight to their dashboard (admins to the admin area).
+      void navigate({ to: session.user.role === "ADMIN" ? "/admin" : "/dashboard" });
     },
     onError: (error) => {
       toast.error(error instanceof ApiError ? error.message : "Something went wrong. Try again.");
