@@ -285,6 +285,7 @@ export interface EvaluationEvent {
 // --- Admin Excel import (POST /admin/import/university/preview) ---
 
 export interface ImportIssue {
+  sheet: "University" | "Courses";
   /** 1-based spreadsheet row. */
   row: number;
   column: string;

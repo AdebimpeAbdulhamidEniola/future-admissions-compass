@@ -23,7 +23,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { applyUniversityImport, previewUniversityImport, type SheetRows } from "@/lib/api/admin";
+import {
+  applyUniversityImport,
+  previewUniversityImport,
+  type SheetRows,
+  type WorkbookSheets,
+} from "@/lib/api/admin";
 import { ApiError } from "@/lib/http";
 import type { ImportFieldChange, ImportPreview } from "@/types/domain";
 
@@ -39,9 +44,12 @@ const ACTION_BADGE = {
   unchanged: { label: "Unchanged", variant: "secondary" },
 } as const;
 
-/** Reads the first sheet as plain cell values; dates become ISO strings so the grid is JSON-safe. */
-async function readSheet(file: File): Promise<SheetRows> {
-  const rows = await readXlsxFile(file);
+/** One sheet as plain cell values; dates become ISO strings so the grid is JSON-safe. */
+async function readSheet(file: File, name: string, position: number): Promise<SheetRows> {
+  // Prefer the sheet by name ("University" / "Courses"); fall back to its position.
+  const rows = await readXlsxFile(file, { sheet: name }).catch(() =>
+    readXlsxFile(file, { sheet: position }),
+  );
   return rows.map((row) =>
     row.map((cell) => {
       if (cell instanceof Date) return cell.toISOString();
@@ -49,6 +57,14 @@ async function readSheet(file: File): Promise<SheetRows> {
       return cell as string | number | boolean | null;
     }),
   );
+}
+
+async function readWorkbook(file: File): Promise<WorkbookSheets> {
+  const [university, courses] = await Promise.all([
+    readSheet(file, "University", 1),
+    readSheet(file, "Courses", 2),
+  ]);
+  return { university, courses };
 }
 
 function formatValue(value: unknown): string {
@@ -97,7 +113,7 @@ function AdminImportRoute() {
   const queryClient = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [rows, setRows] = useState<SheetRows | null>(null);
+  const [rows, setRows] = useState<WorkbookSheets | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
 
   const previewMutation = useMutation({
@@ -130,13 +146,13 @@ function AdminImportRoute() {
     setPreview(null);
     setFileName(file.name);
     try {
-      const sheet = await readSheet(file);
-      setRows(sheet);
-      previewMutation.mutate(sheet);
+      const workbook = await readWorkbook(file);
+      setRows(workbook);
+      previewMutation.mutate(workbook);
     } catch {
       setRows(null);
       toast.error(
-        "That file couldn't be read. Upload an .xlsx file saved from Excel or Google Sheets.",
+        "That file couldn't be read. Upload an .xlsx file with a University sheet and a Courses sheet.",
       );
     }
   }
@@ -150,10 +166,10 @@ function AdminImportRoute() {
       <div>
         <h1 className="font-display text-2xl font-semibold text-foreground">Import from Excel</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Upload one sheet per university with its scoring rules, catchment states and courses.
-          Cut-off columns are optional — a blank cell keeps the current cut-off, and{" "}
-          <code>none</code> clears it. You'll see every change before anything is saved, and courses
-          not in the file are never removed.
+          Upload one workbook per university: a <b>University</b> sheet with its scoring rules and
+          catchment states, and a <b>Courses</b> sheet with one row per course. Cut-off columns are
+          optional — a blank cell keeps the current cut-off, and <code>none</code> clears it. You'll
+          see every change before anything is saved, and courses not in the file are never removed.
         </p>
       </div>
 
@@ -165,7 +181,7 @@ function AdminImportRoute() {
           <Button variant="outline" asChild>
             <a href={TEMPLATE_URL} download>
               <Download className="mr-1.5 size-4" />
-              Download template (FUOYE example)
+              Download template (UI example)
             </a>
           </Button>
           <input
@@ -205,6 +221,7 @@ function AdminImportRoute() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-24">Sheet</TableHead>
                   <TableHead className="w-16">Row</TableHead>
                   <TableHead className="w-20">Column</TableHead>
                   <TableHead>Problem</TableHead>
@@ -213,6 +230,7 @@ function AdminImportRoute() {
               <TableBody>
                 {preview.errors.map((error, i) => (
                   <TableRow key={i}>
+                    <TableCell>{error.sheet}</TableCell>
                     <TableCell className="text-numeral">{error.row}</TableCell>
                     <TableCell>{error.column}</TableCell>
                     <TableCell>{error.message}</TableCell>

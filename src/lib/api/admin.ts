@@ -120,20 +120,26 @@ export async function listEvaluationEvents(
   return http.get<EvaluationEventPage>(`/admin/evaluation-events?${params.toString()}`);
 }
 
-/** A spreadsheet as read in the browser: rows of cell values (dates become ISO strings). */
+/** One sheet as read in the browser: rows of cell values (dates become ISO strings). */
 export type SheetRows = (string | number | boolean | null)[][];
+
+/** The import workbook's two sheets. */
+export interface WorkbookSheets {
+  university: SheetRows;
+  courses: SheetRows;
+}
 
 const MOCK_IMPORT_MESSAGE =
   "Excel import needs the real backend. Set VITE_USE_MOCKS=false and start the API.";
 
 /** Parses and validates the sheet and diffs it against the database — nothing is saved. */
-export async function previewUniversityImport(rows: SheetRows): Promise<ImportPreview> {
+export async function previewUniversityImport(sheets: WorkbookSheets): Promise<ImportPreview> {
   if (USE_MOCKS) return mockFailure(501, MOCK_IMPORT_MESSAGE, "Not Implemented");
-  return http.post<ImportPreview>("/admin/import/university/preview", { rows });
+  return http.post<ImportPreview>("/admin/import/university/preview", sheets);
 }
 
 /** Re-validates and saves the university's rules and the courses in the sheet. */
-export async function applyUniversityImport(rows: SheetRows): Promise<ImportResult> {
+export async function applyUniversityImport(sheets: WorkbookSheets): Promise<ImportResult> {
   if (USE_MOCKS) return mockFailure(501, MOCK_IMPORT_MESSAGE, "Not Implemented");
-  return http.post<ImportResult>("/admin/import/university", { rows });
+  return http.post<ImportResult>("/admin/import/university", sheets);
 }
