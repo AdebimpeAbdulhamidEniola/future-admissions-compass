@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import {
   Building2,
   ClipboardList,
+  FileSpreadsheet,
   Gauge,
   ListChecks,
   MapPinned,
@@ -26,6 +27,7 @@ const NAV = [
   { to: "/admin/requirements", label: "Requirements", icon: ListChecks },
   { to: "/admin/scoring-policies", label: "Scoring policies", icon: Scale },
   { to: "/admin/catchment-rules", label: "Catchment rules", icon: MapPinned },
+  { to: "/admin/import", label: "Import (Excel)", icon: FileSpreadsheet },
   { to: "/admin/metrics", label: "Metrics", icon: Gauge },
   { to: "/admin/evaluation-logs", label: "Evaluation logs", icon: ClipboardList },
 ] as const;

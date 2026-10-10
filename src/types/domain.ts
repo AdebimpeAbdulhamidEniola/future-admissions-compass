@@ -281,3 +281,42 @@ export interface EvaluationEvent {
   outcome: EvaluationOutcome;
   latencyMs: number;
 }
+
+// --- Admin Excel import (POST /admin/import/university/preview) ---
+
+export interface ImportIssue {
+  /** 1-based spreadsheet row. */
+  row: number;
+  column: string;
+  message: string;
+}
+
+export interface ImportFieldChange {
+  field: string;
+  from: unknown;
+  to: unknown;
+}
+
+export interface ImportPreview {
+  valid: boolean;
+  errors: ImportIssue[];
+  universityCode: string | null;
+  universityAction: "create" | "update" | "unchanged" | null;
+  universityChanges: ImportFieldChange[];
+  courses: {
+    row: number;
+    name: string;
+    action: "create" | "update" | "unchanged";
+    changes: ImportFieldChange[];
+  }[];
+  /** Existing courses at the university that aren't in the file — kept as they are. */
+  untouchedCourses: string[];
+}
+
+export interface ImportResult {
+  universityCode: string;
+  universityAction: "create" | "update" | "unchanged" | null;
+  created: number;
+  updated: number;
+  unchanged: number;
+}

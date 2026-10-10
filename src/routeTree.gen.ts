@@ -17,6 +17,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminCatchmentRulesRouteImport } from './routes/admin/catchment-rules'
+import { Route as AdminImportRouteImport } from './routes/admin/import'
 import { Route as AdminCoursesRouteImport } from './routes/admin/courses'
 import { Route as AdminEvaluationLogsRouteImport } from './routes/admin/evaluation-logs'
 import { Route as AdminMetricsRouteImport } from './routes/admin/metrics'
@@ -67,6 +68,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminCatchmentRulesRoute = AdminCatchmentRulesRouteImport.update({
   id: '/catchment-rules',
   path: '/catchment-rules',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminImportRoute = AdminImportRouteImport.update({
+  id: '/import',
+  path: '/import',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminCoursesRoute = AdminCoursesRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
   '/admin/catchment-rules': typeof AdminCatchmentRulesRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/courses': typeof AdminCoursesRoute
   '/admin/evaluation-logs': typeof AdminEvaluationLogsRoute
   '/admin/metrics': typeof AdminMetricsRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
   '/admin/catchment-rules': typeof AdminCatchmentRulesRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/courses': typeof AdminCoursesRoute
   '/admin/evaluation-logs': typeof AdminEvaluationLogsRoute
   '/admin/metrics': typeof AdminMetricsRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
   '/admin/catchment-rules': typeof AdminCatchmentRulesRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/courses': typeof AdminCoursesRoute
   '/admin/evaluation-logs': typeof AdminEvaluationLogsRoute
   '/admin/metrics': typeof AdminMetricsRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/admin/catchment-rules'
+    | '/admin/import'
     | '/admin/courses'
     | '/admin/evaluation-logs'
     | '/admin/metrics'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/admin/catchment-rules'
+    | '/admin/import'
     | '/admin/courses'
     | '/admin/evaluation-logs'
     | '/admin/metrics'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/admin/catchment-rules'
+    | '/admin/import'
     | '/admin/courses'
     | '/admin/evaluation-logs'
     | '/admin/metrics'
@@ -325,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCatchmentRulesRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/import': {
+      id: '/admin/import'
+      path: '/import'
+      fullPath: '/admin/import'
+      preLoaderRoute: typeof AdminImportRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/courses': {
       id: '/admin/courses'
       path: '/courses'
@@ -407,6 +426,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminCatchmentRulesRoute: typeof AdminCatchmentRulesRoute
+  AdminImportRoute: typeof AdminImportRoute
   AdminCoursesRoute: typeof AdminCoursesRoute
   AdminEvaluationLogsRoute: typeof AdminEvaluationLogsRoute
   AdminMetricsRoute: typeof AdminMetricsRoute
@@ -418,6 +438,7 @@ interface AdminRouteRouteChildren {
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCatchmentRulesRoute: AdminCatchmentRulesRoute,
+  AdminImportRoute: AdminImportRoute,
   AdminCoursesRoute: AdminCoursesRoute,
   AdminEvaluationLogsRoute: AdminEvaluationLogsRoute,
   AdminMetricsRoute: AdminMetricsRoute,

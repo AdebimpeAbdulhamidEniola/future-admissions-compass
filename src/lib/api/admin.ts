@@ -1,4 +1,4 @@
-import { http, mockDelay, USE_MOCKS } from "@/lib/http";
+import { http, mockDelay, mockFailure, USE_MOCKS } from "@/lib/http";
 import { mockUniversities } from "@/mocks/universities";
 import { mockCourses } from "@/mocks/courses";
 import { mockCatchmentRules, mockRequirements, mockScoringPolicies } from "@/mocks/policies";
@@ -13,6 +13,8 @@ import type {
   EvaluationEvent,
   EvaluationModule,
   EvaluationOutcome,
+  ImportPreview,
+  ImportResult,
   ScoringPolicy,
   University,
 } from "@/types/domain";
@@ -116,4 +118,22 @@ export async function listEvaluationEvents(
   params.set("page", String(filters.page));
   params.set("pageSize", String(filters.pageSize));
   return http.get<EvaluationEventPage>(`/admin/evaluation-events?${params.toString()}`);
+}
+
+/** A spreadsheet as read in the browser: rows of cell values (dates become ISO strings). */
+export type SheetRows = (string | number | boolean | null)[][];
+
+const MOCK_IMPORT_MESSAGE =
+  "Excel import needs the real backend. Set VITE_USE_MOCKS=false and start the API.";
+
+/** Parses and validates the sheet and diffs it against the database — nothing is saved. */
+export async function previewUniversityImport(rows: SheetRows): Promise<ImportPreview> {
+  if (USE_MOCKS) return mockFailure(501, MOCK_IMPORT_MESSAGE, "Not Implemented");
+  return http.post<ImportPreview>("/admin/import/university/preview", { rows });
+}
+
+/** Re-validates and saves the university's rules and the courses in the sheet. */
+export async function applyUniversityImport(rows: SheetRows): Promise<ImportResult> {
+  if (USE_MOCKS) return mockFailure(501, MOCK_IMPORT_MESSAGE, "Not Implemented");
+  return http.post<ImportResult>("/admin/import/university", { rows });
 }
