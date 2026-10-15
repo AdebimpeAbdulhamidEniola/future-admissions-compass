@@ -7,6 +7,7 @@ import {
   ClipboardList,
   Loader2,
   Pencil,
+  Plus,
   Sparkles,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -126,13 +127,21 @@ function Dashboard() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 sm:py-14">
-        <div>
-          <h1 className="font-display text-3xl font-semibold text-foreground sm:text-4xl">
-            Welcome back, {user?.fullName.split(" ")[0]}
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Your profile, your most recent result, and everything you've assessed so far.
-          </p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="font-display text-3xl font-semibold text-foreground sm:text-4xl">
+              Welcome back, {user?.fullName.split(" ")[0]}
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              Your profile, your most recent result, and everything you've assessed so far.
+            </p>
+          </div>
+          <Button asChild size="lg">
+            <Link to="/assessment/new">
+              <Plus className="mr-1.5 size-4" />
+              Start new assessment
+            </Link>
+          </Button>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
