@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useForm, type UseFormReturn, useWatch } from "react-hook-form";
 
 import { getMyProfile } from "@/lib/api/candidates";
 import { useAuth } from "@/hooks/use-auth";
@@ -48,17 +48,21 @@ export function AssessmentWizardProvider({ children }: { children: ReactNode }) 
 
   const profileQuery = useQuery({ queryKey: ["myProfile"], queryFn: getMyProfile });
 
+  // Pre-fill from the saved profile once per visit. A later refetch of the profile must never
+  // overwrite choices the candidate has made since (e.g. switch the course back).
+  const prefilled = useRef(false);
   useEffect(() => {
-    if (profileQuery.data && !form.formState.isDirty) {
+    if (prefilled.current || !profileQuery.data) return;
+    prefilled.current = true;
+    if (!form.getFieldState("targetCourseId").isDirty && !form.formState.isDirty) {
       form.reset({ ...defaultAssessmentFormValues, ...mapProfileToFormValues(profileQuery.data) });
     }
-    // Only ever runs once the profile resolves, and only while the candidate hasn't started typing.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileQuery.data]);
 
   // FUTA, FUNAAB and FUOYE score without Post-UTME, so their candidates never see that step.
   // Until the chosen university's policy has loaded, the step is shown.
-  const targetUniversityId = form.watch("targetUniversityId");
+  const targetUniversityId = useWatch({ control: form.control, name: "targetUniversityId" });
   const policyQuery = useScoringPolicyQuery(targetUniversityId);
   const asksPostUtme = policyQuery.data ? policyQuery.data.postUtmeWeighting > 0 : true;
   const steps = useMemo<StepId[]>(

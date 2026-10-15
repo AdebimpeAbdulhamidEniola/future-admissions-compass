@@ -1,5 +1,5 @@
 import { Plus, Trash2 } from "lucide-react";
-import { useFieldArray } from "react-hook-form";
+import { useFieldArray, useWatch } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -15,13 +15,13 @@ import { useAssessmentWizard } from "../wizard-context";
 
 export function OLevelResultsStep() {
   const { form } = useAssessmentWizard();
-  const courseId = form.watch("targetCourseId");
+  const courseId = useWatch({ control: form.control, name: "targetCourseId" });
   const requirementQuery = useCourseRequirementQuery(courseId);
   const requiredCredits = requirementQuery.data?.minimumCredits ?? null;
 
-  const secondSittingEnabled = form.watch("secondSittingEnabled");
+  const secondSittingEnabled = useWatch({ control: form.control, name: "secondSittingEnabled" });
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "oLevelRows" });
-  const rows = form.watch("oLevelRows");
+  const rows = useWatch({ control: form.control, name: "oLevelRows" });
 
   const creditCount = (() => {
     const bestBySubject = new Map<string, string>();

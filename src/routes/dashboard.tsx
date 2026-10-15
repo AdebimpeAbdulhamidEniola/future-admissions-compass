@@ -11,7 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -589,7 +589,10 @@ function EditProfileSheet({
     },
   });
 
-  const electiveValues = form.watch(["utmeElective1", "utmeElective2", "utmeElective3"]);
+  const electiveValues = useWatch({
+    control: form.control,
+    name: ["utmeElective1", "utmeElective2", "utmeElective3"],
+  });
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

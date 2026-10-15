@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useWatch } from "react-hook-form";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -52,7 +53,8 @@ export function ReviewStep() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const values = form.watch();
+  // Every field has a default value, so the watched values are always complete.
+  const values = useWatch({ control: form.control }) as ReturnType<typeof form.getValues>;
   const universitiesQuery = useUniversitiesQuery();
   const coursesQuery = useCoursesQuery(values.targetUniversityId);
 

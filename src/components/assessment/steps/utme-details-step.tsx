@@ -27,11 +27,11 @@ const ELECTIVE_FIELD_NAMES = ["utmeElective1", "utmeElective2", "utmeElective3"]
 
 export function UtmeDetailsStep() {
   const { form } = useAssessmentWizard();
-  const courseId = form.watch("targetCourseId");
+  const courseId = useWatch({ control: form.control, name: "targetCourseId" });
   const requirementQuery = useCourseRequirementQuery(courseId);
   const requirement = requirementQuery.data;
 
-  const utmeScore = form.watch("utmeScore");
+  const utmeScore = useWatch({ control: form.control, name: "utmeScore" });
   // useWatch re-renders on every change; form.watch with a list of names could return stale
   // values, so a subject that was just picked still showed as "missing".
   const electiveValues = useWatch({ control: form.control, name: [...ELECTIVE_FIELD_NAMES] });

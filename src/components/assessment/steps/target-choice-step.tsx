@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useWatch } from "react-hook-form";
 
 import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -16,8 +17,8 @@ export function TargetChoiceStep() {
   const universitiesQuery = useUniversitiesQuery();
   const universities = universitiesQuery.data ?? [];
 
-  const universityId = form.watch("targetUniversityId");
-  const courseId = form.watch("targetCourseId");
+  const universityId = useWatch({ control: form.control, name: "targetUniversityId" });
+  const courseId = useWatch({ control: form.control, name: "targetCourseId" });
 
   const coursesQuery = useCoursesQuery(universityId);
   const requirementQuery = useCourseRequirementQuery(courseId);
