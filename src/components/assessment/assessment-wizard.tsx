@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ const STEP_COMPONENTS = {
 
 function AssessmentWizardBody() {
   const { form, currentStepId, stepIndex, totalSteps, isReviewing, isFirstStep, goNext, goBack } = useAssessmentWizard();
+  const navigate = useNavigate();
   const StepComponent = STEP_COMPONENTS[currentStepId];
   const isLastStep = stepIndex === totalSteps - 1;
 
@@ -37,7 +39,12 @@ function AssessmentWizardBody() {
             <>
               <StepComponent />
               <div className="mt-8 flex items-center justify-between border-t border-border pt-6">
-                <Button type="button" variant="outline" onClick={goBack} disabled={isFirstStep}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  // On the first step, Back leaves the wizard for the dashboard.
+                  onClick={isFirstStep ? () => void navigate({ to: "/dashboard" }) : goBack}
+                >
                   <ChevronLeft className="mr-1.5 size-4" />
                   Back
                 </Button>

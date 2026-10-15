@@ -1,4 +1,5 @@
 import { AlertTriangle, Check, Lock, X } from "lucide-react";
+import { useWatch } from "react-hook-form";
 
 import { Badge } from "@/components/ui/badge";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -15,7 +16,10 @@ type MatchStatus = "match" | "miss" | "neutral";
 
 function getMatchStatus(subject: string, requirement: AdmissionRequirement | undefined): MatchStatus {
   if (!subject || !requirement) return "neutral";
-  const isMatch = requirement.requiredUtmeSubjects.includes(subject) || requirement.optionalUtmeSubjects.includes(subject);
+  const isMatch =
+    requirement.requiredUtmeSubjects.includes(subject) ||
+    requirement.optionalUtmeSubjects.includes(subject) ||
+    (requirement.utmeSubjectGroups ?? []).some((group) => group.includes(subject));
   return isMatch ? "match" : "miss";
 }
 
@@ -28,10 +32,18 @@ export function UtmeDetailsStep() {
   const requirement = requirementQuery.data;
 
   const utmeScore = form.watch("utmeScore");
-  const electiveValues = form.watch(ELECTIVE_FIELD_NAMES);
+  // useWatch re-renders on every change; form.watch with a list of names could return stale
+  // values, so a subject that was just picked still showed as "missing".
+  const electiveValues = useWatch({ control: form.control, name: [...ELECTIVE_FIELD_NAMES] });
 
+  // Compulsory subjects not chosen, plus "one of" groups with nothing chosen (shown as "A or B").
   const missingRequired = requirement
-    ? requirement.requiredUtmeSubjects.filter((subject) => !electiveValues.includes(subject))
+    ? [
+        ...requirement.requiredUtmeSubjects.filter((subject) => !electiveValues.includes(subject)),
+        ...(requirement.utmeSubjectGroups ?? [])
+          .filter((group) => !group.some((subject) => electiveValues.includes(subject)))
+          .map((group) => group.join(" or ")),
+      ]
     : [];
 
   return (

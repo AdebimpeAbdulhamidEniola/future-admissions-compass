@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { OfflineBanner } from "@/components/layout/offline-banner";
@@ -36,9 +36,36 @@ function NotFoundComponent() {
   );
 }
 
+/**
+ * After a new deployment the old page's code files are replaced, so a tab opened before it fails
+ * to load the next page's code ("Failed to fetch dynamically imported module"). Reloading picks up
+ * the new files.
+ */
+function isStaleDeploymentError(error: Error) {
+  return /dynamically imported module|Importing a module script failed|ChunkLoadError|Loading chunk .* failed/i.test(
+    error?.message ?? "",
+  );
+}
+
+const RELOAD_FLAG = "placeright.reloaded-for-new-version";
+
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const stale = isStaleDeploymentError(error);
+
+  useEffect(() => {
+    if (!stale) return;
+    try {
+      // At most one automatic reload per 30 seconds, so a genuinely missing file can't loop.
+      const last = Number(sessionStorage.getItem(RELOAD_FLAG) ?? 0);
+      if (Date.now() - last < 30_000) return;
+      sessionStorage.setItem(RELOAD_FLAG, String(Date.now()));
+    } catch {
+      return;
+    }
+    window.location.reload();
+  }, [stale]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -47,11 +74,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          {stale
+            ? "A new version of PlaceRight was just released. Refresh the page to load it."
+            : "Something went wrong on our end. You can try refreshing or head back home."}
         </p>
+        {!stale && error?.message && (
+          <p className="mt-3 break-words text-xs text-muted-foreground">Details: {error.message}</p>
+        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
+              if (stale) {
+                window.location.reload();
+                return;
+              }
               router.invalidate();
               reset();
             }}
