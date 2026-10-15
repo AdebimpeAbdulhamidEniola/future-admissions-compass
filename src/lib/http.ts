@@ -23,22 +23,48 @@ type NestErrorEnvelope = {
   error?: string;
 };
 
+/** Render's free tier sleeps when idle; waking it takes up to about a minute. */
+const WAKE_UP_TIMEOUT_MS = 120_000;
+const WAKE_UP_RETRY_DELAY_MS = 3_000;
+const WAKING_STATUSES = new Set([502, 503, 504]);
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * fetch() that keeps trying while the server is still waking up (connection refused, or the host
+ * answering 502/503/504), so the page simply keeps loading instead of showing an error.
+ */
+async function fetchUntilAwake(url: string, init: RequestInit): Promise<Response> {
+  const startedAt = Date.now();
+  for (;;) {
+    const timedOut = () => Date.now() - startedAt + WAKE_UP_RETRY_DELAY_MS > WAKE_UP_TIMEOUT_MS;
+    try {
+      const response = await fetch(url, init);
+      if (!WAKING_STATUSES.has(response.status) || timedOut()) return response;
+    } catch {
+      if (timedOut()) {
+        throw new ApiError(
+          0,
+          "We couldn't reach the server. Check your internet connection and try again.",
+          "NetworkError",
+        );
+      }
+    }
+    await sleep(WAKE_UP_RETRY_DELAY_MS);
+  }
+}
+
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
   const token = authStore.getToken();
-  let response: Response;
 
-  try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-    });
-  } catch {
-    throw new ApiError(0, "Network unavailable. Check your connection and try again.", "NetworkError");
-  }
+  const response = await fetchUntilAwake(`${API_BASE_URL}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
 
   const text = await response.text().catch(() => "");
   let payload: unknown = null;
@@ -46,7 +72,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     try {
       payload = JSON.parse(text);
     } catch {
-      // Not JSON — e.g. a host's HTML error page while the server is waking up.
+      // Not JSON — e.g. a host's HTML error page.
       if (response.ok) {
         throw new ApiError(response.status, "The server sent a reply we couldn't read.", "BadResponse");
       }
@@ -54,6 +80,10 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   }
 
   if (!response.ok) {
+    // A token the API no longer accepts (expired, or signed with an old secret): sign out so the
+    // guards send the user to /login instead of failing on every page.
+    if (response.status === 401 && token && authStore.getToken() === token) authStore.clear();
+
     const envelope = (payload ?? {}) as NestErrorEnvelope;
     const message = Array.isArray(envelope.message)
       ? envelope.message.join(", ")

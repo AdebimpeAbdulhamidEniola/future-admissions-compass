@@ -10,9 +10,6 @@ export function describeError(error: unknown): string {
     if (error.statusCode === 0) {
       return "We couldn't reach the server. Check your internet connection and try again.";
     }
-    if (error.statusCode === 502 || error.statusCode === 503 || error.statusCode === 504) {
-      return "The server is starting up. Wait a few seconds and try again.";
-    }
     if (error.statusCode === 404) return "We couldn't find this information.";
     if (error.statusCode >= 500) return "Something went wrong on our side. Please try again.";
     return error.message;

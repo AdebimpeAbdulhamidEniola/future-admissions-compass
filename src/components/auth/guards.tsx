@@ -15,26 +15,28 @@ function Redirecting() {
 }
 
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { ready, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) void navigate({ to: "/login", replace: true });
-  }, [isAuthenticated, navigate]);
+    // Wait until the saved session has been read, or a refresh would bounce to /login.
+    if (ready && !isAuthenticated) void navigate({ to: "/login", replace: true });
+  }, [ready, isAuthenticated, navigate]);
 
-  if (!isAuthenticated) return <Redirecting />;
+  if (!ready || !isAuthenticated) return <Redirecting />;
   return <>{children}</>;
 }
 
 export function RequireAdmin({ children }: { children: ReactNode }) {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { ready, isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!ready) return;
     if (!isAuthenticated) void navigate({ to: "/login", replace: true });
     else if (!isAdmin) void navigate({ to: "/", replace: true });
-  }, [isAuthenticated, isAdmin, navigate]);
+  }, [ready, isAuthenticated, isAdmin, navigate]);
 
-  if (!isAuthenticated || !isAdmin) return <Redirecting />;
+  if (!ready || !isAuthenticated || !isAdmin) return <Redirecting />;
   return <>{children}</>;
 }
