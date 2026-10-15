@@ -189,7 +189,11 @@ function UniversityFormDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4" onSubmit={form.handleSubmit((v) => mutation.mutate(v))}>
+          <form
+            method="post"
+            className="space-y-4"
+            onSubmit={form.handleSubmit((v) => mutation.mutate(v))}
+          >
             <UniversityFormFields control={form.control} />
             <DialogFooter>
               <Button type="submit" disabled={mutation.isPending}>

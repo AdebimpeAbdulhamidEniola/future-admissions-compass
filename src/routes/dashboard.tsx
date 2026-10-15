@@ -604,6 +604,7 @@ function EditProfileSheet({
 
         <Form {...form}>
           <form
+            method="post"
             className="mt-6 space-y-5"
             onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
           >

@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2, UserRound } from "lucide-react";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -68,6 +70,7 @@ function LoginPage() {
     onError: () => toast.error("The demo account could not be loaded. Try again."),
   });
 
+  const hydrated = useHydrated();
   const busy = signIn.isPending || demo.isPending;
 
   return (
@@ -88,6 +91,7 @@ function LoginPage() {
     >
       <Form {...form}>
         <form
+          method="post"
           className="space-y-5"
           onSubmit={form.handleSubmit((values) => signIn.mutate(values))}
           noValidate
@@ -131,7 +135,7 @@ function LoginPage() {
             )}
           />
 
-          <Button type="submit" className="h-12 w-full text-base" disabled={busy}>
+          <Button type="submit" className="h-12 w-full text-base" disabled={busy || !hydrated}>
             {signIn.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
             Sign in
           </Button>

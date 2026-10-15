@@ -1,12 +1,6 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { authStore } from "@/lib/auth-store";
-
-/** False during server rendering and hydration; true once the browser's saved session is readable. */
-function useHydrated() {
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
-  return hydrated;
-}
 
 export function useAuth() {
   const hydrated = useHydrated();

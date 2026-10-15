@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2, UserRound } from "lucide-react";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -68,6 +70,7 @@ function RegisterPage() {
     onError: () => toast.error("The demo account could not be loaded. Try again."),
   });
 
+  const hydrated = useHydrated();
   const busy = createAccount.isPending || demo.isPending;
 
   return (
@@ -85,6 +88,7 @@ function RegisterPage() {
     >
       <Form {...form}>
         <form
+          method="post"
           className="space-y-5"
           onSubmit={form.handleSubmit((values) => createAccount.mutate(values))}
           noValidate
@@ -167,7 +171,7 @@ function RegisterPage() {
             )}
           />
 
-          <Button type="submit" className="h-12 w-full text-base" disabled={busy}>
+          <Button type="submit" className="h-12 w-full text-base" disabled={busy || !hydrated}>
             {createAccount.isPending ? <Loader2 className="size-4 animate-spin" /> : null}
             Create account
           </Button>

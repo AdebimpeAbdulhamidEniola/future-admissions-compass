@@ -186,7 +186,11 @@ function CourseFormDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4" onSubmit={form.handleSubmit((v) => mutation.mutate(v))}>
+          <form
+            method="post"
+            className="space-y-4"
+            onSubmit={form.handleSubmit((v) => mutation.mutate(v))}
+          >
             <FormField
               control={form.control}
               name="universityId"
