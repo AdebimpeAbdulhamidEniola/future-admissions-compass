@@ -36,6 +36,7 @@ import {
 } from "@/lib/api/catalog";
 import { cn } from "@/lib/utils";
 import type { Course } from "@/types/domain";
+import { UniversityLogo } from "@/components/brand/university-logo";
 
 export const Route = createFileRoute("/universities/$code")({
   head: ({ params }) => ({
@@ -207,9 +208,7 @@ function UniversityDetailRoute() {
             All universities
           </Link>
           <div className="mt-3 flex items-center gap-4">
-            <span className="flex size-14 items-center justify-center rounded-xl bg-primary/10 font-display text-lg font-semibold text-primary">
-              {university.code}
-            </span>
+            <UniversityLogo code={university.code} name={university.name} className="size-14" />
             <div>
               <h1 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
                 {university.name}
@@ -231,21 +230,24 @@ function UniversityDetailRoute() {
                     { component: "UTME" as const, weighting: policy.utmeWeighting },
                     { component: "POST_UTME" as const, weighting: policy.postUtmeWeighting },
                     { component: "OLEVEL" as const, weighting: policy.oLevelWeighting },
-                    { component: "SITTING_BONUS" as const, weighting: policy.sittingBonus?.oneSitting ?? 0 },
+                    {
+                      component: "SITTING_BONUS" as const,
+                      weighting: policy.sittingBonus?.oneSitting ?? 0,
+                    },
                   ]
                     .filter((seg) => seg.weighting > 0)
                     .map((seg) => (
-                    <div
-                      key={seg.component}
-                      className="flex h-full items-center justify-center border-r-2 border-card text-[11px] font-medium text-white last:border-r-0"
-                      style={{
-                        width: `${seg.weighting}%`,
-                        background: COMPONENT_COLOR[seg.component],
-                      }}
-                    >
-                      {seg.weighting >= 12 ? `${seg.weighting}%` : ""}
-                    </div>
-                  ))}
+                      <div
+                        key={seg.component}
+                        className="flex h-full items-center justify-center border-r-2 border-card text-[11px] font-medium text-white last:border-r-0"
+                        style={{
+                          width: `${seg.weighting}%`,
+                          background: COMPONENT_COLOR[seg.component],
+                        }}
+                      >
+                        {seg.weighting >= 12 ? `${seg.weighting}%` : ""}
+                      </div>
+                    ))}
                 </div>
                 <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">

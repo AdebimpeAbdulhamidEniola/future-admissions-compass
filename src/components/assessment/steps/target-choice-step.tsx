@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Combobox } from "../combobox";
 import { useCourseRequirementQuery, useCoursesQuery, useUniversitiesQuery } from "../queries";
 import { useAssessmentWizard } from "../wizard-context";
+import { UniversityLogo } from "@/components/brand/university-logo";
 
 export function TargetChoiceStep() {
   const { form } = useAssessmentWizard();
@@ -44,7 +45,9 @@ export function TargetChoiceStep() {
     <div className="space-y-8">
       <div>
         <h2 className="font-display text-xl font-semibold text-foreground">Target choice</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Pick the university and course you're aiming for.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Pick the university and course you're aiming for.
+        </p>
       </div>
 
       <FormField
@@ -68,13 +71,30 @@ export function TargetChoiceStep() {
                     onClick={() => field.onChange(university.id)}
                     className={cn(
                       "rounded-xl border p-4 text-left transition-colors hover:border-primary/60",
-                      isSelected ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border bg-card",
+                      isSelected
+                        ? "border-primary bg-primary/5 ring-1 ring-primary"
+                        : "border-border bg-card",
                     )}
                   >
-                    <p className="font-medium text-foreground">{university.name}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{university.locationState} State</p>
+                    <div className="flex items-center gap-3">
+                      <UniversityLogo
+                        code={university.code}
+                        name={university.name}
+                        className="size-10"
+                      />
+                      <div>
+                        <p className="font-medium text-foreground">{university.name}</p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">
+                          {university.locationState} State
+                        </p>
+                      </div>
+                    </div>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      {facultyCount === undefined ? <Skeleton className="h-3 w-20" /> : `${facultyCount} faculties`}
+                      {facultyCount === undefined ? (
+                        <Skeleton className="h-3 w-20" />
+                      ) : (
+                        `${facultyCount} faculties`
+                      )}
                     </p>
                   </button>
                 );
@@ -93,7 +113,10 @@ export function TargetChoiceStep() {
             <FormLabel>Course</FormLabel>
             <FormControl>
               <Combobox
-                options={(coursesQuery.data ?? []).map((course) => ({ value: course.id, label: course.name }))}
+                options={(coursesQuery.data ?? []).map((course) => ({
+                  value: course.id,
+                  label: course.name,
+                }))}
                 value={field.value}
                 onChange={field.onChange}
                 disabled={!universityId}
@@ -111,16 +134,28 @@ export function TargetChoiceStep() {
           <p className="font-medium text-foreground">{selectedCourse.name} — requirements</p>
           <dl className="mt-3 grid gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-xs font-medium uppercase text-muted-foreground">Required UTME subjects</dt>
-              <dd className="mt-1 text-sm text-foreground">{requirementQuery.data.requiredUtmeSubjects.join(", ")}</dd>
+              <dt className="text-xs font-medium uppercase text-muted-foreground">
+                Required UTME subjects
+              </dt>
+              <dd className="mt-1 text-sm text-foreground">
+                {requirementQuery.data.requiredUtmeSubjects.join(", ")}
+              </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase text-muted-foreground">Required O'Level subjects</dt>
-              <dd className="mt-1 text-sm text-foreground">{requirementQuery.data.requiredOLevelSubjects.join(", ")}</dd>
+              <dt className="text-xs font-medium uppercase text-muted-foreground">
+                Required O'Level subjects
+              </dt>
+              <dd className="mt-1 text-sm text-foreground">
+                {requirementQuery.data.requiredOLevelSubjects.join(", ")}
+              </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium uppercase text-muted-foreground">Minimum credits</dt>
-              <dd className="mt-1 text-sm text-foreground">{requirementQuery.data.minimumCredits}</dd>
+              <dt className="text-xs font-medium uppercase text-muted-foreground">
+                Minimum credits
+              </dt>
+              <dd className="mt-1 text-sm text-foreground">
+                {requirementQuery.data.minimumCredits}
+              </dd>
             </div>
             <div>
               <dt className="text-xs font-medium uppercase text-muted-foreground">Cut-offs</dt>

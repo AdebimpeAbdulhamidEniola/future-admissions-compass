@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { AssessmentReport } from "@/types/domain";
 
 import { CATCHMENT_LABEL, marginTone } from "./constants";
+import { UniversityLogo } from "@/components/brand/university-logo";
 
 export function VerdictBanner({ report }: { report: AssessmentReport }) {
   const { verification, score, context } = report;
@@ -69,7 +70,12 @@ export function VerdictBanner({ report }: { report: AssessmentReport }) {
         <h1 className="font-display text-xl font-semibold text-foreground sm:text-2xl">
           {context.courseName}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+          <UniversityLogo
+            code={context.universityCode}
+            name={context.universityName}
+            className="size-7 rounded-md p-0.5 text-[10px]"
+          />
           {context.universityName} ({context.universityCode})
         </p>
         <p className="pt-1 text-sm leading-relaxed text-foreground">{summary}</p>

@@ -65,6 +65,7 @@ import { getMyProfile, updateMyProfile } from "@/lib/api/candidates";
 import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/utils";
 import type { AssessmentReport, CandidateProfile, CatchmentStatus } from "@/types/domain";
+import { UniversityLogo } from "@/components/brand/university-logo";
 
 const TITLE = "Your dashboard — PlaceRight";
 
@@ -277,7 +278,16 @@ function PastAssessmentsTable({
                   <TableCell className="text-muted-foreground">
                     {formatDate(report.createdAt)}
                   </TableCell>
-                  <TableCell>{report.context.universityCode}</TableCell>
+                  <TableCell>
+                    <span className="flex items-center gap-2">
+                      <UniversityLogo
+                        code={report.context.universityCode}
+                        name={report.context.universityName}
+                        className="size-6 rounded-md p-0.5 text-[9px]"
+                      />
+                      {report.context.universityCode}
+                    </span>
+                  </TableCell>
                   <TableCell className="font-medium text-foreground">
                     {report.context.courseName}
                   </TableCell>

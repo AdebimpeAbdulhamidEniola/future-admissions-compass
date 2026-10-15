@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { listCourses, listUniversities } from "@/lib/api/catalog";
+import { UniversityLogo } from "@/components/brand/university-logo";
 
 const TITLE = "Universities — PlaceRight";
 
@@ -78,9 +79,7 @@ function UniversitiesRoute() {
                     className="block"
                   >
                     <Card className="h-full gap-4 border-border p-5 transition-colors hover:border-primary/50">
-                      <span className="flex size-12 items-center justify-center rounded-xl bg-primary/10 font-display text-sm font-semibold text-primary">
-                        {university.code}
-                      </span>
+                      <UniversityLogo code={university.code} name={university.name} />
                       <div>
                         <h2 className="font-display text-lg leading-snug font-semibold text-foreground">
                           {university.name}

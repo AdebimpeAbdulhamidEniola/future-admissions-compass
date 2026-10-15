@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { listCourses, listUniversities } from "@/lib/api/catalog";
+import { UniversityLogo } from "@/components/brand/university-logo";
 
 const TITLE = "PlaceRight — Know if you qualify before you pick your JAMB course";
 const DESCRIPTION =
@@ -161,9 +162,7 @@ function Landing() {
                   ))
                 : data?.map(({ university, lowestCutOff, courseCount }) => (
                     <Card key={university.id} className="gap-4 border-border p-5">
-                      <span className="flex size-12 items-center justify-center rounded-xl bg-primary/10 font-display text-sm font-semibold text-primary">
-                        {university.code}
-                      </span>
+                      <UniversityLogo code={university.code} name={university.name} />
                       <div>
                         <h3 className="font-display text-lg leading-snug font-semibold text-foreground">
                           {university.name}
@@ -191,10 +190,10 @@ function Landing() {
             <div className="max-w-2xl space-y-3">
               <h2 className="font-display text-2xl font-semibold sm:text-3xl">Why this exists</h2>
               <p className="text-base leading-relaxed text-primary-foreground/85">
-                In 2026 the University of Ibadan admitted 4,430 candidates out of 46,919 applicants —
-                roughly 9.4%. Most of those who missed out were never told, in advance and in plain
-                language, that their subject combination or aggregate score put the course out of
-                reach. PlaceRight closes that gap before the choice is submitted, not after.
+                In 2026 the University of Ibadan admitted 4,430 candidates out of 46,919 applicants
+                — roughly 9.4%. Most of those who missed out were never told, in advance and in
+                plain language, that their subject combination or aggregate score put the course out
+                of reach. PlaceRight closes that gap before the choice is submitted, not after.
               </p>
             </div>
           </div>
