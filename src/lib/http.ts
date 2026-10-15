@@ -40,14 +40,24 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     throw new ApiError(0, "Network unavailable. Check your connection and try again.", "NetworkError");
   }
 
-  const text = await response.text();
-  const payload = text ? (JSON.parse(text) as unknown) : null;
+  const text = await response.text().catch(() => "");
+  let payload: unknown = null;
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      // Not JSON — e.g. a host's HTML error page while the server is waking up.
+      if (response.ok) {
+        throw new ApiError(response.status, "The server sent a reply we couldn't read.", "BadResponse");
+      }
+    }
+  }
 
   if (!response.ok) {
     const envelope = (payload ?? {}) as NestErrorEnvelope;
     const message = Array.isArray(envelope.message)
       ? envelope.message.join(", ")
-      : envelope.message ?? response.statusText ?? "Request failed";
+      : envelope.message || response.statusText || "Request failed";
     throw new ApiError(envelope.statusCode ?? response.status, message, envelope.error, payload);
   }
 

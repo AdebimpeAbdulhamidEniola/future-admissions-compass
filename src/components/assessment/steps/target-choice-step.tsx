@@ -1,13 +1,12 @@
-import { useQueries } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 import { Card } from "@/components/ui/card";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { listCourses } from "@/lib/api/catalog";
 import { cn } from "@/lib/utils";
 
 import { Combobox } from "../combobox";
+import { QueryError } from "../query-error";
 import { useCourseRequirementQuery, useCoursesQuery, useUniversitiesQuery } from "../queries";
 import { useAssessmentWizard } from "../wizard-context";
 import { UniversityLogo } from "@/components/brand/university-logo";
@@ -16,13 +15,6 @@ export function TargetChoiceStep() {
   const { form } = useAssessmentWizard();
   const universitiesQuery = useUniversitiesQuery();
   const universities = universitiesQuery.data ?? [];
-
-  const facultyCountQueries = useQueries({
-    queries: universities.map((university) => ({
-      queryKey: ["courses", university.id],
-      queryFn: () => listCourses(university.id),
-    })),
-  });
 
   const universityId = form.watch("targetUniversityId");
   const courseId = form.watch("targetCourseId");
@@ -56,12 +48,20 @@ export function TargetChoiceStep() {
         render={({ field }) => (
           <FormItem>
             <FormLabel>University</FormLabel>
+            {universitiesQuery.isError && (
+              <QueryError
+                title="We couldn't load the universities"
+                error={universitiesQuery.error}
+                onRetry={() => void universitiesQuery.refetch()}
+                retrying={universitiesQuery.isFetching}
+              />
+            )}
             <div className="grid gap-3 sm:grid-cols-2">
-              {universities.map((university, index) => {
-                const courseResult = facultyCountQueries[index];
-                const facultyCount = courseResult?.data
-                  ? new Set(courseResult.data.map((course) => course.faculty)).size
-                  : undefined;
+              {universitiesQuery.isPending &&
+                Array.from({ length: 6 }).map((_, i) => (
+                  <Skeleton key={i} className="h-[74px] rounded-xl" />
+                ))}
+              {universities.map((university) => {
                 const isSelected = field.value === university.id;
 
                 return (
@@ -89,13 +89,6 @@ export function TargetChoiceStep() {
                         </p>
                       </div>
                     </div>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      {facultyCount === undefined ? (
-                        <Skeleton className="h-3 w-20" />
-                      ) : (
-                        `${facultyCount} faculties`
-                      )}
-                    </p>
                   </button>
                 );
               })}
@@ -119,15 +112,40 @@ export function TargetChoiceStep() {
                 }))}
                 value={field.value}
                 onChange={field.onChange}
-                disabled={!universityId}
-                placeholder={universityId ? "Search for a course" : "Choose a university first"}
+                disabled={!universityId || coursesQuery.isPending || coursesQuery.isError}
+                placeholder={
+                  !universityId
+                    ? "Choose a university first"
+                    : coursesQuery.isPending
+                      ? "Loading courses…"
+                      : "Search for a course"
+                }
                 emptyText="No courses found."
               />
             </FormControl>
+            {universityId && coursesQuery.isError && (
+              <QueryError
+                title="We couldn't load the courses for this university"
+                error={coursesQuery.error}
+                onRetry={() => void coursesQuery.refetch()}
+                retrying={coursesQuery.isFetching}
+              />
+            )}
             <FormMessage />
           </FormItem>
         )}
       />
+
+      {selectedCourse && requirementQuery.isPending && <Skeleton className="h-40 rounded-xl" />}
+
+      {selectedCourse && requirementQuery.isError && (
+        <QueryError
+          title={`We couldn't load the requirements for ${selectedCourse.name}`}
+          error={requirementQuery.error}
+          onRetry={() => void requirementQuery.refetch()}
+          retrying={requirementQuery.isFetching}
+        />
+      )}
 
       {selectedCourse && requirementQuery.data && (
         <Card className="p-4">
